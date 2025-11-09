@@ -2,16 +2,7 @@
 #define DC_CONFIG_H
 
 #include <Arduino.h>
-
-// Motor driver pin definitions
-// Adjust these pins according to your wiring
-#define MOTOR_A_PWM 9    // PWM pin for Motor A speed
-#define MOTOR_A_DIR1 7   // Direction pin 1 for Motor A
-#define MOTOR_A_DIR2 8   // Direction pin 2 for Motor A
-
-#define MOTOR_B_PWM 10   // PWM pin for Motor B speed
-#define MOTOR_B_DIR1 11  // Direction pin 1 for Motor B
-#define MOTOR_B_DIR2 12  // Direction pin 2 for Motor B
+#include "PINS.h"
 
 // Motor constants
 #define MOTOR_A 0

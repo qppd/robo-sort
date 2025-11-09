@@ -2,10 +2,7 @@
 #define ULTRASONIC_CONFIG_H
 
 #include <Arduino.h>
-
-// Ultrasonic sensor pin definitions
-#define TRIG_PIN 4
-#define ECHO_PIN 5
+#include "PINS.h"
 
 // Measurement constants
 #define MAX_DISTANCE 400  // Maximum distance in cm (HC-SR04 limit)
@@ -22,5 +19,7 @@ public:
 private:
     long measureDistance();
 };
+
+#endif // ULTRASONIC_CONFIG_H
 
 #endif // ULTRASONIC_CONFIG_H
