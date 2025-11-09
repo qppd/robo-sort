@@ -2,20 +2,24 @@
 #include <Wire.h>
 #include "SERVO_CONFIG.h"
 #include "DC_CONFIG.h"
+#include "ULTRASONIC_CONFIG.h"
 
 ServoConfig servoConfig;
 DCConfig dcConfig;
+UltrasonicConfig ultrasonicConfig;
 
 void setup() {
   Serial.begin(9600);
   servoConfig.begin();
   dcConfig.begin();
+  ultrasonicConfig.begin();
   Serial.println("RoboSort Control System Ready!");
   Serial.println("Servo Commands: TEST, S<servo> <angle>");
   Serial.println("Motor Commands: MTEST, M<motor> <direction> <speed>, MSTOP");
   Serial.println("  Motors: A or B");
   Serial.println("  Directions: F (forward), B (backward), S (stop), BR (brake)");
   Serial.println("  Speed: 0-255");
+  Serial.println("Ultrasonic Commands: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>");
 }
 
 void loop() {
@@ -93,10 +97,60 @@ void loop() {
       } else {
         Serial.println("Invalid command format. Use: M<motor> <direction> <speed>");
       }
+    }
+    // Ultrasonic commands
+    else if (input.equalsIgnoreCase("UTEST")) {
+      ultrasonicConfig.testSensor();
+    } else if (input.equalsIgnoreCase("UDIST")) {
+      long distance = ultrasonicConfig.getDistance();
+      if (distance == 0) {
+        Serial.println("Distance: Out of range or no echo");
+      } else {
+        Serial.print("Distance: ");
+        Serial.print(distance);
+        Serial.println(" cm");
+      }
+    } else if (input.startsWith("UAVG")) {
+      int spaceIdx = input.indexOf(' ');
+      int samples = 3; // Default
+      if (spaceIdx > 0) {
+        samples = input.substring(spaceIdx + 1).toInt();
+        if (samples < 1 || samples > 10) {
+          Serial.println("Invalid sample count. Range: 1-10");
+          return;
+        }
+      }
+      long avgDistance = ultrasonicConfig.getDistanceAverage(samples);
+      if (avgDistance == 0) {
+        Serial.println("Average distance: No valid readings");
+      } else {
+        Serial.print("Average distance (");
+        Serial.print(samples);
+        Serial.print(" samples): ");
+        Serial.print(avgDistance);
+        Serial.println(" cm");
+      }
+    } else if (input.startsWith("UDETECT")) {
+      int spaceIdx = input.indexOf(' ');
+      if (spaceIdx > 0) {
+        long threshold = input.substring(spaceIdx + 1).toInt();
+        if (threshold < 1 || threshold > MAX_DISTANCE) {
+          Serial.println("Invalid threshold. Range: 1-400 cm");
+          return;
+        }
+        bool detected = ultrasonicConfig.isObjectDetected(threshold);
+        Serial.print("Object detection (threshold: ");
+        Serial.print(threshold);
+        Serial.print(" cm): ");
+        Serial.println(detected ? "DETECTED" : "NOT DETECTED");
+      } else {
+        Serial.println("Invalid command format. Use: UDETECT <threshold>");
+      }
     } else {
       Serial.println("Unknown command.");
       Serial.println("Servo: TEST, S<servo> <angle>");
       Serial.println("Motor: MTEST, M<motor> <direction> <speed>, MSTOP");
+      Serial.println("Ultrasonic: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>");
     }
   }
 }
