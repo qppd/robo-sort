@@ -213,6 +213,59 @@ UDETECT 30
 ```
 Run sensor test, get single distance, get average of 5 samples, detect object within 30 cm.
 
+## Wiring Diagram
+
+### System Wiring Schematic
+![RoboSort Wiring Diagram](diagram/Wiring.png)
+
+The wiring diagram shows the complete electrical connections for the RoboSort system. All components are connected to the Arduino Mega 2560 microcontroller, which serves as the central control unit.
+
+#### Component Connections:
+
+**1. Adafruit PCA9685 16-Channel PWM Servo Driver**
+- **VCC** → Arduino 5V
+- **GND** → Arduino GND
+- **SDA** → Arduino Pin 20 (SDA)
+- **SCL** → Arduino Pin 21 (SCL)
+- **V+** → External 5V Power Supply (for servos)
+- **GND** → Common Ground with external power
+- **Servo Outputs** → 5 Servos connected to channels 0-4
+
+**2. E-Gizmo HPMD-3.1 Dual DC Motor Driver**
+- **Motor A Control:**
+  - PWM → Arduino Pin 9
+  - DIR1 → Arduino Pin 7
+  - DIR2 → Arduino Pin 8
+- **Motor B Control:**
+  - PWM → Arduino Pin 10
+  - DIR1 → Arduino Pin 11
+  - DIR2 → Arduino Pin 12
+- **Power:**
+  - VIN → External 6-12V Power Supply
+  - GND → Common Ground with Arduino
+- **Motor Outputs:**
+  - MA+/MA- → DC Motor A (Conveyor/Movement)
+  - MB+/MB- → DC Motor B (Conveyor/Movement)
+
+**3. HC-SR04 Ultrasonic Sensor**
+- **VCC** → Arduino 5V
+- **GND** → Arduino GND
+- **TRIG** → Arduino Pin 4
+- **ECHO** → Arduino Pin 5
+
+**4. Power Supply Configuration**
+- **Arduino Power:** USB connection from Raspberry Pi or 7-12V DC adapter
+- **Servo Power:** Separate 5V power supply (recommended 5V 5A for multiple servos)
+- **Motor Power:** Separate 6-12V power supply (2A minimum per motor)
+- **Common Ground:** All grounds must be connected together
+
+#### Important Notes:
+- Always use separate power supplies for motors and servos to prevent voltage drops
+- Ensure all grounds are connected together (common ground)
+- The Fritzing source file (`Wiring.fzz`) is available in the `diagram/` folder for editing
+- Verify all connections before powering on the system
+- Use appropriate wire gauges for motor connections (minimum 22 AWG)
+
 ## Hardware Models
 
 ### Front View
@@ -236,6 +289,8 @@ robo-sort/
 ├── LICENSE
 ├── README.md
 ├── diagram/                      # Circuit diagrams and schematics
+│   ├── Wiring.fzz                # Fritzing wiring diagram (editable)
+│   └── Wiring.png                # Wiring diagram image
 ├── model/                        # 3D models and images
 │   ├── robosort-front.jpg
 │   ├── robosort-main.jpg
