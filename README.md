@@ -1,17 +1,20 @@
-# RoboSort: Automated Sorting Robot
+# RoboSort: Automated Paper and Plastic Waste Segregation System
 
 ## Overview
-RoboSort is an automated sorting robot designed to efficiently separate and organize objects using a robotic arm and conveyor system. The project integrates both Arduino and Raspberry Pi platforms, combining mechanical, electrical, and software components for a robust, scalable solution suitable for educational, prototyping, and light industrial applications.
+RoboSort is an intelligent automated waste segregation system designed to efficiently separate paper and plastic waste materials using a robotic arm and conveyor system. The project addresses the growing need for automated waste management by combining computer vision, robotics, and embedded systems to accurately identify and sort recyclable materials. Integrating both Arduino and Raspberry Pi platforms, RoboSort combines mechanical, electrical, and software components for a robust, scalable solution suitable for educational institutions, recycling facilities, and smart waste management applications.
 
 ## Architecture
 The system follows a modular, two-tier architecture:
-- **Low-level control**: Arduino microcontroller manages real-time servo operations and hardware interfacing
-- **High-level logic**: Raspberry Pi handles advanced processing, decision-making, vision processing, and network communication
-- **Communication**: Serial protocol enables bidirectional data exchange between Arduino and Raspberry Pi
+- **Low-level control**: Arduino microcontroller manages real-time servo operations, motor control, and hardware interfacing
+- **High-level logic**: Raspberry Pi handles vision processing, material classification (paper vs plastic), decision-making, and network communication
+- **Communication**: Serial protocol enables bidirectional data exchange between Arduino and Raspberry Pi for coordinated waste sorting operations
 
 ## Features
-- Five degrees of freedom (5-DOF) robotic arm driven by a 16-channel PWM servo driver
-- Dual DC motor control system using E-Gizmo HPMD-3.1 motor driver for conveyor and movement operations
+- Five degrees of freedom (5-DOF) robotic arm for precise waste material handling
+- Automated paper and plastic waste identification and segregation
+- Conveyor belt system powered by dual DC motors using E-Gizmo HPMD-3.1 motor driver
+- 16-channel PWM servo driver (PCA9685) for coordinated multi-servo control
+- Computer vision capability for material classification
 - Modular design with clear separation between control (Arduino) and high-level logic (Raspberry Pi)
 - Serial command interface for manual testing and calibration
 - Expandable architecture for additional sensors or actuators
