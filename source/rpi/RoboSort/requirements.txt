@@ -1,0 +1,4 @@
+# RoboSort Python Dependencies
+# Install using: pip install -r requirements.txt
+
+pyserial==3.5

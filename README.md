@@ -58,7 +58,9 @@ The system follows a modular, two-tier architecture:
 - **DC_CONFIG.cpp**: Implementation of DC motor control logic with E-Gizmo HPMD-3.1 driver
 
 ### Raspberry Pi Software
-- **RoboSort.py**: High-level control logic, sensor integration, and advanced features
+- **RoboSort.py**: Main application with interactive command-line interface for testing and controlling the robot
+- **serial_config.py**: Modular serial communication handler for Arduino-Raspberry Pi USB communication
+- **requirements.txt**: Python package dependencies
 
 ### Serial Commands
 
@@ -77,6 +79,14 @@ The system follows a modular, two-tier architecture:
   - Example: `MB B 150` - Motor B backward at speed 150
 - `MSTOP`: Immediately stops all DC motors
 
+#### Ultrasonic Commands
+- `UTEST`: Runs comprehensive ultrasonic sensor test with multiple readings
+- `UDIST`: Gets single distance measurement in centimeters
+- `UAVG <samples>`: Gets average distance from multiple samples (1-10)
+  - Example: `UAVG 5` - Average of 5 distance samples
+- `UDETECT <threshold>`: Detects if object is within threshold distance (1-400 cm)
+  - Example: `UDETECT 30` - Detect objects within 30 cm
+
 ## Installation
 
 ### Arduino Setup
@@ -93,49 +103,115 @@ The system follows a modular, two-tier architecture:
 ### Raspberry Pi Setup
 1. Ensure Python 3.x is installed (pre-installed on Raspberry Pi OS)
 2. Navigate to `source/rpi/RoboSort/`
-3. Install required Python packages (if any dependencies are added in the future)
-4. Run the Python script: `python3 RoboSort.py`
+3. Install required Python packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   Or install pyserial directly:
+   ```bash
+   pip install pyserial
+   ```
+4. Configure serial port permissions:
+   ```bash
+   sudo usermod -a -G dialout $USER
+   ```
+   Then logout and login again for changes to take effect
+5. Connect Arduino Mega to Raspberry Pi via USB cable
+6. Identify the serial port (usually `/dev/ttyACM0` or `/dev/ttyUSB0`):
+   ```bash
+   ls /dev/tty*
+   ```
+7. Run the Python application:
+   ```bash
+   python3 RoboSort.py
+   ```
 
 ## Usage
 
-### Basic Operation
-1. Power on the Arduino and Raspberry Pi
-2. Ensure proper power supply to motors (separate power recommended for high-current DC motors)
-3. Connect to the Arduino via serial monitor (9600 baud)
-4. Use the serial commands to control and test the servos and motors
+### Raspberry Pi Interactive Control
+The RoboSort.py application provides a menu-driven interface for controlling the system:
 
-### Testing Servos
+```bash
+python3 RoboSort.py
+```
+
+**Menu Options:**
+1. Test all servos
+2. Set specific servo angle
+3. Test all motors
+4. Control specific motor
+5. Stop all motors
+6. Test ultrasonic sensor
+7. Get distance measurement
+8. Get average distance
+9. Detect object (with threshold)
+10. Send custom command
+0. Exit
+
+**Python Module Usage Example:**
+```python
+from serial_config import SerialConfig
+
+# Using context manager (automatic connection/disconnection)
+with SerialConfig(port='/dev/ttyACM0') as serial_conn:
+    # Test components
+    serial_conn.test_servos()
+    serial_conn.get_distance()
+    
+    # Control servo
+    serial_conn.set_servo(0, 90)
+    
+    # Control motor
+    serial_conn.control_motor('A', 'F', 200)
+    
+    # Stop when done
+    serial_conn.stop_all_motors()
+```
+
+### Arduino Serial Monitor Testing
+
+**Basic Operation:**
+1. Connect Arduino to computer via USB
+2. Open Arduino IDE Serial Monitor (9600 baud)
+3. Send commands directly to test components
+
+**Testing Servos:**
 ```
 TEST
 ```
-This command runs a test sequence on all servos, moving each through its full range of motion.
+Runs a test sequence on all servos, moving each through its full range of motion.
 
-### Manual Servo Control
+**Manual Servo Control:**
 ```
 S0 90
 S1 45
 S2 180
 ```
-These commands set servo 0 to 90 degrees, servo 1 to 45 degrees, and servo 2 to 180 degrees respectively.
+Set servo 0 to 90 degrees, servo 1 to 45 degrees, and servo 2 to 180 degrees.
 
-### Testing DC Motors
+**Testing DC Motors:**
 ```
 MTEST
 ```
-This command runs a comprehensive test sequence on both DC motors, testing forward, backward, and stop operations at various speeds.
+Runs a comprehensive test sequence on both DC motors.
 
-### Manual DC Motor Control
+**Manual DC Motor Control:**
 ```
 MA F 200
 MB B 150
 MA S 0
 MSTOP
 ```
-These commands demonstrate:
-- Motor A forward at speed 200
-- Motor B backward at speed 150
-- Motor A stop
-- Stop all motors immediately
+Motor A forward at speed 200, Motor B backward at speed 150, Motor A stop, and stop all motors.
+
+**Testing Ultrasonic Sensor:**
+```
+UTEST
+UDIST
+UAVG 5
+UDETECT 30
+```
+Run sensor test, get single distance, get average of 5 samples, detect object within 30 cm.
 
 ## Hardware Models
 
@@ -159,22 +235,26 @@ The main/top view provides a comprehensive look at the overall structure, showin
 robo-sort/
 ├── LICENSE
 ├── README.md
-├── diagram/              # Circuit diagrams and schematics
-├── model/                # 3D models and images
+├── diagram/                      # Circuit diagrams and schematics
+├── model/                        # 3D models and images
 │   ├── robosort-front.jpg
 │   ├── robosort-main.jpg
 │   └── robosort-side.jpg
 └── source/
     ├── arduino/
     │   └── RoboSort/
-    │       ├── RoboSort.ino      # Main firmware with integrated control
-    │       ├── SERVO_CONFIG.h     # Servo driver header
-    │       ├── SERVO_CONFIG.cpp   # Servo driver implementation
-    │       ├── DC_CONFIG.h        # DC motor driver header
-    │       └── DC_CONFIG.cpp      # DC motor driver implementation
+    │       ├── RoboSort.ino              # Main firmware with integrated control
+    │       ├── SERVO_CONFIG.h            # Servo driver header
+    │       ├── SERVO_CONFIG.cpp          # Servo driver implementation
+    │       ├── DC_CONFIG.h               # DC motor driver header
+    │       ├── DC_CONFIG.cpp             # DC motor driver implementation
+    │       ├── ULTRASONIC_CONFIG.h       # Ultrasonic sensor header
+    │       └── ULTRASONIC_CONFIG.cpp     # Ultrasonic sensor implementation
     └── rpi/
         └── RoboSort/
-            └── RoboSort.py        # High-level control logic
+            ├── RoboSort.py               # Main application with CLI interface
+            ├── serial_config.py          # Serial communication module
+            └── requirements.txt          # Python dependencies
 ```
 
 ## Configuration
