@@ -32,6 +32,13 @@ The system follows a modular, two-tier architecture:
 - **Robotic Arm**: 5-DOF articulated arm
 - **Servos**: 5 standard servos (SG90/MG996R or similar)
 - **Servo Driver**: Adafruit 16-channel PWM Servo Driver (PCA9685)
+  - I2C interface requiring only 2 pins (SDA, SCL)
+  - 12-bit resolution PWM output
+  - Adjustable frequency up to 1.6 kHz
+  - Chainable up to 62 boards (992 servos total)
+  - I2C address: 0x40-0x7F (selectable via solder jumpers)
+  - 5V tolerant logic (works with 3.3V or 5V systems)
+  - Built-in clock for free-running PWM (no continuous signal needed)
 - **DC Motor Driver**: E-Gizmo HPMD-3.1 Dual H-Bridge Motor Driver
 - **DC Motors**: 2 DC motors for conveyor belt and/or robot movement
 - **Microcontroller**: Arduino-compatible board (Uno, Mega, etc.)
@@ -169,12 +176,69 @@ robo-sort/
 
 ## Configuration
 
+### Adafruit PCA9685 16-Channel PWM/Servo Driver Setup
+
+#### Technical Specifications
+- **Chip**: NXP PCA9685 PWM controller
+- **Resolution**: 12-bit (4096 steps)
+- **PWM Frequency**: Adjustable from ~40Hz to ~1600Hz (typically 50Hz for servos)
+- **Channels**: 16 independent PWM outputs
+- **Interface**: I2C (uses only 2 pins: SDA and SCL)
+- **Default I2C Address**: 0x40 (changeable via solder jumpers A0-A5)
+- **Address Range**: 0x40 to 0x7F (allows up to 62 boards on one I2C bus)
+- **Logic Level**: 5V tolerant I2C (works with 3.3V or 5V microcontrollers)
+- **Power**: Separate power input for servos (up to 6V recommended)
+- **Dimensions**: 2.5" x 1" x 0.1" (62.5mm x 25.4mm x 3mm)
+
+#### Key Features
+- **Free-Running PWM**: Built-in clock means no continuous signal needed from Arduino
+- **Zero Processing Overhead**: Runs independently after initial setup
+- **Chainable**: Control up to 992 servos using 62 boards with only 2 pins
+- **Output Protection**: 220Ω series resistors on all outputs
+- **Reverse Polarity Protection**: Built-in on terminal block
+- **Configurable Output**: Push-pull or open-drain mode
+
+#### Wiring Guide
+**I2C Connections (Required):**
+- SDA → Arduino A4 (Uno/Nano) or Pin 20 (Mega)
+- SCL → Arduino A5 (Uno/Nano) or Pin 21 (Mega)
+- VCC → Arduino 5V
+- GND → Arduino GND
+
+**Servo Power (Required):**
+- V+ → External power supply positive (4.8V - 6V for most servos)
+- GND → External power supply ground (must share common ground with Arduino)
+- Note: Do NOT power servos from Arduino's 5V pin (insufficient current)
+
+**Servo Connections:**
+- Connect servos to any of the 16 three-pin headers
+- Each header provides: PWM signal, VCC, and GND
+- Servos can be plugged directly into the board
+
+#### Address Selection
+By default, the board uses I2C address 0x40. To change the address:
+- Solder bridge combinations of A0-A5 jumpers on the board
+- Each jumper adds to the base address (0x40)
+- Example: Bridging A0 sets address to 0x41
+
+#### Library Installation
+Install the Adafruit PWM Servo Driver library in Arduino IDE:
+```
+Tools > Manage Libraries > Search "Adafruit PWM Servo Driver" > Install
+```
+
 ### Servo Calibration
 Adjust the servo pulse width limits in `SERVO_CONFIG.cpp`:
 ```cpp
-#define SERVO_MIN_PULSE  150
-#define SERVO_MAX_PULSE  600
+#define SERVO_MIN_PULSE  150  // Minimum pulse length (0°)
+#define SERVO_MAX_PULSE  600  // Maximum pulse length (180°)
 ```
+
+**Calibration Tips:**
+- Standard servos typically use 150-600 pulse range (1ms-2ms)
+- Fine-tune these values if servos don't reach full range or jitter at endpoints
+- Test with serial commands before finalizing pulse values
+- Some servos may require 120-600 or 150-650 ranges
 
 ### Servo Channel Mapping
 Modify the servo channel assignments in the `ServoConfig` constructor to match your wiring configuration.
