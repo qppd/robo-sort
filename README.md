@@ -14,6 +14,7 @@ Integrating both Arduino and Raspberry Pi platforms, RoboSort combines mechanica
 ## Table of Contents
 - [Overview](#overview)
 - [Architecture](#architecture)
+- [System Diagrams](#system-diagrams)
 - [Serial Communication Protocol](#serial-communication-protocol)
 - [Features](#features)
 - [Hardware Requirements](#hardware-requirements)
@@ -26,6 +27,7 @@ Integrating both Arduino and Raspberry Pi platforms, RoboSort combines mechanica
 - [AI Vision System Configuration](#ai-vision-system-configuration)
 - [Configuration](#configuration)
 - [System Integration](#system-integration)
+- [Diagrams Folder](#diagrams-folder)
 - [Development](#development)
 - [Contributing](#contributing)
 - [License](#license)
@@ -37,6 +39,318 @@ The system follows a modular, three-tier architecture:
 - **High-level logic**: Raspberry Pi handles vision processing, material classification (paper vs plastic), decision-making, and network communication
 - **AI Vision & Sensing**: Advanced YOLO object detection with LIDAR environmental awareness for precise material identification and obstacle avoidance
 - **Communication**: Serial protocol enables bidirectional data exchange between Arduino and Raspberry Pi for coordinated waste sorting operations
+
+## System Diagrams
+
+### Architecture Overview
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Raspberry Pi  │    │   Arduino Mega  │    │   Hardware      │
+│   (High-Level)  │◄──►│   (Low-Level)   │◄──►│   Components    │
+│                 │    │                 │    │                 │
+│ • AI Vision     │    │ • Servo Control │    │ • Robotic Arm   │
+│ • YOLO Detect   │    │ • Stepper Motor │    │ • Servos        │
+│ • LIDAR Process │    │ • Sensor Read   │    │ • Stepper Motor │
+│ • Decision      │    │ • Serial Comm   │    │ • LIDAR Sensor  │
+│ • Coordination  │    │                 │    │ • Ultrasonic    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                        │                        │
+         └────────────────────────┼────────────────────────┘
+                                  │
+                    ┌─────────────┴─────────────┐
+                    │     Serial USB (9600)     │
+                    │   Bidirectional Protocol  │
+                    └───────────────────────────┘
+```
+
+### AI Vision Processing Flow
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   Camera    │───►│   YOLO      │───►│   Object    │
+│   Input     │    │   Detection │    │   Detection │
+└─────────────┘    └─────────────┘    └─────────────┘
+       │                   │                   │
+       ▼                   ▼                   ▼
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   Frame     │───►│   Inference │───►│   Results   │
+│   Capture   │    │   Engine    │    │   Analysis  │
+└─────────────┘    └─────────────┘    └─────────────┘
+                                                       │
+                                                       ▼
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   LIDAR     │───►│   Distance  │───►│   Overlay   │
+│   Data      │    │   Fusion    │    │   Display   │
+└─────────────┘    └─────────────┘    └─────────────┘
+```
+
+### Serial Communication Sequence
+```
+Raspberry Pi                    Arduino Mega
+     │                              │
+     │  1. Connect USB Cable       │
+     │────────────────────────────►│
+     │                              │
+     │  2. Serial Port Detect       │
+     │     (/dev/ttyACM0)           │
+     │                              │
+     │  3. Open Serial (9600)       │
+     │────────────────────────────►│
+     │                              │
+     │  4. Arduino Reset/Ready      │
+     │◄─────────────────────────────│
+     │                              │
+     │  5. Send Command             │
+     │     "S0 90\n"                │
+     │────────────────────────────►│
+     │                              │
+     │  6. Process Command          │
+     │                              │
+     │  7. Execute Action           │
+     │                              │
+     │  8. Send Response            │
+     │     "OK\n"                   │
+     │◄─────────────────────────────│
+     │                              │
+     │  9. Continue...              │
+     │                              │
+```
+
+### Hardware Component Layout
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    RoboSort System Layout                   │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐      │
+│  │  Raspberry  │    │   Arduino   │    │   LIDAR     │      │
+│  │     Pi      │    │    Mega     │    │    LD06     │      │
+│  │             │    │             │    │             │      │
+│  │ • USB Cam   │    │ • Servo PWM │    │ • 360° Scan │      │
+│  │ • AI Vision │    │ • Stepper   │    │ • Distance   │      │
+│  │ • Control   │    │ • Sensors   │    │ • Serial     │      │
+│  └─────────────┘    └─────────────┘    └─────────────┘      │
+│           │                   │                   │         │
+│           └─────────┬─────────┼─────────┬─────────┘         │
+│                     │         │         │                   │
+│  ┌─────────────┐    │    ┌─────────────┐    │    ┌─────────┐ │
+│  │  Stepper    │◄───┘    │   Robotic    │◄───┘    │  Power  │ │
+│  │   Driver    │         │     Arm      │         │ Supply  │ │
+│  │  (A4988)    │         │   (5-DOF)    │         │         │ │
+│  │             │         │ • Servos     │         │ • 5V    │ │
+│  │ • STEP/DIR  │         │ • Gripper    │         │ • 12V   │ │
+│  │ • Current   │         │              │         │ • GND   │ │
+│  └─────────────┘         └─────────────┘         └─────────┘ │
+│                                                                     │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐              │
+│  │ Ultrasonic  │    │   Waste     │    │   Sorted    │              │
+│  │  Sensor     │    │  Input      │    │   Bins      │              │
+│  │  HC-SR04    │    │   Area      │    │             │              │
+│  │             │    │             │    │ • Paper     │              │
+│  │ • Distance  │    │ • Detection │    │ • Plastic   │              │
+│  │ • Trigger   │    │ • Position  │    │ • Other     │              │
+│  └─────────────┘    └─────────────┘    └─────────────┘              │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Software Workflow
+```
+┌─────────────┐
+│   Start     │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐     ┌─────────────┐
+│ Initialize  │────►│   Camera    │
+│ Components  │     │   Setup     │
+└──────┬──────┘     └──────┬──────┘
+       │                   │
+       ▼                   ▼
+┌─────────────┐     ┌─────────────┐
+│ Serial USB  │     │   LIDAR     │
+│ Connection  │     │   Setup     │
+└──────┬──────┘     └──────┬──────┘
+       │                   │
+       └──────┬────────────┘
+              │
+              ▼
+┌─────────────────────────────┐
+│        Main Loop            │
+├─────────────────────────────┤
+│  ┌─────────────┐            │
+│  │  Capture    │            │
+│  │   Frame     │            │
+│  └──────┬──────┘            │
+│         │                   │
+│         ▼                   │
+│  ┌─────────────┐            │
+│  │   YOLO      │            │
+│  │ Detection   │            │
+│  └──────┬──────┘            │
+│         │                   │
+│         ▼                   │
+│  ┌─────────────┐            │
+│  │   LIDAR     │            │
+│  │   Fusion    │            │
+│  └──────┬──────┘            │
+│         │                   │
+│         ▼                   │
+│  ┌─────────────┐            │
+│  │   Decision  │            │
+│  │   Making    │            │
+│  └──────┬──────┘            │
+│         │                   │
+│         ▼                   │
+│  ┌─────────────┐            │
+│  │   Serial    │            │
+│  │   Command   │            │
+│  └──────┬──────┘            │
+│         │                   │
+│         ▼                   │
+│  ┌─────────────┐            │
+│  │   Robotic   │            │
+│  │   Action    │            │
+│  └──────┬──────┘            │
+│         │                   │
+└─────────┼───────────────────┘
+          │
+          ▼
+┌─────────────┐     ┌─────────────┐
+│   Display   │◄────┤   Continue  │
+│   Results   │     │    Loop     │
+└──────┬──────┘     └──────┬──────┘
+       │                   │
+       └─────────┬─────────┘
+                 │
+                 ▼
+          ┌─────────────┐
+          │    Exit     │
+          │  (q/Q key)  │
+          └─────────────┘
+```
+
+### Command Processing Flow
+```
+User Input / Auto Detection
+           │
+           ▼
+    ┌─────────────┐
+    │  Command    │
+    │  Parser     │
+    └──────┬──────┘
+           │
+           ▼
+    ┌─────────────┐     ┌─────────────┐
+    │   Servo     │     │  Stepper    │
+    │ Commands    │     │ Commands    │
+    │ (S<id><ang>)│     │ (STEP<steps>)│
+    └──────┬──────┘     └──────┬──────┘
+           │                   │
+           └──────┬────────────┘
+                  │
+                  ▼
+           ┌─────────────┐
+           │   Serial    │
+           │   Send      │
+           │  (9600bps)  │
+           └──────┬──────┘
+                  │
+                  ▼
+           ┌─────────────┐
+           │   Arduino   │
+           │   Process   │
+           └──────┬──────┘
+                  │
+                  ▼
+           ┌─────────────┐
+           │   Hardware  │
+           │   Control   │
+           └──────┬──────┘
+                  │
+                  ▼
+           ┌─────────────┐
+           │   Response  │
+           │   Return    │
+           └─────────────┘
+```
+
+### Error Handling Flow
+```
+┌─────────────┐
+│   Error     │
+│  Detected   │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐     ┌─────────────┐
+│   Log       │     │   Check     │
+│   Error     │     │   Type      │
+└──────┬──────┘     └──────┬──────┘
+       │                   │
+       ▼                   ▼
+┌─────────────┐     ┌─────────────┐
+│   Serial    │     │   Camera    │
+│   Timeout   │     │   Error     │
+└──────┬──────┘     └──────┬──────┘
+       │                   │
+       ▼                   ▼
+┌─────────────┐     ┌─────────────┐
+│   Retry     │     │   Reconnect │
+│ Connection  │     │   Camera    │
+└──────┬──────┘     └──────┬──────┘
+       │                   │
+       └──────┬────────────┘
+              │
+              ▼
+       ┌─────────────┐
+       │   Continue  │
+       │   Operation │
+       └─────────────┘
+```
+
+### Data Flow Architecture
+```
+Input Sources
+├── Camera Stream
+│   ├── USB Camera
+│   ├── Pi Camera
+│   └── Video Files
+├── LIDAR Sensor
+│   ├── LD06 360°
+│   └── Serial Data
+└── User Commands
+    ├── Keyboard
+    ├── Serial Input
+    └── Auto Triggers
+
+Processing Pipeline
+├── Frame Capture
+│   ├── OpenCV
+│   └── Real-time
+├── AI Detection
+│   ├── YOLO Model
+│   ├── Inference
+│   └── Post-processing
+├── Sensor Fusion
+│   ├── Distance Data
+│   ├── Object Tracking
+│   └── Safety Checks
+└── Decision Engine
+    ├── Sorting Logic
+    ├── Command Generation
+    └── Priority Handling
+
+Output Destinations
+├── Display Overlay
+│   ├── Bounding Boxes
+│   ├── Distance Info
+│   └── FPS Counter
+├── Serial Commands
+│   ├── Arduino Control
+│   └── Hardware Actions
+└── Logging System
+    ├── Performance
+    ├── Errors
+    └── Statistics
+```
 
 ## Serial Communication Protocol
 
@@ -655,6 +969,31 @@ Common stepper motor drivers (A4988, DRV8825) use a standard interface:
 - **Processing Speed**: Real-time FPS monitoring
 - **Sorting Efficiency**: Success rate tracking and optimization
 - **System Reliability**: Uptime monitoring and fault detection
+
+## Diagrams Folder
+
+The `diagrams/` directory contains comprehensive visual documentation of the RoboSort system:
+
+### Available Diagrams
+- **`system_architecture.puml`**: PlantUML diagram showing complete system architecture and component interactions
+- **`workflow_diagrams.md`**: Mermaid diagrams illustrating processing workflows, communication sequences, and state transitions
+- **`pin_configuration.txt`**: Detailed ASCII diagram of Arduino Mega pin connections, wiring schematics, and troubleshooting guide
+- **`README.md`**: Documentation for all diagrams with usage instructions and viewing tools
+
+### Diagram Formats
+- **PlantUML**: Professional architecture diagrams (view online at plantuml.com)
+- **Mermaid**: Interactive flowcharts compatible with GitHub markdown
+- **ASCII Text**: Hardware-focused diagrams for easy reference during assembly
+
+### Key Visualizations
+- System component relationships and data flow
+- AI vision processing pipeline
+- Serial communication protocols
+- Hardware pin configurations and power distribution
+- Error handling and recovery workflows
+- State machine transitions
+
+For detailed hardware assembly and system understanding, refer to the diagrams folder.
 
 ## Development
 
