@@ -1,24 +1,96 @@
-# RoboSort: Automated Paper and Plastic Waste Segregation System
+# RoboSort: Advanced Automated Waste Segregation with AI Vision & LIDAR
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/)
+[![Arduino](https://img.shields.io/badge/Arduino-Compatible-green.svg)](https://www.arduino.cc/)
+[![YOLO](https://img.shields.io/badge/YOLO-AI_Vision-orange.svg)](https://ultralytics.com/)
+[![Raspberry Pi](https://img.shields.io/badge/Raspberry_Pi-4B+-red.svg)](https://www.raspberrypi.org/)
 
 ## Overview
-RoboSort is an intelligent automated waste segregation system designed to efficiently separate paper and plastic waste materials using a robotic arm and conveyor system. The project addresses the growing need for automated waste management by combining computer vision, robotics, and embedded systems to accurately identify and sort recyclable materials. Integrating both Arduino and Raspberry Pi platforms, RoboSort combines mechanical, electrical, and software components for a robust, scalable solution suitable for educational institutions, recycling facilities, and smart waste management applications.
+RoboSort is an intelligent automated waste segregation system designed to efficiently separate paper and plastic waste materials using a robotic arm, stepper motor positioning, and cutting-edge AI technology. The project addresses the growing need for automated waste management by combining computer vision, robotics, embedded systems, and LIDAR sensing to accurately identify and sort recyclable materials.
+
+Integrating both Arduino and Raspberry Pi platforms, RoboSort combines mechanical, electrical, and software components for a robust, scalable solution suitable for educational institutions, recycling facilities, and smart waste management applications. The system now features advanced YOLO-based object detection and 360° LIDAR environmental awareness for enhanced sorting accuracy and safety.
+
+## Table of Contents
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Serial Communication Protocol](#serial-communication-protocol)
+- [Features](#features)
+- [Hardware Requirements](#hardware-requirements)
+- [Software Components](#software-components)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Wiring Diagram](#wiring-diagram)
+- [Hardware Models](#hardware-models)
+- [Project Structure](#project-structure)
+- [AI Vision System Configuration](#ai-vision-system-configuration)
+- [Configuration](#configuration)
+- [System Integration](#system-integration)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 ## Architecture
-The system follows a modular, two-tier architecture:
+The system follows a modular, three-tier architecture:
 - **Low-level control**: Arduino microcontroller manages real-time servo operations, motor control, and hardware interfacing
 - **High-level logic**: Raspberry Pi handles vision processing, material classification (paper vs plastic), decision-making, and network communication
+- **AI Vision & Sensing**: Advanced YOLO object detection with LIDAR environmental awareness for precise material identification and obstacle avoidance
 - **Communication**: Serial protocol enables bidirectional data exchange between Arduino and Raspberry Pi for coordinated waste sorting operations
 
+## Serial Communication Protocol
+
+### Raspberry Pi ↔ Arduino Mega USB Communication
+
+The system uses serial communication over USB cable for bidirectional data exchange between the Raspberry Pi (high-level logic) and Arduino Mega (low-level control). This architecture provides reliable, real-time control of robotic components.
+
+#### Technical Specifications
+- **Interface**: USB Serial (Virtual COM Port)
+- **Baud Rate**: 9600 bps
+- **Data Bits**: 8
+- **Parity**: None
+- **Stop Bits**: 1
+- **Flow Control**: None
+- **Protocol**: ASCII text commands with newline termination
+
+#### Connection Setup
+1. **Hardware Connection**: Connect Arduino Mega to Raspberry Pi USB port using USB cable
+2. **Port Identification**:
+   - Linux/Raspberry Pi: `/dev/ttyACM0` or `/dev/ttyUSB0`
+   - Windows: `COM3`, `COM4`, etc.
+3. **Permissions**: Add user to `dialout` group for serial access
+   ```bash
+   sudo usermod -a -G dialout $USER
+   ```
+
+#### Communication Flow
+```
+Raspberry Pi (Python) → Serial USB → Arduino Mega → Hardware Control
+Raspberry Pi (Python) ← Serial USB ← Arduino Mega ← Sensor Feedback
+```
+
+#### Command Format
+- **Commands**: ASCII text strings ending with newline (`\n`)
+- **Response**: Immediate acknowledgment or data return
+- **Timeout**: 1 second read timeout
+- **Error Handling**: Automatic reconnection on communication failure
+
 ## Features
-- Five degrees of freedom (5-DOF) robotic arm for precise waste material handling
-- Automated paper and plastic waste identification and segregation
-- Conveyor belt system powered by dual DC motors using E-Gizmo HPMD-3.1 motor driver
-- 16-channel PWM servo driver (PCA9685) for coordinated multi-servo control
-- Computer vision capability for material classification
-- Modular design with clear separation between control (Arduino) and high-level logic (Raspberry Pi)
-- Serial command interface for manual testing and calibration
-- Expandable architecture for additional sensors or actuators
-- Comprehensive documentation and model images for easy assembly and understanding
+- **🤖 Five degrees of freedom (5-DOF) robotic arm** for precise waste material handling
+- **🧠 Advanced AI Vision**: YOLO-based object detection and classification for accurate material identification
+- **📡 LIDAR Integration**: 360° environmental awareness with LD06 LIDAR sensor support
+- **🔄 Automated paper and plastic waste identification** and segregation with real-time confidence scoring
+- **⚙️ Stepper Motor Control**: Precise positioning for robotic arm movement using stepper motor drivers
+- **🎯 16-channel PWM servo driver (PCA9685)** for coordinated multi-servo control
+- **📹 Multiple Camera Support**: USB cameras, Raspberry Pi Camera, and video file processing
+- **🎥 Real-time Video Processing**: Live object detection with overlay information and recording capabilities
+- **📊 Distance-Aware Detection**: LIDAR distance measurements integrated with visual detection results
+- **🛡️ Collision Avoidance**: 360° obstacle detection for safe robotic operation
+- **📈 Performance Monitoring**: Real-time FPS tracking and object counting
+- **🔧 Modular design** with clear separation between control (Arduino) and high-level logic (Raspberry Pi)
+- **💻 Serial command interface** for manual testing and calibration
+- **📱 Expandable architecture** for additional sensors or actuators
+- **📚 Comprehensive documentation** and model images for easy assembly and understanding
 
 ## Hardware Requirements
 
@@ -42,11 +114,16 @@ The system follows a modular, two-tier architecture:
   - I2C address: 0x40-0x7F (selectable via solder jumpers)
   - 5V tolerant logic (works with 3.3V or 5V systems)
   - Built-in clock for free-running PWM (no continuous signal needed)
-- **DC Motor Driver**: E-Gizmo HPMD-3.1 Dual H-Bridge Motor Driver
-- **DC Motors**: 2 DC motors for conveyor belt and/or robot movement
+- **Stepper Motor Driver**: Stepper motor driver for precise positioning (e.g., A4988, DRV8825)
+- **Stepper Motors**: NEMA stepper motors for robotic arm positioning and movement
+- **LIDAR Sensors**:
+  - **LDRobot LD06**: 360° scanning LIDAR (0.02-12m range, 4500Hz sample rate)
+- **Camera Systems**:
+  - USB webcam or Raspberry Pi Camera for object detection
+  - Support for multiple resolutions and video formats
 - **Microcontroller**: Arduino-compatible board (Uno, Mega, etc.)
-- **Single-board Computer**: Raspberry Pi (any model with GPIO)
-- **Power Supply**: Adequate power for servos, DC motors, and logic circuits (recommend separate power for motors)
+- **Single-board Computer**: Raspberry Pi (any model with GPIO, recommended 4B+ for AI processing)
+- **Power Supply**: Adequate power for servos, stepper motors, LIDAR, and logic circuits (recommend separate power for motors)
 
 ## Software Components
 
@@ -54,13 +131,43 @@ The system follows a modular, two-tier architecture:
 - **RoboSort.ino**: Main firmware integrating servo and motor control with serial command interface
 - **SERVO_CONFIG.h**: Header file with servo configuration and function declarations
 - **SERVO_CONFIG.cpp**: Implementation of servo control logic and movement functions
-- **DC_CONFIG.h**: Header file for DC motor driver configuration and control declarations
-- **DC_CONFIG.cpp**: Implementation of DC motor control logic with E-Gizmo HPMD-3.1 driver
+- **STEPPER_CONFIG.h**: Header file for stepper motor driver configuration and control declarations
+- **STEPPER_CONFIG.cpp**: Implementation of stepper motor control logic for precise positioning
 
 ### Raspberry Pi Software
 - **RoboSort.py**: Main application with interactive command-line interface for testing and controlling the robot
 - **serial_config.py**: Modular serial communication handler for Arduino-Raspberry Pi USB communication
+- **yolo_detect.py**: Advanced AI vision system with YOLO object detection and LIDAR integration
 - **requirements.txt**: Python package dependencies
+
+### AI Vision System (yolo_detect.py)
+The YOLO detection system provides advanced computer vision capabilities:
+
+#### Core Features
+- **Multi-Source Input**: Support for USB cameras, Raspberry Pi Camera, video files, images, and image folders
+- **Real-time Object Detection**: YOLO-based classification with confidence scoring
+- **LIDAR Integration**: Distance measurement overlay on detected objects
+- **360° Environmental Awareness**: Full point cloud data from LD06 LIDAR
+- **Performance Monitoring**: FPS tracking and object counting
+- **Recording Capabilities**: Save detection results as video files
+
+#### Supported LIDAR Sensors
+- **LD06 (LDRobot)**: 360° scanning LIDAR with 0.02-12m range
+
+#### Command Line Interface
+```bash
+# Basic YOLO detection
+python yolo_detect.py --model model.pt --source usb0 --resolution 640x480
+
+# With LD06 LIDAR integration
+python yolo_detect.py --model model.pt --source usb0 --lidar /dev/ttyUSB0 --lidar-type ld06
+
+# With TFMini LIDAR
+python yolo_detect.py --model model.pt --source usb0 --lidar COM3 --lidar-type tfmini
+
+# Record results
+python yolo_detect.py --model model.pt --source usb0 --record --resolution 640x480
+```
 
 ### Serial Commands
 
@@ -69,15 +176,15 @@ The system follows a modular, two-tier architecture:
 - `S<servo> <angle>`: Sets a specific servo (0-4) to a given angle (0-180)
   - Example: `S2 90` - Set servo 2 to 90 degrees
 
-#### Motor Commands
-- `MTEST`: Runs a comprehensive test sequence on both DC motors
-- `M<motor> <direction> <speed>`: Controls individual motor with specified parameters
-  - Motors: `A` or `B`
-  - Directions: `F` (forward), `B` (backward), `S` (stop), `BR` (brake)
-  - Speed: 0-255
-  - Example: `MA F 200` - Motor A forward at speed 200
-  - Example: `MB B 150` - Motor B backward at speed 150
-- `MSTOP`: Immediately stops all DC motors
+#### Stepper Motor Commands
+- `STEPPER_TEST`: Runs a comprehensive test sequence on the stepper motor
+- `STEP <steps> <direction> <speed>`: Moves stepper motor with specified parameters
+  - Steps: Number of steps to move (1-10000)
+  - Direction: `CW` (clockwise) or `CCW` (counter-clockwise)
+  - Speed: Steps per second (1-1000)
+  - Example: `STEP 200 CW 500` - Move 200 steps clockwise at 500 steps/sec
+- `STEPPER_HOME`: Homes the stepper motor to zero position
+- `STEPPER_STOP`: Immediately stops stepper motor movement
 
 #### Ultrasonic Commands
 - `UTEST`: Runs comprehensive ultrasonic sensor test with multiple readings
@@ -107,26 +214,97 @@ The system follows a modular, two-tier architecture:
    ```bash
    pip install -r requirements.txt
    ```
-   Or install pyserial directly:
+   Or install packages individually:
    ```bash
-   pip install pyserial
+   pip install pyserial ultralytics opencv-python numpy
    ```
-4. Configure serial port permissions:
+4. **For LIDAR Support** (optional, install as needed):
+   ```bash
+   # For LD06 serial LIDAR (pyserial already included)
+   # No additional packages needed
+   ```
+5. Configure serial port permissions:
    ```bash
    sudo usermod -a -G dialout $USER
    ```
    Then logout and login again for changes to take effect
-5. Connect Arduino Mega to Raspberry Pi via USB cable
-6. Identify the serial port (usually `/dev/ttyACM0` or `/dev/ttyUSB0`):
+6. **Serial Communication Setup**:
+   - Connect Arduino Mega to Raspberry Pi via USB cable
+   - The Arduino will appear as a serial device (typically `/dev/ttyACM0`)
+   - Baud rate: 9600 (automatically configured)
+   - Test connection:
    ```bash
-   ls /dev/tty*
+   ls /dev/ttyACM* /dev/ttyUSB*
    ```
 7. Run the Python application:
    ```bash
    python3 RoboSort.py
    ```
 
+### YOLO Model Setup
+1. Download or train a YOLO model for waste classification
+2. Place the model file (`.pt` format) in the `source/rpi/RoboSort/` directory
+3. Supported models: YOLOv8, YOLOv9, YOLOv10, or custom trained models
+
+### LIDAR Sensor Setup
+1. **LD06 Setup**:
+   - Connect to USB port (appears as `/dev/ttyUSB0` on Linux or `COM3` on Windows)
+   - Baudrate: 230400
+   - No additional configuration needed
+
 ## Usage
+
+### AI Vision System (YOLO Detection)
+
+The `yolo_detect.py` script provides advanced object detection and LIDAR integration capabilities:
+
+#### Basic Usage
+```bash
+# Detect objects from USB camera
+python yolo_detect.py --model yolov8n.pt --source usb0
+
+# Detect from Raspberry Pi Camera
+python yolo_detect.py --model yolov8n.pt --source picamera0 --resolution 640x480
+
+# Process video file
+python yolo_detect.py --model yolov8n.pt --source video.mp4
+
+# Process single image
+python yolo_detect.py --model yolov8n.pt --source image.jpg
+
+# Process image folder
+python yolo_detect.py --model yolov8n.pt --source images/
+```
+
+#### LIDAR Integration
+```bash
+# LD06 360° LIDAR (recommended for full environmental awareness)
+python yolo_detect.py --model yolov8n.pt --source usb0 --lidar /dev/ttyUSB0 --lidar-type ld06
+```
+
+#### Advanced Options
+```bash
+# Custom confidence threshold
+python yolo_detect.py --model yolov8n.pt --source usb0 --thresh 0.3
+
+# Record detection results
+python yolo_detect.py --model yolov8n.pt --source usb0 --record --resolution 640x480
+
+# Custom display resolution
+python yolo_detect.py --model yolov8n.pt --source usb0 --resolution 1280x720
+```
+
+#### Visual Output Features
+- **Real-time Detection**: Bounding boxes with class labels and confidence scores
+- **LIDAR Overlay**: Distance measurements displayed on screen and in detection labels
+- **Performance Metrics**: FPS counter and object counting
+- **360° Awareness**: LD06 provides closest obstacle distance from any direction
+- **Safety Monitoring**: Forward distance for collision avoidance
+
+#### Keyboard Controls
+- **'q' or 'Q'**: Quit the application
+- **'s' or 'S'**: Pause/resume detection
+- **'p' or 'P'**: Save current frame as screenshot
 
 ### Raspberry Pi Interactive Control
 The RoboSort.py application provides a menu-driven interface for controlling the system:
@@ -138,12 +316,12 @@ python3 RoboSort.py
 **Menu Options:**
 1. Test all servos
 2. Set specific servo angle
-3. Test all motors
-4. Control specific motor
-5. Stop all motors
-6. Test ultrasonic sensor
-7. Get distance measurement
-8. Get average distance
+3. Test stepper motor
+4. Control stepper motor movement
+5. Home stepper motor
+6. Stop stepper motor
+7. Test ultrasonic sensor
+8. Get distance measurement
 9. Detect object (with threshold)
 10. Send custom command
 0. Exit
@@ -157,15 +335,18 @@ with SerialConfig(port='/dev/ttyACM0') as serial_conn:
     # Test components
     serial_conn.test_servos()
     serial_conn.get_distance()
-    
+
     # Control servo
     serial_conn.set_servo(0, 90)
-    
-    # Control motor
-    serial_conn.control_motor('A', 'F', 200)
-    
-    # Stop when done
-    serial_conn.stop_all_motors()
+
+    # Control stepper motor
+    serial_conn.stepper_move(200, 'CW', 500)  # Move 200 steps clockwise at 500 steps/sec
+
+    # Home stepper motor
+    serial_conn.stepper_home()
+
+    # Stop stepper motor
+    serial_conn.stepper_stop()
 ```
 
 ### Arduino Serial Monitor Testing
@@ -189,20 +370,20 @@ S2 180
 ```
 Set servo 0 to 90 degrees, servo 1 to 45 degrees, and servo 2 to 180 degrees.
 
-**Testing DC Motors:**
+**Testing Stepper Motor:**
 ```
-MTEST
+STEPPER_TEST
 ```
-Runs a comprehensive test sequence on both DC motors.
+Runs a comprehensive test sequence on the stepper motor.
 
-**Manual DC Motor Control:**
+**Manual Stepper Motor Control:**
 ```
-MA F 200
-MB B 150
-MA S 0
-MSTOP
+STEP 200 CW 500
+STEP 200 CCW 500
+STEPPER_HOME
+STEPPER_STOP
 ```
-Motor A forward at speed 200, Motor B backward at speed 150, Motor A stop, and stop all motors.
+Move 200 steps clockwise at 500 steps/sec, move 200 steps counter-clockwise at 500 steps/sec, home the motor, and stop the motor.
 
 **Testing Ultrasonic Sensor:**
 ```
@@ -218,7 +399,14 @@ Run sensor test, get single distance, get average of 5 samples, detect object wi
 ### System Wiring Schematic
 ![RoboSort Wiring Diagram](diagram/Wiring.png)
 
-The wiring diagram shows the complete electrical connections for the RoboSort system. All components are connected to the Arduino Mega 2560 microcontroller, which serves as the central control unit.
+The wiring diagram shows the complete electrical connections for the RoboSort system. All components are connected to the Arduino Mega 2560 microcontroller, which serves as the central control unit. The Arduino communicates with the Raspberry Pi via USB serial connection for coordinated control.
+
+#### System Communication:
+**Arduino Mega ↔ Raspberry Pi Serial USB**
+- **USB Cable**: Standard USB A-to-B cable (Arduino Mega uses USB-B connector)
+- **Serial Port**: Appears as `/dev/ttyACM0` on Raspberry Pi
+- **Baud Rate**: 9600 bps
+- **Protocol**: ASCII command/response over virtual serial port
 
 #### Component Connections:
 
@@ -231,21 +419,18 @@ The wiring diagram shows the complete electrical connections for the RoboSort sy
 - **GND** → Common Ground with external power
 - **Servo Outputs** → 5 Servos connected to channels 0-4
 
-**2. E-Gizmo HPMD-3.1 Dual DC Motor Driver**
-- **Motor A Control:**
-  - PWM → Arduino Pin 9
-  - DIR1 → Arduino Pin 7
-  - DIR2 → Arduino Pin 8
-- **Motor B Control:**
-  - PWM → Arduino Pin 10
-  - DIR1 → Arduino Pin 11
-  - DIR2 → Arduino Pin 12
+**2. Stepper Motor Driver (A4988/DRV8825)**
+- **Control Pins:**
+  - STEP → Arduino Pin 9 (pulse for each step)
+  - DIR → Arduino Pin 8 (direction control)
+  - EN → Arduino Pin 7 (enable/disable, optional)
+  - MS1-MS3 → Arduino Pins 6, 5, 4 (microstepping, optional)
 - **Power:**
-  - VIN → External 6-12V Power Supply
-  - GND → Common Ground with Arduino
-- **Motor Outputs:**
-  - MA+/MA- → DC Motor A (Conveyor/Movement)
-  - MB+/MB- → DC Motor B (Conveyor/Movement)
+  - VMOT → Motor power supply (8-35V depending on driver)
+  - GND → Common ground with Arduino
+  - VDD → Logic power (3.3-5V from Arduino)
+- **Motor Connections:**
+  - A1/A2/B1/B2 → Stepper motor coils (check motor datasheet for wiring)
 
 **3. HC-SR04 Ultrasonic Sensor**
 - **VCC** → Arduino 5V
@@ -256,11 +441,14 @@ The wiring diagram shows the complete electrical connections for the RoboSort sy
 **4. Power Supply Configuration**
 - **Arduino Power:** USB connection from Raspberry Pi or 7-12V DC adapter
 - **Servo Power:** Separate 5V power supply (recommended 5V 5A for multiple servos)
-- **Motor Power:** Separate 6-12V power supply (2A minimum per motor)
+- **Stepper Motor Power:** Separate power supply (8-35V depending on motor/driver)
 - **Common Ground:** All grounds must be connected together
 
 #### Important Notes:
-- Always use separate power supplies for motors and servos to prevent voltage drops
+- Always use separate power supplies for stepper motors and servos to prevent voltage drops
+- Ensure proper stepper motor coil wiring (check motor datasheet)
+- Set appropriate current limiting on stepper driver to prevent overheating
+- Use shielded cables for STEP and DIR signals if experiencing interference
 - Ensure all grounds are connected together (common ground)
 - The Fritzing source file (`Wiring.fzz`) is available in the `diagram/` folder for editing
 - Verify all connections before powering on the system
@@ -288,10 +476,11 @@ The main/top view provides a comprehensive look at the overall structure, showin
 robo-sort/
 ├── LICENSE
 ├── README.md
-├── diagram/                      # Circuit diagrams and schematics
-│   ├── Wiring.fzz                # Fritzing wiring diagram (editable)
-│   └── Wiring.png                # Wiring diagram image
-├── model/                        # 3D models and images
+├── yolo_detect.py                    # AI Vision System with YOLO & LIDAR
+├── diagram/                         # Circuit diagrams and schematics
+│   ├── Wiring.fzz                   # Fritzing wiring diagram (editable)
+│   └── Wiring.png                   # Wiring diagram image
+├── model/                           # 3D models and images
 │   ├── robosort-front.jpg
 │   ├── robosort-main.jpg
 │   └── robosort-side.jpg
@@ -301,20 +490,43 @@ robo-sort/
     │       ├── RoboSort.ino              # Main firmware with integrated control
     │       ├── SERVO_CONFIG.h            # Servo driver header
     │       ├── SERVO_CONFIG.cpp          # Servo driver implementation
-    │       ├── DC_CONFIG.h               # DC motor driver header
-    │       ├── DC_CONFIG.cpp             # DC motor driver implementation
+    │       ├── STEPPER_CONFIG.h          # Stepper motor driver header
+    │       ├── STEPPER_CONFIG.cpp        # Stepper motor driver implementation
     │       ├── ULTRASONIC_CONFIG.h       # Ultrasonic sensor header
     │       └── ULTRASONIC_CONFIG.cpp     # Ultrasonic sensor implementation
     └── rpi/
         └── RoboSort/
             ├── RoboSort.py               # Main application with CLI interface
             ├── serial_config.py          # Serial communication module
+            ├── yolo_detect.py            # AI Vision System (duplicate for easy access)
             └── requirements.txt          # Python dependencies
 ```
 
-## Configuration
+## AI Vision System Configuration
 
-### Adafruit PCA9685 16-Channel PWM/Servo Driver Setup
+### YOLO Model Training
+For optimal waste classification performance, train a custom YOLO model:
+
+1. **Collect Dataset**: Gather images of paper and plastic waste materials
+2. **Label Images**: Use tools like LabelImg or Roboflow to annotate objects
+3. **Train Model**: Use Ultralytics YOLOv8 for training:
+   ```bash
+   pip install ultralytics
+   yolo train data=waste_dataset.yaml model=yolov8n.pt epochs=100
+   ```
+4. **Export Model**: Convert to deployment format:
+   ```bash
+   yolo export model=runs/detect/train/weights/best.pt format=onnx
+   ```
+
+### LIDAR Sensor Calibration
+- **LD06**: No calibration needed, factory calibrated
+
+### Performance Optimization
+- Use Raspberry Pi 4B+ or higher for best AI performance
+- Enable GPU acceleration if available (NVIDIA Jetson)
+- Adjust confidence threshold based on lighting conditions
+- Use appropriate camera resolution for your use case
 
 #### Technical Specifications
 - **Chip**: NXP PCA9685 PWM controller
@@ -381,39 +593,68 @@ Adjust the servo pulse width limits in `SERVO_CONFIG.cpp`:
 ### Servo Channel Mapping
 Modify the servo channel assignments in the `ServoConfig` constructor to match your wiring configuration.
 
-### DC Motor Pin Configuration
-Configure motor driver pin connections in `DC_CONFIG.h` according to your wiring:
+### Stepper Motor Pin Configuration
+Configure stepper motor driver pin connections in `STEPPER_CONFIG.h` according to your wiring:
 ```cpp
-#define MOTOR_A_PWM 9    // PWM pin for Motor A speed control
-#define MOTOR_A_DIR1 7   // Direction pin 1 for Motor A
-#define MOTOR_A_DIR2 8   // Direction pin 2 for Motor A
-
-#define MOTOR_B_PWM 10   // PWM pin for Motor B speed control
-#define MOTOR_B_DIR1 11  // Direction pin 1 for Motor B
-#define MOTOR_B_DIR2 12  // Direction pin 2 for Motor B
+#define STEPPER_STEP 9     // STEP pin for stepper motor driver
+#define STEPPER_DIR 8      // DIR pin for stepper motor direction
+#define STEPPER_EN 7       // ENABLE pin for stepper motor (optional)
+#define STEPPER_MS1 6      // Microstepping pin 1 (optional)
+#define STEPPER_MS2 5      // Microstepping pin 2 (optional)
+#define STEPPER_MS3 4      // Microstepping pin 3 (optional)
 ```
 
-### E-Gizmo HPMD-3.1 Wiring Guide
-The E-Gizmo HPMD-3.1 is a dual H-bridge motor driver capable of controlling two DC motors independently:
-
-**Power Connections:**
-- Connect motor power supply (6-12V recommended) to the driver's VIN and GND
-- Ensure adequate current rating for your motors (up to 3A per channel)
-
-**Motor Connections:**
-- Connect Motor A to MA+ and MA- terminals
-- Connect Motor B to MB+ and MB- terminals
+### Stepper Motor Driver Wiring Guide
+Common stepper motor drivers (A4988, DRV8825) use a standard interface:
 
 **Control Connections:**
-- Connect Arduino PWM pins to PWM inputs (for speed control)
-- Connect Arduino digital pins to DIR1 and DIR2 inputs (for direction control)
+- STEP → Arduino digital pin (pulse for each step)
+- DIR → Arduino digital pin (direction control)
+- EN → Arduino digital pin (enable/disable driver)
+- MS1-MS3 → Arduino digital pins (microstepping resolution)
+
+**Motor Connections:**
+- Connect stepper motor coils to A1/A2/B1/B2 terminals
+- Ensure proper coil pairing (check motor datasheet)
+
+**Power Connections:**
+- VMOT → Motor power supply (8-35V depending on driver)
+- GND → Common ground with Arduino
+- VDD → Logic power (3.3-5V from Arduino)
+
+**Control Connections:**
+- Connect Arduino digital pins to STEP, DIR, and EN inputs
+- Optional microstepping pins for finer resolution control
 - Connect Arduino GND to driver GND (common ground required)
 
 **Safety Notes:**
-- Use separate power supply for motors to prevent voltage drops affecting the Arduino
-- Add flyback diodes if not integrated in the driver
+- Use appropriate power supply voltage for your stepper motor specifications
+- Add decoupling capacitors (10-100µF) across motor power terminals
+- Ensure proper current limiting on the driver to prevent motor overheating
 - Keep motor power wires short and twisted to reduce noise
-- Consider adding capacitors (0.1µF) across motor terminals to reduce EMI
+- Use shielded cables for STEP and DIR signals if experiencing interference
+
+## System Integration
+
+### Complete RoboSort Workflow
+1. **Material Detection**: YOLO vision system identifies waste materials in the workspace
+2. **Distance Measurement**: LIDAR ensures safe robotic approach distance
+3. **Sorting Decision**: Raspberry Pi processes detection results and makes sorting decisions
+4. **Robotic Action**: Arduino receives commands to actuate stepper motors and servos
+5. **Material Handling**: Robotic arm picks and places materials in appropriate bins
+6. **Quality Control**: System logs all actions for performance monitoring
+
+### Safety Features
+- **Collision Avoidance**: LIDAR provides 360° obstacle detection
+- **Emergency Stop**: Hardware and software emergency stop capabilities
+- **Fault Detection**: Automatic detection of sensor failures
+- **Safe Operating Zones**: Configurable safety boundaries for robotic movement
+
+### Performance Metrics
+- **Detection Accuracy**: YOLO confidence scores for material classification
+- **Processing Speed**: Real-time FPS monitoring
+- **Sorting Efficiency**: Success rate tracking and optimization
+- **System Reliability**: Uptime monitoring and fault detection
 
 ## Development
 

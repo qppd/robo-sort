@@ -1,4 +1,13 @@
 # RoboSort Python Dependencies
 # Install using: pip install -r requirements.txt
 
+# Core dependencies
 pyserial==3.5
+numpy==1.24.3
+opencv-python==4.8.1.78
+
+# YOLO AI Vision
+ultralytics==8.0.196
+
+# Optional LIDAR dependencies (install as needed)
+# For LD06 serial LIDAR: pyserial already included above
