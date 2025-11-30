@@ -785,6 +785,45 @@ The side view highlights the internal mechanism layout, conveyor system, and the
 
 The main/top view provides a comprehensive look at the overall structure, showing the arrangement of components and the spatial relationship between the body and the trash bin.
 
+### RoboSort Lidar Mount
+![RoboSort Lidar Mount](model/RoboSort_Lidar_Mount.png)
+
+**Description:**
+The RoboSort Lidar Mount is a custom-designed 3D-printed bracket specifically engineered to securely hold the LD06 360° LIDAR sensor on the RoboSort platform. This mount ensures optimal sensor alignment and vibration isolation, which are critical for accurate distance measurements and reliable 360° environmental scanning.
+
+**Key Features:**
+- **Precision Fit:** Designed to match the LD06 LIDAR's mounting holes and base diameter for a snug, secure fit.
+- **Vibration Dampening:** Includes anti-vibration pads or mounting holes for rubber grommets to minimize sensor noise.
+- **Cable Management:** Integrated channels or clips for neat routing of power and data cables.
+- **Adjustable Height:** Allows fine-tuning of the LIDAR's elevation for best field of view and obstacle clearance.
+- **Material:** Recommended to print in PETG or ABS for strength and heat resistance.
+- **Mounting:** Attaches to the main platform using M3 screws and heat-set inserts for robust, repeatable installation.
+
+**Usage:**
+- Place the LD06 LIDAR into the mount, align the holes, and secure with screws.
+- Route the cables through the provided channels to prevent tangling or snagging during arm movement.
+- The mount is positioned to provide a clear 360° scan without obstruction from the robotic arm or bins.
+
+**3D Model File:**
+- The STL file for the Lidar Mount (`RoboSort_Lidar_Mount.stl`) is available in the `model/` directory (ignored by git, but the image is shown here for reference).
+
+**Preview:**
+![RoboSort Lidar Mount Render](model/RoboSort_Lidar_Mount.png)
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
+### Ultrasonic Sensor Holder
+![Ultrasonic Sensor Holder](model/Ultrasonic_Sensor_Holder.png)
+![Ultrasonic Sensor Holder Printed](model/Ultrasonic_Sensor_Holder_Printed.png)
+
+The Ultrasonic Sensor Holder is a 3D-printed bracket designed to mount an HC-SR04 or similar sensor to the RoboSort frame. It provides a secure, angled position for optimal distance measurement and easy wiring access.
+
+**3D Model File:** `Ultrasonic_Sensor_Holder.stl` (not tracked in git, image shown for reference).
+
+---
+
 ## Project Structure
 ```
 robo-sort/

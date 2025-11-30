@@ -1,0 +1,36 @@
+# Ignore 3D model and CAD files
+*.stl
+*.STL
+*.step
+*.STEP
+*.iges
+*.IGES
+*.obj
+*.OBJ
+*.3mf
+*.3MF
+*.f3d
+*.F3D
+*.fcstd
+*.FCStd
+*.gcode
+*.GCODE
+
+# Ignore backup and temp files
+*.bak
+*.tmp
+*.swp
+*.swo
+~$*
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
