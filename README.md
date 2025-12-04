@@ -878,7 +878,7 @@ The RoboSort Plate Holder is a custom-designed 3D-printed bracket specifically e
 ![Ultrasonic Sensor Holder](model/Ultrasonic_Sensor_Holder.png)
 ![Ultrasonic Sensor Holder Printed](model/Ultrasonic_Sensor_Holder_Printed.png)
 
-The Ultrasonic Sensor Holder is a 3D-printed bracket designed to mount an HC-SR04 or similar sensor to the RoboSort frame. It provides a secure, angled position for optimal distance measurement and easy wiring access.
+The Ultrasonic Sensor Holder is based on the HC-SR04 Ultrasonic Sensor Holder from Thingiverse ([Thingiverse Link](https://www.thingiverse.com/thing:1170335)). It's a 3D-printed bracket designed to mount an HC-SR04 or similar sensor to the RoboSort frame. It provides a secure, angled position for optimal distance measurement and easy wiring access.
 
 **3D Model File:** `Ultrasonic_Sensor_Holder.stl` (not tracked in git, image shown for reference).
 
