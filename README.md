@@ -814,6 +814,66 @@ The RoboSort Lidar Mount is a custom-designed 3D-printed bracket specifically en
 
 ---
 
+### RoboSort Limit Switch Mount
+![RoboSort Limit Switch Mount](model/RoboSort_Limit_Switch_Mount.png)
+
+**Description:**
+The RoboSort Limit Switch Mount is a custom-designed 3D-printed bracket engineered to securely hold limit switches (end-stop sensors) on the RoboSort platform. This mount provides precise positioning for homing and boundary detection in stepper motor systems, ensuring accurate and safe robotic movement.
+
+**Key Features:**
+- **Precision Alignment:** Designed with adjustable slots or holes for fine-tuning switch position and activation point.
+- **Secure Mounting:** Includes mounting holes for M3 screws and heat-set inserts for robust attachment to the frame.
+- **Cable Management:** Integrated channels or clips for organizing switch wiring and preventing cable strain.
+- **Universal Compatibility:** Supports standard microswitches or optical limit switches commonly used in robotics.
+- **Material:** Recommended to print in PETG or ABS for durability and dimensional stability.
+- **Adjustable Trigger:** Allows precise adjustment of the switch activation distance for optimal performance.
+
+**Usage:**
+- Mount the limit switch into the bracket and secure with screws.
+- Position the mount at the desired end-stop location on the linear rail or stepper motor axis.
+- Adjust the switch position to trigger at the correct boundary point.
+- Connect the switch to the Arduino for homing and safety limit detection.
+
+**3D Model File:**
+- The STL file for the Limit Switch Mount (`RoboSort_Limit_Switch_Mount.stl`) is available in the `model/` directory (ignored by git, but the image is shown here for reference).
+
+**Preview:**
+![RoboSort Limit Switch Mount Render](model/RoboSort_Limit_Switch_Mount.png)
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
+### RoboSort Plate Holder
+![RoboSort Plate Holder](model/RoboSort_Plate_Holder.png)
+
+**Description:**
+The RoboSort Plate Holder is a custom-designed 3D-printed bracket specifically engineered to securely hold sorting plates or trays on the RoboSort platform. This holder ensures stable positioning of waste materials during the sorting process, preventing slippage and ensuring accurate robotic arm pickup.
+
+**Key Features:**
+- **Secure Grip:** Designed with retention features or clamps to hold plates firmly in place.
+- **Adjustable Positioning:** Includes slots or holes for fine-tuning plate alignment and height.
+- **Vibration Resistance:** Features anti-slip surfaces or rubber inserts to minimize plate movement during operation.
+- **Modular Design:** Allows for easy removal and replacement of plates for different sorting scenarios.
+- **Material:** Recommended to print in PETG or ABS for strength and wear resistance.
+- **Mounting:** Attaches to the main platform using M3 screws and heat-set inserts for stable installation.
+
+**Usage:**
+- Place the sorting plate into the holder and secure if necessary.
+- Mount the holder on the designated platform area for material staging.
+- Ensure the plate is level and properly aligned for robotic arm access.
+- The holder maintains plate position during the entire sorting cycle.
+
+**3D Model File:**
+- The STL file for the Plate Holder (`RoboSort_Plate_Holder.stl`) is available in the `model/` directory (ignored by git, but the image is shown here for reference).
+
+**Preview:**
+![RoboSort Plate Holder Render](model/RoboSort_Plate_Holder.png)
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ### Ultrasonic Sensor Holder
 ![Ultrasonic Sensor Holder](model/Ultrasonic_Sensor_Holder.png)
 ![Ultrasonic Sensor Holder Printed](model/Ultrasonic_Sensor_Holder_Printed.png)
