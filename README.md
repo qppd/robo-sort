@@ -495,9 +495,6 @@ The RoboSort Lidar Mount is a custom-designed 3D-printed bracket specifically en
 **3D Model File:**
 - The STL file for the Lidar Mount (`RoboSort_Lidar_Mount.stl`) is available in the `model/` directory (ignored by git, but the image is shown here for reference).
 
-**Preview:**
-![RoboSort Lidar Mount Render](model/RoboSort_Lidar_Mount.png)
-
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
 ---
@@ -525,8 +522,6 @@ The RoboSort Limit Switch Mount is a custom-designed 3D-printed bracket engineer
 **3D Model File:**
 - The STL file for the Limit Switch Mount (`RoboSort_Limit_Switch_Mount.stl`) is available in the `model/` directory (ignored by git, but the image is shown here for reference).
 
-**Preview:**
-![RoboSort Limit Switch Mount Render](model/RoboSort_Limit_Switch_Mount.png)
 
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
@@ -555,8 +550,6 @@ The RoboSort Plate is a custom-designed 3D-printed platform component specifical
 **3D Model Files:**
 - G-code file: `CE3V3SE_RoboSort_Plate.gcode` (pre-sliced for Creality Ender-3 V3 SE printer).
 
-**Preview:**
-![RoboSort Plate Render](model/RoboSort_Plate.png)
 
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
@@ -588,8 +581,6 @@ The RoboSort Plate Holder is a custom-designed 3D-printed bracket specifically e
 - STL file: `RoboSort_Plate_Holder.stl` is available in the `model/` directory.
 - G-code file: `CE3V3SE_RoboSort_Plate_Holder.gcode` (pre-sliced for Creality Ender-3 V3 SE printer).
 
-**Preview:**
-![RoboSort Plate Holder Render](model/RoboSort_Plate_Holder.png)
 
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
@@ -617,8 +608,33 @@ The RoboSort Ultrasonic Case is a custom-designed 3D-printed enclosure specifica
 **3D Model Files:**
 - STL file: `RoboSort_Ultrasonic_Case.stl` is available in the `model/` directory.
 
-**Preview:**
-![RoboSort Ultrasonic Case Render](model/RoboSort_Ultrasonic_Case.png)
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
+### RoboSort Lifter Servo Coupling Adapter
+![RoboSort Lifter Servo Coupling Adapter](model/RoboSort_Lifter_Servo_Coupling_Adapter.png)
+
+**Description:**
+The RoboSort Lifter Servo Coupling Adapter is a custom-designed 3D-printed coupling component specifically engineered to connect the servo motor to the lifter mechanism in the RoboSort platform. This adapter provides a secure and precise interface between the servo output shaft and the lifting system's drive components, ensuring efficient power transmission and accurate vertical movement control.
+
+**Key Features:**
+- **Precision Coupling:** Designed with exact tolerances to match servo motor shaft dimensions and lifter drive requirements.
+- **Torque Transmission:** Optimized geometry for maximum torque transfer from servo to lifting mechanism.
+- **Backlash Minimization:** Features anti-backlash design to reduce play and improve positioning accuracy.
+- **Material Compatibility:** Compatible with standard servo motors and lifting system components.
+- **Material:** Recommended to print in PETG or ABS for strength and wear resistance.
+- **Mounting:** Integrates seamlessly with servo motors and lifter assembly using set screws or press-fit connections.
+
+**Usage:**
+- Attach the adapter to the servo motor output shaft and secure with set screws.
+- Connect the adapter to the lifter mechanism's drive input.
+- Ensure proper alignment to prevent binding during operation.
+- The adapter transmits servo rotation to linear lifting motion for material handling.
+
+**3D Model Files:**
+- STL file: `RoboSort_Lifter_Servo_Coupling_Adapter.stl` is available in the `model/` directory.
 
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
