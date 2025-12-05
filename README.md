@@ -844,28 +844,62 @@ The RoboSort Limit Switch Mount is a custom-designed 3D-printed bracket engineer
 
 ---
 
+### RoboSort Plate
+![RoboSort Plate](model/RoboSort_Plate.png)
+
+**Description:**
+The RoboSort Plate is a custom-designed 3D-printed platform component specifically engineered for the up and down mechanism of the robotic arm. This plate serves as the primary surface for holding and positioning waste materials during the vertical movement and sorting process, ensuring stable material handling throughout the arm's operation.
+
+**Key Features:**
+- **Vertical Mechanism Integration:** Specifically designed to work with the robotic arm's up/down movement system.
+- **Stable Platform:** Provides a flat, reliable surface for material placement during vertical translation.
+- **Lightweight Design:** Optimized weight distribution to reduce load on servos and motors during vertical movement.
+- **Material Compatibility:** Designed to handle various waste materials (paper, plastic) without deformation.
+- **Material:** Recommended to print in PETG or ABS for strength, durability, and heat resistance.
+- **Precision Fit:** Engineered to integrate seamlessly with the Plate Holder for complete mechanism operation.
+
+**Usage:**
+- Install the plate onto the robotic arm's vertical mechanism assembly.
+- Ensure proper alignment with the Plate Holder for smooth up/down movement.
+- The plate moves vertically with the arm to position materials at different heights for sorting.
+- Works in conjunction with the gripper system for material transfer.
+
+**3D Model Files:**
+- STL files: `RoboSort_Plate_1.stl` and `RoboSort_Plate_2.stl` are available in the `model/` directory.
+- G-code file: `CE3V3SE_RoboSort_Plate.gcode` (pre-sliced for Creality Ender-3 V3 SE printer).
+
+**Preview:**
+![RoboSort Plate Render](model/RoboSort_Plate.png)
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ### RoboSort Plate Holder
 ![RoboSort Plate Holder](model/RoboSort_Plate_Holder.png)
 
 **Description:**
-The RoboSort Plate Holder is a custom-designed 3D-printed bracket specifically engineered to securely hold sorting plates or trays on the RoboSort platform. This holder ensures stable positioning of waste materials during the sorting process, preventing slippage and ensuring accurate robotic arm pickup.
+The RoboSort Plate Holder is a custom-designed 3D-printed bracket specifically engineered to securely hold the RoboSort Plate as part of the robotic arm's up and down mechanism. This holder provides the structural support and guidance system for the vertical movement of the plate, ensuring stable positioning of waste materials during the entire sorting process and preventing slippage during arm operations.
 
 **Key Features:**
-- **Secure Grip:** Designed with retention features or clamps to hold plates firmly in place.
-- **Adjustable Positioning:** Includes slots or holes for fine-tuning plate alignment and height.
+- **Up/Down Mechanism Component:** Essential part of the robotic arm's vertical movement system.
+- **Secure Grip:** Designed with retention features or clamps to hold the plate firmly in place during vertical motion.
+- **Adjustable Positioning:** Includes slots or holes for fine-tuning plate alignment and height settings.
 - **Vibration Resistance:** Features anti-slip surfaces or rubber inserts to minimize plate movement during operation.
-- **Modular Design:** Allows for easy removal and replacement of plates for different sorting scenarios.
+- **Modular Design:** Allows for easy assembly and maintenance of the vertical mechanism.
 - **Material:** Recommended to print in PETG or ABS for strength and wear resistance.
-- **Mounting:** Attaches to the main platform using M3 screws and heat-set inserts for stable installation.
+- **Mounting:** Attaches to the robotic arm structure using M3 screws and heat-set inserts for stable installation.
 
 **Usage:**
-- Place the sorting plate into the holder and secure if necessary.
-- Mount the holder on the designated platform area for material staging.
-- Ensure the plate is level and properly aligned for robotic arm access.
-- The holder maintains plate position during the entire sorting cycle.
+- Attach the holder to the robotic arm's vertical actuation system.
+- Place the RoboSort Plate into the holder and secure with mounting hardware.
+- Mount the assembly on the designated arm location for material staging.
+- Ensure the plate is level and properly aligned for smooth vertical movement.
+- The holder maintains plate position during the entire up/down sorting cycle.
 
-**3D Model File:**
-- The STL file for the Plate Holder (`RoboSort_Plate_Holder.stl`) is available in the `model/` directory (ignored by git, but the image is shown here for reference).
+**3D Model Files:**
+- STL file: `RoboSort_Plate_Holder.stl` is available in the `model/` directory.
+- G-code file: `CE3V3SE_RoboSort_Plate_Holder.gcode` (pre-sliced for Creality Ender-3 V3 SE printer).
 
 **Preview:**
 ![RoboSort Plate Holder Render](model/RoboSort_Plate_Holder.png)
@@ -874,13 +908,13 @@ The RoboSort Plate Holder is a custom-designed 3D-printed bracket specifically e
 
 ---
 
-### Ultrasonic Sensor Holder
-![Ultrasonic Sensor Holder](model/Ultrasonic_Sensor_Holder.png)
-![Ultrasonic Sensor Holder Printed](model/Ultrasonic_Sensor_Holder_Printed.png)
+### Ultrasonic Sensor Housing
+![Ultrasonic Sensor Housing Base](model/Ultrasonic_Sensor_Housing_Base_V1.png)
+![Ultrasonic Sensor Housing Top](model/Ultrasonic_Sensor_Housing_Top_V1.png)
 
-The Ultrasonic Sensor Holder is based on the HC-SR04 Ultrasonic Sensor Holder from Thingiverse ([Thingiverse Link](https://www.thingiverse.com/thing:1170335)). It's a 3D-printed bracket designed to mount an HC-SR04 or similar sensor to the RoboSort frame. It provides a secure, angled position for optimal distance measurement and easy wiring access.
+The Ultrasonic Sensor Housing consists of a base and top component, based on the HC-SR04 Ultrasonic Sensor Holder from Thingiverse ([Thingiverse Link](https://www.thingiverse.com/thing:1170335)). It's a 3D-printed enclosure designed to securely house and mount an HC-SR04 or similar ultrasonic sensor to the RoboSort frame. It provides protection, secure positioning, and optimal orientation for accurate distance measurement and easy wiring access.
 
-**3D Model File:** `Ultrasonic_Sensor_Holder.stl` (not tracked in git, image shown for reference).
+**3D Model Files:** `Ultrasonic_Sensor_Housing_Base_V1.STL` and `Ultrasonic_Sensor_Housing_Top_V1.STL` (not tracked in git, images shown for reference).
 
 ---
 
@@ -1069,28 +1103,411 @@ Common stepper motor drivers (A4988, DRV8825) use a standard interface:
 - **Sorting Efficiency**: Success rate tracking and optimization
 - **System Reliability**: Uptime monitoring and fault detection
 
-## Diagrams Folder
+## System Architecture & Workflow Diagrams
 
-The `diagrams/` directory contains comprehensive visual documentation of the RoboSort system:
+This section provides comprehensive visual documentation of the RoboSort system architecture, workflows, and component interactions using Mermaid diagrams.
 
-### Available Diagrams
-- **`system_architecture.puml`**: PlantUML diagram showing complete system architecture and component interactions
-- **`workflow_diagrams.md`**: Mermaid diagrams illustrating processing workflows, communication sequences, and state transitions
-- **`pin_configuration.txt`**: Detailed ASCII diagram of Arduino Mega pin connections, wiring schematics, and troubleshooting guide
-- **`README.md`**: Documentation for all diagrams with usage instructions and viewing tools
+### System Architecture Diagram
 
-### Diagram Formats
-- **PlantUML**: Professional architecture diagrams (view online at plantuml.com)
-- **Mermaid**: Interactive flowcharts compatible with GitHub markdown
-- **ASCII Text**: Hardware-focused diagrams for easy reference during assembly
+```mermaid
+graph TB
+    subgraph "High-Level Processing"
+        RPI[Raspberry Pi 4B]
+        AI[AI Vision System]
+        YOLO[YOLO Detection Engine]
+        DE[Decision Engine]
+    end
+    
+    subgraph "Low-Level Control"
+        ARD[Arduino Mega 2560]
+        SERVO[Servo Controller]
+        STEPPER[Stepper Driver A4988]
+        SENSORS[Sensor Interface]
+    end
+    
+    subgraph "Hardware Components"
+        ARM[Robotic Arm 5-DOF]
+        CAMERA[USB Camera]
+        LIDAR[LD06 LIDAR Sensor]
+        ULTRA[HC-SR04 Ultrasonic]
+        POWER[12V Power Supply]
+    end
+    
+    subgraph "User Interface"
+        DISPLAY[Display Output]
+        KEYBOARD[Keyboard Input]
+        MONITOR[Serial Monitor]
+    end
+    
+    RPI -->|Serial USB 9600bps| ARD
+    AI --> YOLO
+    YOLO -->|Classification| DE
+    DE -->|Control Commands| RPI
+    
+    ARD -->|PWM Signals| SERVO
+    ARD -->|STEP/DIR| STEPPER
+    ARD -->|Read Data| SENSORS
+    
+    SERVO -->|Control| ARM
+    STEPPER -->|Motor Control| ARM
+    SENSORS -->|Distance| ULTRA
+    SENSORS -->|360° Scan| LIDAR
+    
+    CAMERA -->|Video Stream| AI
+    LIDAR -->|Distance Data| AI
+    POWER -->|Power| ARM
+    POWER -->|Power| ARD
+    POWER -->|Power| RPI
+    
+    DISPLAY -->|Visual Output| RPI
+    KEYBOARD -->|User Input| RPI
+    MONITOR -->|Debug Output| ARD
+```
 
-### Key Visualizations
-- System component relationships and data flow
-- AI vision processing pipeline
-- Serial communication protocols
-- Hardware pin configurations and power distribution
-- Error handling and recovery workflows
-- State machine transitions
+### Main Processing Workflow
+
+```mermaid
+graph TD
+    A[Start System] --> B[Initialize Components]
+    B --> C[Setup Camera]
+    B --> D[Setup Serial Connection]
+    B --> E[Setup LIDAR Sensor]
+
+    C --> F[Camera Ready]
+    D --> G[Serial Connected]
+    E --> H[LIDAR Ready]
+
+    F --> I{Main Processing Loop}
+    G --> I
+    H --> I
+
+    I --> J[Capture Frame]
+    J --> K[Run YOLO Detection]
+    K --> L[Process Results]
+    L --> M[Get LIDAR Data]
+    M --> N[Fuse Sensor Data]
+    N --> O{Material Detected?}
+
+    O -->|Yes| P[Classify Material]
+    O -->|No| Q[Continue Monitoring]
+
+    P --> R{Classification}
+    R -->|Paper| S[Send Paper Command]
+    R -->|Plastic| T[Send Plastic Command]
+    R -->|Other| U[Send Other Command]
+
+    S --> V[Execute Robotic Action]
+    T --> V
+    U --> V
+
+    V --> W[Display Results]
+    W --> X[Log Data]
+    X --> Y{Continue?}
+    Y -->|Yes| I
+    Y -->|No| Z[Shutdown System]
+
+    Q --> I
+    Z --> AA[End]
+```
+
+### Serial Communication Sequence
+
+```mermaid
+sequenceDiagram
+    participant R as Raspberry Pi
+    participant A as Arduino Mega
+    participant H as Hardware
+
+    R->>A: Connect USB Serial (9600bps)
+    A-->>R: Ready Signal
+    R->>R: Initialize Camera
+    R->>R: Initialize LIDAR
+    R->>R: Load YOLO Model
+
+    loop Main Processing Loop
+        R->>R: Capture Frame
+        R->>R: Run YOLO Inference
+        R->>R: Read LIDAR Data
+        R->>R: Fuse Detection Results
+
+        alt Object Detected
+            R->>R: Classify Material
+            R->>A: Send Control Command (e.g., "S0 90\n")
+            A->>A: Parse Command
+            A->>H: Execute Hardware Action
+            H-->>A: Action Complete
+            A-->>R: Response ("OK\n")
+        end
+    end
+
+    R->>R: Display Results
+    R->>R: Check Exit Condition
+```
+
+### System State Transitions
+
+```mermaid
+stateDiagram-v2
+    [*] --> Initialization
+    Initialization --> CameraSetup
+    Initialization --> SerialSetup
+    Initialization --> LIDARSetup
+
+    CameraSetup --> Ready: Camera OK
+    SerialSetup --> Ready: Serial OK
+    LIDARSetup --> Ready: LIDAR OK
+
+    Ready --> Processing: All Systems Ready
+
+    state Processing {
+        [*] --> Detection
+        Detection --> Classification: Run YOLO
+        Classification --> Fusion: Get LIDAR Data
+        Fusion --> Decision: Analyze Results
+        Decision --> Action: Object Found
+        Decision --> Monitoring: No Object
+        Action --> Command: Generate Command
+        Command --> Execution: Send to Arduino
+        Execution --> Response: Hardware Action
+        Response --> [*]
+        Monitoring --> [*]
+    }
+
+    Processing --> Processing: Continue
+    Processing --> Shutdown: Stop Command
+    Shutdown --> [*]
+```
+
+### Power Distribution Network
+
+```mermaid
+graph TD
+    PS[12V DC Power Supply<br/>3A 36W] --> F1[Fuse F1<br/>2A]
+    F1 --> ARD[Arduino Mega 2560<br/>VIN 7-12V]
+    ARD --> REG[5V Regulator<br/>LM7805]
+    REG --> F2[Fuse F2<br/>2A]
+    F2 --> SERVO[Servo Motors<br/>5× MG996R]
+    F2 --> LIDAR[LD06 LIDAR<br/>5V 200mA]
+    PS --> STEPPER[Stepper Driver<br/>A4988 12V]
+    ARD --> ULTRA[HC-SR04<br/>5V 15mA]
+    
+    style PS fill:#f9f,stroke:#333,stroke-width:4px
+    style ARD fill:#bbf,stroke:#333,stroke-width:2px
+    style REG fill:#bfb,stroke:#333,stroke-width:2px
+```
+
+### Component Pin Configuration
+
+```mermaid
+graph LR
+    subgraph "Arduino Mega 2560"
+        P0[Pin 0-1<br/>Serial RX/TX]
+        P3[Pin 3-7<br/>Servo PWM]
+        P8[Pin 8-13<br/>Stepper Control]
+        P16[Pin 16-17<br/>LIDAR Serial2]
+        P20[Pin 20-21<br/>I2C SDA/SCL]
+        P22[Pin 22-23<br/>Ultrasonic]
+    end
+    
+    P0 -->|USB Serial| RPI[Raspberry Pi]
+    P3 -->|PWM| S1[Base Servo]
+    P3 -->|PWM| S2[Shoulder Servo]
+    P3 -->|PWM| S3[Elbow Servo]
+    P3 -->|PWM| S4[Wrist Servo]
+    P3 -->|PWM| S5[Gripper Servo]
+    P8 -->|STEP/DIR/EN| DRIVER[A4988 Driver]
+    P16 -->|TX2/RX2| LD[LD06 LIDAR]
+    P20 -->|I2C| PCA[PCA9685 PWM]
+    P22 -->|TRIG/ECHO| US[HC-SR04]
+```
+
+### Robotic Arm Assembly Structure
+
+```mermaid
+graph TD
+    BASE[Base Platform<br/>400×300×20mm<br/>PETG Material] --> ARM_BASE[Arm Base Segment<br/>Ø80mm×50mm<br/>MG996R Servo]
+    ARM_BASE --> SHOULDER[Shoulder Segment<br/>60×40×100mm<br/>MG996R Servo<br/>0-180° Range]
+    SHOULDER --> ELBOW[Elbow Segment<br/>50×35×100mm<br/>MG996R Servo<br/>0-180° Range]
+    ELBOW --> WRIST[Wrist Segment<br/>40×30×50mm<br/>MG996R Servo<br/>0-180° Rotation]
+    WRIST --> GRIPPER[Gripper Assembly<br/>60×40×30mm<br/>SG90 Servo<br/>0-50mm Opening]
+    
+    BASE --> ELECTRONICS[Electronics Bay<br/>RPI + Arduino + Power]
+    BASE --> BINS[Waste Bins<br/>3×100×100mm<br/>Paper/Plastic/Other]
+```
+
+### Sensor Data Flow
+
+```mermaid
+graph LR
+    subgraph "Input Sensors"
+        CAM[USB Camera<br/>Video Stream]
+        LID[LD06 LIDAR<br/>360° Distance]
+        ULT[HC-SR04<br/>Ultrasonic Distance]
+    end
+    
+    subgraph "Processing"
+        YOLO[YOLO Model<br/>Object Detection]
+        FUSION[Sensor Fusion<br/>Data Integration]
+        DECISION[Decision Engine<br/>Classification]
+    end
+    
+    subgraph "Output"
+        CMD[Serial Commands]
+        DISPLAY[Visual Display]
+        LOG[Data Logging]
+    end
+    
+    CAM --> YOLO
+    YOLO --> FUSION
+    LID --> FUSION
+    ULT --> FUSION
+    FUSION --> DECISION
+    DECISION --> CMD
+    DECISION --> DISPLAY
+    DECISION --> LOG
+```
+
+### Stepper Motor Control Microstepping
+
+```mermaid
+graph TD
+    A[Stepper Motor Control] --> B{Microstepping Mode}
+    B -->|MS1=0,MS2=0,MS3=0| C[Full Step<br/>200 steps/rev]
+    B -->|MS1=1,MS2=0,MS3=0| D[Half Step<br/>400 steps/rev]
+    B -->|MS1=0,MS2=1,MS3=0| E[1/4 Step<br/>800 steps/rev]
+    B -->|MS1=1,MS2=1,MS3=0| F[1/8 Step<br/>1600 steps/rev]
+    B -->|MS1=1,MS2=1,MS3=1| G[1/16 Step<br/>3200 steps/rev]
+    
+    C --> H[Arduino Pin 8: STEP]
+    D --> H
+    E --> H
+    F --> H
+    G --> H
+    H --> I[Arduino Pin 9: DIR]
+    I --> J[Arduino Pin 10: ENABLE]
+```
+
+### Material Classification Decision Tree
+
+```mermaid
+graph TD
+    START[Object Detected] --> YOLO{YOLO Classification}
+    YOLO -->|Confidence > 0.8| PAPER{Paper?}
+    YOLO -->|Confidence > 0.8| PLASTIC{Plastic?}
+    YOLO -->|Confidence < 0.8| OTHER[Other Material]
+    
+    PAPER -->|Yes| P_DIST[Check Distance<br/>LIDAR]
+    PLASTIC -->|Yes| PL_DIST[Check Distance<br/>LIDAR]
+    
+    P_DIST -->|< 30cm| P_GRAB[Position Arm<br/>Paper Bin]
+    PL_DIST -->|< 30cm| PL_GRAB[Position Arm<br/>Plastic Bin]
+    OTHER --> O_GRAB[Position Arm<br/>Other Bin]
+    
+    P_GRAB --> GRIP[Close Gripper]
+    PL_GRAB --> GRIP
+    O_GRAB --> GRIP
+    
+    GRIP --> MOVE[Move to Bin]
+    MOVE --> RELEASE[Open Gripper]
+    RELEASE --> RETURN[Return to Home]
+    RETURN --> DONE[Complete]
+```
+
+### Error Handling & Recovery
+
+```mermaid
+graph TD
+    START[Operation] --> CHECK{Error Detected?}
+    CHECK -->|No| CONTINUE[Continue Operation]
+    CHECK -->|Yes| TYPE{Error Type}
+    
+    TYPE -->|Serial Timeout| SERIAL[Reconnect Serial<br/>Reset Arduino]
+    TYPE -->|Camera Failure| CAMERA[Reinitialize Camera<br/>Check USB]
+    TYPE -->|Servo Error| SERVO[Recalibrate Servos<br/>Check Power]
+    TYPE -->|LIDAR Error| LIDAR[Reset LIDAR<br/>Check Serial2]
+    
+    SERIAL --> RETRY{Retry Count}
+    CAMERA --> RETRY
+    SERVO --> RETRY
+    LIDAR --> RETRY
+    
+    RETRY -->|< 3| START
+    RETRY -->|>= 3| ALERT[Alert User<br/>Log Error]
+    ALERT --> SAFE[Enter Safe Mode]
+    SAFE --> MANUAL[Manual Intervention]
+    
+    CONTINUE --> START
+```
+
+### Assembly and Manufacturing Process
+
+```mermaid
+graph LR
+    subgraph "Design Phase"
+        CAD[CAD Design<br/>Fusion 360]
+        REVIEW[Design Review<br/>Standards Check]
+        APPROVE[Approval]
+    end
+    
+    subgraph "Manufacturing"
+        SLICE[Slice Models<br/>3D Printer]
+        PRINT[Print Components<br/>PETG/ABS/PLA]
+        QC[Quality Control<br/>Dimensional Check]
+    end
+    
+    subgraph "Assembly"
+        MECH[Mechanical Assembly<br/>Base + Arm]
+        ELECT[Electronics Install<br/>RPI + Arduino]
+        WIRE[Wiring & Cabling<br/>Power + Signals]
+    end
+    
+    subgraph "Testing"
+        FUNC[Functional Testing<br/>Components]
+        INTEG[Integration Testing<br/>System]
+        CALIB[Calibration<br/>Sensors + Servos]
+    end
+    
+    CAD --> REVIEW
+    REVIEW --> APPROVE
+    APPROVE --> SLICE
+    SLICE --> PRINT
+    PRINT --> QC
+    QC --> MECH
+    MECH --> ELECT
+    ELECT --> WIRE
+    WIRE --> FUNC
+    FUNC --> INTEG
+    INTEG --> CALIB
+    CALIB --> DEPLOY[Deployment]
+```
+
+### Key Specifications Summary
+
+#### Hardware Components
+- **Microcontrollers**: Raspberry Pi 4B + Arduino Mega 2560
+- **Servos**: 5× MG996R (11kg·cm torque), 1× SG90 (1.8kg·cm)
+- **Stepper Driver**: A4988 with microstepping (Full to 1/16)
+- **Sensors**: USB Camera, LD06 LIDAR (360°), HC-SR04 Ultrasonic
+- **Power**: 12V 3A DC supply with 5V regulation
+
+#### Communication Protocols
+- **Serial USB**: 9600 bps (RPi ↔ Arduino)
+- **LIDAR Serial**: 230400 bps (Arduino Serial2 ↔ LD06)
+- **I2C**: SDA/SCL for PWM driver expansion
+- **PWM**: 50Hz servo control signals
+
+#### Physical Specifications
+- **Base Platform**: 400mm × 300mm × 20mm
+- **Arm Reach**: 300mm radius
+- **Payload Capacity**: 500g
+- **Positioning Accuracy**: ±2mm
+- **Total Weight**: ~2.5kg assembled
+
+#### Printing Specifications
+- **Materials**: PETG (base), ABS (arm), PLA+ (mounts)
+- **Layer Height**: 0.2mm standard
+- **Infill**: 20-40% depending on component
+- **Tolerances**: ±0.1mm general, ±0.05mm critical fits
 
 For detailed hardware assembly and system understanding, refer to the diagrams folder.
 
