@@ -865,7 +865,6 @@ The RoboSort Plate is a custom-designed 3D-printed platform component specifical
 - Works in conjunction with the gripper system for material transfer.
 
 **3D Model Files:**
-- STL files: `RoboSort_Plate_1.stl` and `RoboSort_Plate_2.stl` are available in the `model/` directory.
 - G-code file: `CE3V3SE_RoboSort_Plate.gcode` (pre-sliced for Creality Ender-3 V3 SE printer).
 
 **Preview:**
@@ -908,13 +907,32 @@ The RoboSort Plate Holder is a custom-designed 3D-printed bracket specifically e
 
 ---
 
-### Ultrasonic Sensor Housing
-![Ultrasonic Sensor Housing Base](model/Ultrasonic_Sensor_Housing_Base_V1.png)
-![Ultrasonic Sensor Housing Top](model/Ultrasonic_Sensor_Housing_Top_V1.png)
+### RoboSort Ultrasonic Case
+![RoboSort Ultrasonic Case](model/RoboSort_Ultrasonic_Case.png)
 
-The Ultrasonic Sensor Housing consists of a base and top component, based on the HC-SR04 Ultrasonic Sensor Holder from Thingiverse ([Thingiverse Link](https://www.thingiverse.com/thing:1170335)). It's a 3D-printed enclosure designed to securely house and mount an HC-SR04 or similar ultrasonic sensor to the RoboSort frame. It provides protection, secure positioning, and optimal orientation for accurate distance measurement and easy wiring access.
+**Description:**
+The RoboSort Ultrasonic Case is a custom-designed 3D-printed enclosure specifically engineered to securely house and mount an HC-SR04 or similar ultrasonic sensor on the RoboSort platform. This case provides optimal sensor alignment, vibration isolation, and cable management for accurate distance measurements and reliable obstacle detection.
 
-**3D Model Files:** `Ultrasonic_Sensor_Housing_Base_V1.STL` and `Ultrasonic_Sensor_Housing_Top_V1.STL` (not tracked in git, images shown for reference).
+**Key Features:**
+- **Precision Fit:** Designed to match the HC-SR04 sensor's dimensions for a snug, secure fit.
+- **Vibration Dampening:** Includes mounting features to minimize sensor noise during operation.
+- **Cable Management:** Integrated channels for neat routing of power and signal cables.
+- **Adjustable Orientation:** Allows fine-tuning of sensor angle for best detection range.
+- **Material:** Recommended to print in PETG or ABS for durability and dimensional stability.
+- **Mounting:** Attaches to the RoboSort frame using M3 screws and heat-set inserts.
+
+**Usage:**
+- Place the HC-SR04 sensor into the case, align the pins, and secure with screws.
+- Route the cables through the provided channels to prevent tangling.
+- Mount the case on the designated frame location for optimal sensor positioning.
+
+**3D Model Files:**
+- STL file: `RoboSort_Ultrasonic_Case.stl` is available in the `model/` directory.
+
+**Preview:**
+![RoboSort Ultrasonic Case Render](model/RoboSort_Ultrasonic_Case.png)
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
 ---
 
