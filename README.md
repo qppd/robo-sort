@@ -1543,3 +1543,40 @@ For questions, suggestions, or contributions, feel free to reach out:
 - **Portfolio**: [sajed-mendoza.onrender.com](https://sajed-mendoza.onrender.com)
 - **Facebook**: [facebook.com/qppd.dev](https://facebook.com/qppd.dev)
 - **Facebook Page**: [facebook.com/QUEZONPROVINCEDEVS](https://facebook.com/QUEZONPROVINCEDEVS)
+
+```mermaid
+graph TD
+    A[Start] --> B[Display Banner]
+    B --> C[Configure Serial Port]
+    C --> D[Establish Connection with Arduino]
+    D --> E{Connection Successful?}
+    E -- No --> F[Display Error and Exit]
+    E -- Yes --> G[Wait for Arduino Initialization]
+    G --> H[Read Initial Messages from Arduino]
+    H --> I[Display Command Menu]
+    I --> J[User Selects Command]
+    J --> K{Command Type}
+    K -- Test Servos --> L[Test Servo Functionality]
+    K -- Set Servo Angle --> M[Set Specific Servo Angle]
+    K -- Test Motors --> N[Test Motor Functionality]
+    K -- Control Motor --> O[Control Specific Motor]
+    K -- Stop Motors --> P[Stop All Motors]
+    K -- Test Ultrasonic --> Q[Test Ultrasonic Sensor]
+    K -- Get Distance --> R[Get Distance Measurement]
+    K -- Get Average Distance --> S[Get Average Distance]
+    K -- Detect Object --> T[Detect Object with Threshold]
+    K -- Custom Command --> U[Send Custom Command to Arduino]
+    K -- Exit --> V[Exit Program]
+    L --> I
+    M --> I
+    N --> I
+    O --> I
+    P --> I
+    Q --> I
+    R --> I
+    S --> I
+    T --> I
+    U --> I
+    V --> W[Disconnect and Clean Up]
+    W --> X[End]
+```
