@@ -3,26 +3,33 @@
 #include "SERVO_CONFIG.h"
 #include "DC_CONFIG.h"
 #include "ULTRASONIC_CONFIG.h"
+#include "TB6600.h"
 
 ServoConfig servoConfig;
 DCConfig dcConfig;
 UltrasonicConfig ultrasonicConfig;
+TB6600 stepper(STEPPER_DIR_PIN, STEPPER_STEP_PIN, STEPPER_ENA_PIN);
 
 void setup() {
   Serial.begin(9600);
   servoConfig.begin();
   dcConfig.begin();
   ultrasonicConfig.begin();
+  stepper.begin();
   Serial.println("RoboSort Control System Ready!");
-  Serial.println("Servo Commands: TEST, S<servo> <angle>");
+  Serial.println("Servo Commands: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
   Serial.println("Motor Commands: MTEST, M<motor> <direction> <speed>, MSTOP");
   Serial.println("  Motors: A or B");
   Serial.println("  Directions: F (forward), B (backward), S (stop), BR (brake)");
   Serial.println("  Speed: 0-255");
   Serial.println("Ultrasonic Commands: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>");
+  Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP");
+  Serial.println("  Dir: 0 (CW), 1 (CCW)");
 }
 
 void loop() {
+  stepper.update();
+  servoConfig.update();
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
     input.trim();
@@ -48,6 +55,18 @@ void loop() {
       } else {
         Serial.println("Invalid command format. Use: S<servo> <angle>");
       }
+    } else if (input.equalsIgnoreCase("STEST")) {
+      servoConfig.startContinuousTest();
+      Serial.println("Continuous servo test started.");
+    } else if (input.equalsIgnoreCase("SSTOP")) {
+      servoConfig.stopContinuousTest();
+      Serial.println("Continuous servo test stopped.");
+    } else if (input.equalsIgnoreCase("SENABLE")) {
+      servoConfig.enableServos();
+      Serial.println("Servos enabled.");
+    } else if (input.equalsIgnoreCase("SDISABLE")) {
+      servoConfig.disableServos();
+      Serial.println("Servos disabled.");
     }
     // Motor commands
     else if (input.equalsIgnoreCase("MTEST")) {
@@ -146,11 +165,53 @@ void loop() {
       } else {
         Serial.println("Invalid command format. Use: UDETECT <threshold>");
       }
+    }
+    // Stepper commands
+    else if (input.equalsIgnoreCase("STEPTEST")) {
+      stepper.setDirection(0); // CW
+      stepper.stepMany(200, 100, 800); // 200 steps
+      delay(500);
+      stepper.setDirection(1); // CCW
+      stepper.stepMany(200, 100, 800);
+      Serial.println("Stepper test sequence complete.");
+    } else if (input.equalsIgnoreCase("STEPSTOP")) {
+      stepper.emergencyStop();
+      Serial.println("Stepper emergency stop.");
+    } else if (input.startsWith("STEP") && !input.equalsIgnoreCase("STEPTEST") && !input.equalsIgnoreCase("STEPSTOP") && !input.equalsIgnoreCase("STEPCTEST") && !input.equalsIgnoreCase("STEPCSTOP")) {
+      // Parse stepper command: STEP <steps> <dir>
+      input = input.substring(4); // Remove 'STEP'
+      int spaceIdx = input.indexOf(' ');
+      if (spaceIdx > 0) {
+        unsigned long steps = strtoul(input.substring(0, spaceIdx).c_str(), NULL, 10);
+        int dir = input.substring(spaceIdx + 1).toInt();
+        if (steps > 0 && (dir == 0 || dir == 1)) {
+          stepper.setDirection(dir);
+          if (stepper.startSteps(steps, 100, 800)) {
+            Serial.print("Starting stepper: ");
+            Serial.print(steps);
+            Serial.print(" steps ");
+            Serial.println(dir ? "CCW" : "CW");
+          } else {
+            Serial.println("Stepper busy, cannot start new operation.");
+          }
+        } else {
+          Serial.println("Invalid steps or direction. Steps > 0, Dir: 0 or 1");
+        }
+      } else {
+        Serial.println("Invalid command format. Use: STEP <steps> <dir>");
+      }
+    } else if (input.equalsIgnoreCase("STEPCTEST")) {
+      stepper.startContinuousTest();
+      Serial.println("Continuous stepper test started.");
+    } else if (input.equalsIgnoreCase("STEPCSTOP")) {
+      stepper.stopContinuousTest();
+      Serial.println("Continuous stepper test stopped.");
     } else {
       Serial.println("Unknown command.");
-      Serial.println("Servo: TEST, S<servo> <angle>");
+      Serial.println("Servo: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
       Serial.println("Motor: MTEST, M<motor> <direction> <speed>, MSTOP");
       Serial.println("Ultrasonic: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>");
+      Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP");
     }
   }
 }

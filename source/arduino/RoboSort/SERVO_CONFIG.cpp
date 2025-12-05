@@ -5,7 +5,7 @@
 #define SERVO_MIN_PULSE  150
 #define SERVO_MAX_PULSE  600
 
-ServoConfig::ServoConfig() : pwm(0x40) {
+ServoConfig::ServoConfig() : pwm(0x40), _continuousTest(false), _lastMoveTime(0), _currentAngle(0), _direction(1) {
     // Default channels for 5 servos (0-4)
     for (uint8_t i = 0; i < NUM_SERVOS; i++) {
         servoChannels[i] = i;
@@ -13,6 +13,8 @@ ServoConfig::ServoConfig() : pwm(0x40) {
 }
 
 void ServoConfig::begin() {
+    pinMode(SERVO_OE_PIN, OUTPUT);
+    digitalWrite(SERVO_OE_PIN, HIGH); // Disable servos at startup
     pwm.begin();
     pwm.setPWMFreq(50); // Analog servos run at ~50 Hz
 }
@@ -38,5 +40,47 @@ void ServoConfig::testServos() {
         delay(500);
         setServoAngle(i, 90);
         delay(500);
+    }
+}
+
+void ServoConfig::enableServos() {
+    digitalWrite(SERVO_OE_PIN, LOW);
+}
+
+void ServoConfig::disableServos() {
+    digitalWrite(SERVO_OE_PIN, HIGH);
+}
+
+void ServoConfig::startContinuousTest() {
+    _continuousTest = true;
+    _currentAngle = 0;
+    _direction = 1;
+    _lastMoveTime = millis();
+    for (uint8_t i = 0; i < NUM_SERVOS; i++) {
+        setServoAngle(i, _currentAngle);
+    }
+}
+
+void ServoConfig::stopContinuousTest() {
+    _continuousTest = false;
+}
+
+void ServoConfig::update() {
+    if (_continuousTest) {
+        unsigned long now = millis();
+        if (now - _lastMoveTime >= 500) { // Move every 500ms
+            _currentAngle += _direction * 10; // Change by 10 degrees
+            if (_currentAngle >= 180) {
+                _currentAngle = 180;
+                _direction = -1;
+            } else if (_currentAngle <= 0) {
+                _currentAngle = 0;
+                _direction = 1;
+            }
+            for (uint8_t i = 0; i < NUM_SERVOS; i++) {
+                setServoAngle(i, _currentAngle);
+            }
+            _lastMoveTime = now;
+        }
     }
 }

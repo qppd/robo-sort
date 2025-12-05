@@ -82,7 +82,7 @@ Raspberry Pi (Python) ← Serial USB ← Arduino Mega ← Sensor Feedback
 - **🧠 Advanced AI Vision**: YOLO-based object detection and classification for accurate material identification
 - **📡 LIDAR Integration**: 360° environmental awareness with LD06 LIDAR sensor support
 - **🔄 Automated paper and plastic waste identification** and segregation with real-time confidence scoring
-- **⚙️ Stepper Motor Control**: Precise positioning for robotic arm movement using stepper motor drivers
+- **⚙️ Stepper Motor Control**: Precise positioning for robotic arm movement using TB6600 driver with NEMA 23 stepper motor (19kg/cm holding torque)
 - **🎯 16-channel PWM servo driver (PCA9685)** for coordinated multi-servo control
 - **📹 Multiple Camera Support**: USB cameras, Raspberry Pi Camera, and video file processing
 - **🎥 Real-time Video Processing**: Live object detection with overlay information and recording capabilities
@@ -116,8 +116,8 @@ Raspberry Pi (Python) ← Serial USB ← Arduino Mega ← Sensor Feedback
   - I2C address: 0x40-0x7F (selectable via solder jumpers)
   - 5V tolerant logic (works with 3.3V or 5V systems)
   - Built-in clock for free-running PWM (no continuous signal needed)
-- **Stepper Motor Driver**: Stepper motor driver for precise positioning (e.g., A4988, DRV8825)
-- **Stepper Motors**: NEMA stepper motors for robotic arm positioning and movement
+- **Stepper Motor Driver**: TB6600 stepper motor driver for precise positioning
+- **Stepper Motors**: NEMA 23 stepper motor (19kg/cm holding torque)
 - **LIDAR Sensors**:
   - **LDRobot LD06**: 360° scanning LIDAR (0.02-12m range, 4500Hz sample rate)
 - **Camera Systems**:
@@ -130,11 +130,11 @@ Raspberry Pi (Python) ← Serial USB ← Arduino Mega ← Sensor Feedback
 ## Software Components
 
 ### Arduino Firmware
-- **RoboSort.ino**: Main firmware integrating servo and motor control with serial command interface
-- **SERVO_CONFIG.h**: Header file with servo configuration and function declarations
-- **SERVO_CONFIG.cpp**: Implementation of servo control logic and movement functions
-- **STEPPER_CONFIG.h**: Header file for stepper motor driver configuration and control declarations
-- **STEPPER_CONFIG.cpp**: Implementation of stepper motor control logic for precise positioning
+- **RoboSort.ino**: Main firmware integrating servo, stepper, and motor control with serial command interface
+- **SERVO_CONFIG.h/.cpp**: Servo control logic with PCA9685 PWM driver and OE enable control
+- **TB6600.h/.cpp**: TB6600 stepper motor driver implementation with blocking and non-blocking stepping
+- **DC_CONFIG.h/.cpp**: DC motor control for HPMD-3.1 driver
+- **ULTRASONIC_CONFIG.h/.cpp**: HC-SR04 ultrasonic sensor distance measurement
 
 ### Raspberry Pi Software
 - **RoboSort.py**: Main application with interactive command-line interface for testing and controlling the robot
@@ -340,14 +340,12 @@ with SerialConfig(port='/dev/ttyACM0') as serial_conn:
 
     # Control servo
     serial_conn.set_servo(0, 90)
+    serial_conn.enable_servos()
+    serial_conn.disable_servos()
 
     # Control stepper motor
-    serial_conn.stepper_move(200, 'CW', 500)  # Move 200 steps clockwise at 500 steps/sec
-
-    # Home stepper motor
-    serial_conn.stepper_home()
-
-    # Stop stepper motor
+    serial_conn.stepper_move(200, 0)  # Move 200 steps CW
+    serial_conn.stepper_move(200, 1)  # Move 200 steps CCW
     serial_conn.stepper_stop()
 ```
 
@@ -360,41 +358,41 @@ with SerialConfig(port='/dev/ttyACM0') as serial_conn:
 
 **Testing Servos:**
 ```
-TEST
+TEST          # Run test sequence on all servos
+S0 90         # Set servo 0 to 90 degrees
+SENABLE       # Enable servo driver
+SDISABLE      # Disable servo driver
+STEST         # Start continuous back-and-forth test
+SSTOP         # Stop continuous test
 ```
-Runs a test sequence on all servos, moving each through its full range of motion.
-
-**Manual Servo Control:**
-```
-S0 90
-S1 45
-S2 180
-```
-Set servo 0 to 90 degrees, servo 1 to 45 degrees, and servo 2 to 180 degrees.
 
 **Testing Stepper Motor:**
 ```
-STEPPER_TEST
+STEPTEST      # Run test sequence (200 steps CW then CCW)
+STEP 200 0    # Move 200 steps CW
+STEP 200 1    # Move 200 steps CCW
+STEPSTOP      # Emergency stop
+STEPCTEST     # Start continuous back-and-forth test
+STEPCSTOP     # Stop continuous test
 ```
-Runs a comprehensive test sequence on the stepper motor.
-
-**Manual Stepper Motor Control:**
-```
-STEP 200 CW 500
-STEP 200 CCW 500
-STEPPER_HOME
-STEPPER_STOP
-```
-Move 200 steps clockwise at 500 steps/sec, move 200 steps counter-clockwise at 500 steps/sec, home the motor, and stop the motor.
 
 **Testing Ultrasonic Sensor:**
 ```
-UTEST
-UDIST
-UAVG 5
-UDETECT 30
+UTEST         # Run sensor test
+UDIST         # Get single distance measurement
+UAVG 5        # Get average of 5 samples
+UDETECT 30    # Detect object within 30 cm threshold
 ```
-Run sensor test, get single distance, get average of 5 samples, detect object within 30 cm.
+
+**Testing DC Motors:**
+```
+MTEST         # Test all motors
+MA F 100      # Motor A forward at speed 100
+MA B 150      # Motor A backward at speed 150
+MA S          # Motor A stop
+MA BR         # Motor A brake
+MSTOP         # Stop all motors
+```
 
 ## Wiring Diagram
 
@@ -417,22 +415,21 @@ The wiring diagram shows the complete electrical connections for the RoboSort sy
 - **GND** → Arduino GND
 - **SDA** → Arduino Pin 20 (SDA)
 - **SCL** → Arduino Pin 21 (SCL)
+- **OE** → Arduino Pin 2 (Output Enable, active low)
 - **V+** → External 5V Power Supply (for servos)
 - **GND** → Common Ground with external power
 - **Servo Outputs** → 5 Servos connected to channels 0-4
 
-**2. Stepper Motor Driver (A4988/DRV8825)**
+**2. TB6600 Stepper Motor Driver**
 - **Control Pins:**
-  - STEP → Arduino Pin 9 (pulse for each step)
-  - DIR → Arduino Pin 8 (direction control)
-  - EN → Arduino Pin 7 (enable/disable, optional)
-  - MS1-MS3 → Arduino Pins 6, 5, 4 (microstepping, optional)
+  - PUL+ → Arduino Pin 3 (pulse for each step)
+  - DIR+ → Arduino Pin 4 (direction control)
+  - ENA+ → Arduino Pin 5 (enable/disable, active low)
 - **Power:**
-  - VMOT → Motor power supply (8-35V depending on driver)
+  - VMOT → Motor power supply (DC power input)
   - GND → Common ground with Arduino
-  - VDD → Logic power (3.3-5V from Arduino)
 - **Motor Connections:**
-  - A1/A2/B1/B2 → Stepper motor coils (check motor datasheet for wiring)
+  - A+ / A- / B+ / B- → NEMA 23 stepper motor coils
 
 **3. HC-SR04 Ultrasonic Sensor**
 - **VCC** → Arduino 5V
@@ -659,8 +656,8 @@ robo-sort/
     │       ├── RoboSort.ino              # Main firmware with integrated control
     │       ├── SERVO_CONFIG.h            # Servo driver header
     │       ├── SERVO_CONFIG.cpp          # Servo driver implementation
-    │       ├── STEPPER_CONFIG.h          # Stepper motor driver header
-    │       ├── STEPPER_CONFIG.cpp        # Stepper motor driver implementation
+    │       ├── TB6600.h                   # TB6600 stepper motor driver header
+    │       ├── TB6600.cpp                # TB6600 stepper motor driver implementation
     │       ├── ULTRASONIC_CONFIG.h       # Ultrasonic sensor header
     │       └── ULTRASONIC_CONFIG.cpp     # Ultrasonic sensor implementation
     └── rpi/
@@ -763,24 +760,20 @@ Adjust the servo pulse width limits in `SERVO_CONFIG.cpp`:
 Modify the servo channel assignments in the `ServoConfig` constructor to match your wiring configuration.
 
 ### Stepper Motor Pin Configuration
-Configure stepper motor driver pin connections in `STEPPER_CONFIG.h` according to your wiring:
+Configure stepper motor driver pin connections in `PINS.h` according to your wiring:
 ```cpp
-#define STEPPER_STEP 9     // STEP pin for stepper motor driver
-#define STEPPER_DIR 8      // DIR pin for stepper motor direction
-#define STEPPER_EN 7       // ENABLE pin for stepper motor (optional)
-#define STEPPER_MS1 6      // Microstepping pin 1 (optional)
-#define STEPPER_MS2 5      // Microstepping pin 2 (optional)
-#define STEPPER_MS3 4      // Microstepping pin 3 (optional)
+#define STEPPER_STEP_PIN 3  // PUL+ connected to pin 3
+#define STEPPER_DIR_PIN 4   // DIR+ connected to pin 4
+#define STEPPER_ENA_PIN 5   // ENA+ connected to pin 5
 ```
 
-### Stepper Motor Driver Wiring Guide
-Common stepper motor drivers (A4988, DRV8825) use a standard interface:
+### TB6600 Stepper Motor Driver Wiring Guide
+The TB6600 stepper motor driver uses the following interface:
 
 **Control Connections:**
-- STEP → Arduino digital pin (pulse for each step)
-- DIR → Arduino digital pin (direction control)
-- EN → Arduino digital pin (enable/disable driver)
-- MS1-MS3 → Arduino digital pins (microstepping resolution)
+- PUL+ → Arduino digital pin (pulse for each step)
+- DIR+ → Arduino digital pin (direction control)
+- ENA+ → Arduino digital pin (enable/disable driver, active low)
 
 **Motor Connections:**
 - Connect stepper motor coils to A1/A2/B1/B2 terminals

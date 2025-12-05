@@ -21,5 +21,3 @@ private:
 };
 
 #endif // ULTRASONIC_CONFIG_H
-
-#endif // ULTRASONIC_CONFIG_H
