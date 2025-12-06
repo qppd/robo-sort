@@ -1,31 +1,33 @@
 #include "DC_CONFIG.h"
 
-DCConfig::DCConfig() {
+DCConfig::DCConfig() : _continuousTest(false), _lastChangeTime(0), _direction(FORWARD) {
     // Constructor
 }
 
 void DCConfig::begin() {
     // Initialize motor control pins
     pinMode(MOTOR_A_PWM, OUTPUT);
-    pinMode(MOTOR_A_DIR1, OUTPUT);
-    pinMode(MOTOR_A_DIR2, OUTPUT);
+    pinMode(MOTOR_A_DIR, OUTPUT);
+    pinMode(MOTOR_A_WD, OUTPUT);
     
     pinMode(MOTOR_B_PWM, OUTPUT);
-    pinMode(MOTOR_B_DIR1, OUTPUT);
-    pinMode(MOTOR_B_DIR2, OUTPUT);
+    pinMode(MOTOR_B_DIR, OUTPUT);
+    pinMode(MOTOR_B_WD, OUTPUT);
+    
+    // Initialize watchdog pins low
+    digitalWrite(MOTOR_A_WD, LOW);
+    digitalWrite(MOTOR_B_WD, LOW);
     
     // Stop all motors initially
     stopAll();
 }
 
-void DCConfig::setMotorPins(uint8_t motor, uint8_t dir1State, uint8_t dir2State, uint8_t pwmValue) {
+void DCConfig::setMotorPins(uint8_t motor, uint8_t dirState, uint8_t pwmValue) {
     if (motor == MOTOR_A) {
-        digitalWrite(MOTOR_A_DIR1, dir1State);
-        digitalWrite(MOTOR_A_DIR2, dir2State);
+        digitalWrite(MOTOR_A_DIR, dirState);
         analogWrite(MOTOR_A_PWM, pwmValue);
     } else if (motor == MOTOR_B) {
-        digitalWrite(MOTOR_B_DIR1, dir1State);
-        digitalWrite(MOTOR_B_DIR2, dir2State);
+        digitalWrite(MOTOR_B_DIR, dirState);
         analogWrite(MOTOR_B_PWM, pwmValue);
     }
 }
@@ -58,13 +60,13 @@ void DCConfig::setMotorSpeed(uint8_t motor, int speed) {
 
 void DCConfig::setMotorDirection(uint8_t motor, uint8_t direction) {
     if (direction == FORWARD) {
-        setMotorPins(motor, HIGH, LOW, 0);
+        setMotorPins(motor, HIGH, 0);
     } else if (direction == BACKWARD) {
-        setMotorPins(motor, LOW, HIGH, 0);
+        setMotorPins(motor, LOW, 0);
     } else if (direction == BRAKE) {
-        setMotorPins(motor, HIGH, HIGH, 0);
+        brakeMotor(motor);
     } else {
-        setMotorPins(motor, LOW, LOW, 0);
+        setMotorPins(motor, LOW, 0);
     }
 }
 
@@ -72,9 +74,9 @@ void DCConfig::moveMotor(uint8_t motor, uint8_t direction, uint8_t speed) {
     speed = constrain(speed, 0, 255);
     
     if (direction == FORWARD) {
-        setMotorPins(motor, HIGH, LOW, speed);
+        setMotorPins(motor, HIGH, speed);
     } else if (direction == BACKWARD) {
-        setMotorPins(motor, LOW, HIGH, speed);
+        setMotorPins(motor, LOW, speed);
     } else if (direction == BRAKE) {
         brakeMotor(motor);
     } else {
@@ -83,16 +85,38 @@ void DCConfig::moveMotor(uint8_t motor, uint8_t direction, uint8_t speed) {
 }
 
 void DCConfig::stopMotor(uint8_t motor) {
-    setMotorPins(motor, LOW, LOW, 0);
+    setMotorPins(motor, LOW, 0);
 }
 
 void DCConfig::brakeMotor(uint8_t motor) {
-    setMotorPins(motor, HIGH, HIGH, 0);
+    // Since no dedicated brake pin, use high PWM for braking
+    if (motor == MOTOR_A) {
+        analogWrite(MOTOR_A_PWM, 255);
+        delay(100); // Short brake pulse
+        analogWrite(MOTOR_A_PWM, 0);
+    } else if (motor == MOTOR_B) {
+        analogWrite(MOTOR_B_PWM, 255);
+        delay(100);
+        analogWrite(MOTOR_B_PWM, 0);
+    }
 }
 
-void DCConfig::stopAll() {
-    stopMotor(MOTOR_A);
-    stopMotor(MOTOR_B);
+void DCConfig::updateWatchdog() {
+    static unsigned long lastToggleA = 0;
+    static unsigned long lastToggleB = 0;
+    unsigned long now = millis();
+    
+    // Toggle watchdog for Motor A every 500ms
+    if (now - lastToggleA >= 500) {
+        digitalWrite(MOTOR_A_WD, !digitalRead(MOTOR_A_WD));
+        lastToggleA = now;
+    }
+    
+    // Toggle watchdog for Motor B every 500ms
+    if (now - lastToggleB >= 500) {
+        digitalWrite(MOTOR_B_WD, !digitalRead(MOTOR_B_WD));
+        lastToggleB = now;
+    }
 }
 
 void DCConfig::testMotors() {
@@ -149,4 +173,36 @@ void DCConfig::testMotors() {
     stopAll();
     
     Serial.println("Motor test complete!");
+}
+
+void DCConfig::startContinuousTest() {
+    _continuousTest = true;
+    _direction = FORWARD;
+    _lastChangeTime = millis();
+    moveMotor(MOTOR_A, _direction, 150);
+    moveMotor(MOTOR_B, _direction, 150);
+    Serial.println("Continuous motor test started.");
+}
+
+void DCConfig::stopContinuousTest() {
+    _continuousTest = false;
+    stopAll();
+    Serial.println("Continuous motor test stopped.");
+}
+
+void DCConfig::update() {
+    if (_continuousTest) {
+        unsigned long now = millis();
+        if (now - _lastChangeTime >= 2000) { // Change direction every 2 seconds
+            _direction = (_direction == FORWARD) ? BACKWARD : FORWARD;
+            moveMotor(MOTOR_A, _direction, 150);
+            moveMotor(MOTOR_B, _direction, 150);
+            _lastChangeTime = now;
+        }
+    }
+}
+
+void DCConfig::stopAll() {
+    stopMotor(MOTOR_A);
+    stopMotor(MOTOR_B);
 }

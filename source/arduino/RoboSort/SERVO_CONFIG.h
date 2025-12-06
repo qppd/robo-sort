@@ -4,7 +4,7 @@
 #include <Adafruit_PWMServoDriver.h>
 #include "PINS.h"
 
-#define NUM_SERVOS 6
+#define NUM_SERVOS 5
 
 class ServoConfig {
 public:

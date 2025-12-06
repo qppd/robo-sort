@@ -18,11 +18,11 @@ void setup() {
   stepper.begin();
   Serial.println("RoboSort Control System Ready!");
   Serial.println("Servo Commands: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
-  Serial.println("Motor Commands: MTEST, M<motor> <direction> <speed>, MSTOP");
+  Serial.println("Motor Commands: MTEST, M<motor> <direction> <speed>, MSTOP, MCTEST, MCSTOP");
   Serial.println("  Motors: A or B");
   Serial.println("  Directions: F (forward), B (backward), S (stop), BR (brake)");
   Serial.println("  Speed: 0-255");
-  Serial.println("Ultrasonic Commands: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>");
+  Serial.println("Ultrasonic Commands: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>, UCTEST, UCSTOP");
   Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP");
   Serial.println("  Dir: 0 (CW), 1 (CCW)");
 }
@@ -30,6 +30,9 @@ void setup() {
 void loop() {
   stepper.update();
   servoConfig.update();
+  dcConfig.updateWatchdog();
+  dcConfig.update();
+  ultrasonicConfig.update();
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
     input.trim();
@@ -38,7 +41,7 @@ void loop() {
     if (input.equalsIgnoreCase("TEST")) {
       servoConfig.testServos();
       Serial.println("Servo test sequence complete.");
-    } else if (input.startsWith("S") && !input.startsWith("ST")) {
+    } else if (input.startsWith("S") && !input.startsWith("ST") && !input.equalsIgnoreCase("SENABLE") && !input.equalsIgnoreCase("SDISABLE")) {
       int spaceIdx = input.indexOf(' ');
       if (spaceIdx > 1) {
         int servoNum = input.substring(1, spaceIdx).toInt();
@@ -165,6 +168,10 @@ void loop() {
       } else {
         Serial.println("Invalid command format. Use: UDETECT <threshold>");
       }
+    } else if (input.equalsIgnoreCase("UCTEST")) {
+      ultrasonicConfig.startContinuousMonitor();
+    } else if (input.equalsIgnoreCase("UCSTOP")) {
+      ultrasonicConfig.stopContinuousMonitor();
     }
     // Stepper commands
     else if (input.equalsIgnoreCase("STEPTEST")) {
@@ -206,11 +213,15 @@ void loop() {
     } else if (input.equalsIgnoreCase("STEPCSTOP")) {
       stepper.stopContinuousTest();
       Serial.println("Continuous stepper test stopped.");
+    } else if (input.equalsIgnoreCase("MCTEST")) {
+      dcConfig.startContinuousTest();
+    } else if (input.equalsIgnoreCase("MCSTOP")) {
+      dcConfig.stopContinuousTest();
     } else {
       Serial.println("Unknown command.");
       Serial.println("Servo: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
-      Serial.println("Motor: MTEST, M<motor> <direction> <speed>, MSTOP");
-      Serial.println("Ultrasonic: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>");
+      Serial.println("Motor: MTEST, M<motor> <direction> <speed>, MSTOP, MCTEST, MCSTOP");
+      Serial.println("Ultrasonic: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>, UCTEST, UCSTOP");
       Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP");
     }
   }

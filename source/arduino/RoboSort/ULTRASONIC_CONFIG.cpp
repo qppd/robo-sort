@@ -1,6 +1,6 @@
 #include "ULTRASONIC_CONFIG.h"
 
-UltrasonicConfig::UltrasonicConfig() {
+UltrasonicConfig::UltrasonicConfig() : _continuousMonitor(false), _monitorStartTime(0), _lastReadTime(0) {
     // Constructor
 }
 
@@ -95,4 +95,41 @@ void UltrasonicConfig::testSensor() {
     }
     
     Serial.println("=== Test Complete ===");
+}
+
+void UltrasonicConfig::startContinuousMonitor() {
+    _continuousMonitor = true;
+    _monitorStartTime = millis();
+    _lastReadTime = 0;
+    Serial.println("Ultrasonic continuous monitoring started (20 seconds).");
+}
+
+void UltrasonicConfig::stopContinuousMonitor() {
+    _continuousMonitor = false;
+    Serial.println("Ultrasonic continuous monitoring stopped.");
+}
+
+void UltrasonicConfig::update() {
+    if (_continuousMonitor) {
+        unsigned long now = millis();
+        
+        // Check if 20 seconds elapsed
+        if (now - _monitorStartTime >= 20000) {
+            stopContinuousMonitor();
+            return;
+        }
+        
+        // Read distance every 500ms
+        if (now - _lastReadTime >= 500) {
+            long distance = getDistance();
+            Serial.print("Distance: ");
+            if (distance == 0) {
+                Serial.println("Out of range");
+            } else {
+                Serial.print(distance);
+                Serial.println(" cm");
+            }
+            _lastReadTime = now;
+        }
+    }
 }

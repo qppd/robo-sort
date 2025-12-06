@@ -10,14 +10,14 @@
 
 // ===== DC MOTOR DRIVER (E-Gizmo HPMD-3.1) PINS =====
 // Motor A Pins
-#define MOTOR_A_PWM 9    // PWM pin for Motor A speed control
-#define MOTOR_A_DIR1 7   // Direction pin 1 for Motor A
-#define MOTOR_A_DIR2 8   // Direction pin 2 for Motor A
+#define MOTOR_A_PWM 11   // PWM pin for Motor A speed control
+#define MOTOR_A_DIR 10   // Direction pin for Motor A
+#define MOTOR_A_WD 9     // Watchdog pin for Motor A
 
 // Motor B Pins
-#define MOTOR_B_PWM 10   // PWM pin for Motor B speed control
-#define MOTOR_B_DIR1 11  // Direction pin 1 for Motor B
-#define MOTOR_B_DIR2 12  // Direction pin 2 for Motor B
+#define MOTOR_B_PWM 8    // PWM pin for Motor B speed control
+#define MOTOR_B_DIR 7    // Direction pin for Motor B
+#define MOTOR_B_WD 6     // Watchdog pin for Motor B
 
 // ===== ULTRASONIC SENSOR (HC-SR04) PINS =====
 #define TRIG_PIN 4       // Trigger pin for ultrasonic sensor

@@ -62,7 +62,8 @@ void TB6600::startContinuousTest() {
   _continuousTest = true;
   _currentDirection = 0;
   setDirection(_currentDirection);
-  startSteps(200, 100, 800); // Start first batch
+  // ~5555 steps for 5 seconds at 100us pulse + 800us gap
+  startSteps(5555, 100, 800);
 }
 
 void TB6600::stopContinuousTest() {
@@ -100,7 +101,9 @@ void TB6600::update() {
         if (_continuousTest) {
           _currentDirection = 1 - _currentDirection;
           setDirection(_currentDirection);
-          startSteps(200, 100, 800); // Start next batch
+          // Calculate steps for 5 seconds: 5000ms / (pulseUs + gapUs) microseconds per step
+          // Using 100us pulse + 800us gap = 900us per step = ~5555 steps in 5 seconds
+          startSteps(5555, 100, 800);
         }
       }
     } else {

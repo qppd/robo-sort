@@ -52,6 +52,7 @@ void ServoConfig::disableServos() {
 }
 
 void ServoConfig::startContinuousTest() {
+    enableServos(); // Ensure servos are enabled
     _continuousTest = true;
     _currentAngle = 0;
     _direction = 1;
@@ -68,15 +69,9 @@ void ServoConfig::stopContinuousTest() {
 void ServoConfig::update() {
     if (_continuousTest) {
         unsigned long now = millis();
-        if (now - _lastMoveTime >= 500) { // Move every 500ms
-            _currentAngle += _direction * 10; // Change by 10 degrees
-            if (_currentAngle >= 180) {
-                _currentAngle = 180;
-                _direction = -1;
-            } else if (_currentAngle <= 0) {
-                _currentAngle = 0;
-                _direction = 1;
-            }
+        if (now - _lastMoveTime >= 5000) { // Change direction every 5 seconds
+            _direction = -_direction;
+            _currentAngle = (_direction == 1) ? 0 : 180;
             for (uint8_t i = 0; i < NUM_SERVOS; i++) {
                 setServoAngle(i, _currentAngle);
             }

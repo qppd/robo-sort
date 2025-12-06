@@ -362,7 +362,7 @@ TEST          # Run test sequence on all servos
 S0 90         # Set servo 0 to 90 degrees
 SENABLE       # Enable servo driver
 SDISABLE      # Disable servo driver
-STEST         # Start continuous back-and-forth test
+STEST         # Start continuous test (5 sec at 0°, 5 sec at 180°)
 SSTOP         # Stop continuous test
 ```
 
@@ -372,7 +372,7 @@ STEPTEST      # Run test sequence (200 steps CW then CCW)
 STEP 200 0    # Move 200 steps CW
 STEP 200 1    # Move 200 steps CCW
 STEPSTOP      # Emergency stop
-STEPCTEST     # Start continuous back-and-forth test
+STEPCTEST     # Start continuous test (5 sec CW, 5 sec CCW)
 STEPCSTOP     # Stop continuous test
 ```
 
@@ -382,6 +382,8 @@ UTEST         # Run sensor test
 UDIST         # Get single distance measurement
 UAVG 5        # Get average of 5 samples
 UDETECT 30    # Detect object within 30 cm threshold
+UCTEST        # Start continuous monitoring for 20 seconds
+UCSTOP        # Stop continuous monitoring
 ```
 
 **Testing DC Motors:**
@@ -392,6 +394,8 @@ MA B 150      # Motor A backward at speed 150
 MA S          # Motor A stop
 MA BR         # Motor A brake
 MSTOP         # Stop all motors
+MCTEST        # Start continuous back-and-forth test
+MCSTOP        # Stop continuous test
 ```
 
 ## Wiring Diagram
@@ -431,7 +435,18 @@ The wiring diagram shows the complete electrical connections for the RoboSort sy
 - **Motor Connections:**
   - A+ / A- / B+ / B- → NEMA 23 stepper motor coils
 
-**3. HC-SR04 Ultrasonic Sensor**
+**3. DC Motor Drivers (HPMD-3.1)**
+- **Motor A:**
+  - PWM → Arduino Pin 11
+  - DIR → Arduino Pin 10
+  - WD → Arduino Pin 9 (Watchdog trigger)
+- **Motor B:**
+  - PWM → Arduino Pin 8
+  - DIR → Arduino Pin 7
+  - WD → Arduino Pin 6 (Watchdog trigger)
+- **Power:** Separate power supply for motors
+
+**4. HC-SR04 Ultrasonic Sensor**
 - **VCC** → Arduino 5V
 - **GND** → Arduino GND
 - **TRIG** → Arduino Pin 4
