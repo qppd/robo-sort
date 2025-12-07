@@ -30,7 +30,6 @@ void setup() {
 void loop() {
   stepper.update();
   servoConfig.update();
-  dcConfig.updateWatchdog();
   dcConfig.update();
   ultrasonicConfig.update();
   if (Serial.available()) {
@@ -78,7 +77,7 @@ void loop() {
     } else if (input.equalsIgnoreCase("MSTOP")) {
       dcConfig.stopAll();
       Serial.println("All motors stopped.");
-    } else if (input.startsWith("M") && !input.equalsIgnoreCase("MTEST") && !input.equalsIgnoreCase("MSTOP")) {
+    } else if (input.startsWith("M") && !input.equalsIgnoreCase("MTEST") && !input.equalsIgnoreCase("MSTOP") && !input.equalsIgnoreCase("MCTEST") && !input.equalsIgnoreCase("MCSTOP")) {
       // Parse motor command: M<motor> <direction> <speed>
       input = input.substring(1); // Remove 'M'
       int firstSpace = input.indexOf(' ');

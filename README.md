@@ -118,6 +118,8 @@ Raspberry Pi (Python) ← Serial USB ← Arduino Mega ← Sensor Feedback
   - Built-in clock for free-running PWM (no continuous signal needed)
 - **Stepper Motor Driver**: TB6600 stepper motor driver for precise positioning
 - **Stepper Motors**: NEMA 23 stepper motor (19kg/cm holding torque)
+- **DC Motor Drivers**: Two L298N motor driver modules for DC motor control
+- **DC Motors**: Two DC motors compatible with L298N drivers
 - **LIDAR Sensors**:
   - **LDRobot LD06**: 360° scanning LIDAR (0.02-12m range, 4500Hz sample rate)
 - **Camera Systems**:
@@ -133,7 +135,7 @@ Raspberry Pi (Python) ← Serial USB ← Arduino Mega ← Sensor Feedback
 - **RoboSort.ino**: Main firmware integrating servo, stepper, and motor control with serial command interface
 - **SERVO_CONFIG.h/.cpp**: Servo control logic with PCA9685 PWM driver and OE enable control
 - **TB6600.h/.cpp**: TB6600 stepper motor driver implementation with blocking and non-blocking stepping
-- **DC_CONFIG.h/.cpp**: DC motor control for HPMD-3.1 driver
+- **DC_CONFIG.h/.cpp**: DC motor control for L298N motor driver modules
 - **ULTRASONIC_CONFIG.h/.cpp**: HC-SR04 ultrasonic sensor distance measurement
 
 ### Raspberry Pi Software
@@ -398,6 +400,13 @@ MCTEST        # Start continuous back-and-forth test
 MCSTOP        # Stop continuous test
 ```
 
+**L298N Motor Control Notes:**
+- **Forward**: IN1=HIGH, IN2=LOW
+- **Backward**: IN1=LOW, IN2=HIGH
+- **Stop**: IN1=LOW, IN2=LOW
+- **Brake**: IN1=HIGH, IN2=HIGH (short-circuit brake)
+- Speed controlled via PWM on ENA/ENB pins (0-255)
+
 ## Wiring Diagram
 
 ### System Wiring Schematic
@@ -435,16 +444,16 @@ The wiring diagram shows the complete electrical connections for the RoboSort sy
 - **Motor Connections:**
   - A+ / A- / B+ / B- → NEMA 23 stepper motor coils
 
-**3. DC Motor Drivers (HPMD-3.1)**
-- **Motor A:**
-  - PWM → Arduino Pin 11
-  - DIR → Arduino Pin 10
-  - WD → Arduino Pin 9 (Watchdog trigger)
-- **Motor B:**
-  - PWM → Arduino Pin 8
-  - DIR → Arduino Pin 7
-  - WD → Arduino Pin 6 (Watchdog trigger)
-- **Power:** Separate power supply for motors
+**3. DC Motor Drivers (L298N Modules)**
+- **L298N Module 1 (Motor A):**
+  - IN1 → Arduino Pin 7
+  - IN2 → Arduino Pin 9
+  - ENA → Arduino Pin 11 (PWM for speed control)
+- **L298N Module 2 (Motor B):**
+  - IN1 → Arduino Pin 10
+  - IN2 → Arduino Pin 11
+  - ENB → Arduino Pin 8 (PWM for speed control)
+- **Power:** Separate power supply for motors (motor power connected to L298N modules)
 
 **4. HC-SR04 Ultrasonic Sensor**
 - **VCC** → Arduino 5V

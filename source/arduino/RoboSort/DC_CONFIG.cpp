@@ -5,30 +5,29 @@ DCConfig::DCConfig() : _continuousTest(false), _lastChangeTime(0), _direction(FO
 }
 
 void DCConfig::begin() {
-    // Initialize motor control pins
-    pinMode(MOTOR_A_PWM, OUTPUT);
-    pinMode(MOTOR_A_DIR, OUTPUT);
-    pinMode(MOTOR_A_WD, OUTPUT);
+    // Initialize L298N Module 1 (Motor A) pins
+    pinMode(MOTOR_A_IN1, OUTPUT);
+    pinMode(MOTOR_A_IN2, OUTPUT);
+    pinMode(MOTOR_A_ENA, OUTPUT);
     
-    pinMode(MOTOR_B_PWM, OUTPUT);
-    pinMode(MOTOR_B_DIR, OUTPUT);
-    pinMode(MOTOR_B_WD, OUTPUT);
-    
-    // Initialize watchdog pins low
-    digitalWrite(MOTOR_A_WD, LOW);
-    digitalWrite(MOTOR_B_WD, LOW);
+    // Initialize L298N Module 2 (Motor B) pins
+    pinMode(MOTOR_B_IN1, OUTPUT);
+    pinMode(MOTOR_B_IN2, OUTPUT);
+    pinMode(MOTOR_B_ENB, OUTPUT);
     
     // Stop all motors initially
     stopAll();
 }
 
-void DCConfig::setMotorPins(uint8_t motor, uint8_t dirState, uint8_t pwmValue) {
+void DCConfig::setMotorPins(uint8_t motor, uint8_t in1State, uint8_t in2State, uint8_t pwmValue) {
     if (motor == MOTOR_A) {
-        digitalWrite(MOTOR_A_DIR, dirState);
-        analogWrite(MOTOR_A_PWM, pwmValue);
+        digitalWrite(MOTOR_A_IN1, in1State);
+        digitalWrite(MOTOR_A_IN2, in2State);
+        analogWrite(MOTOR_A_ENA, pwmValue);
     } else if (motor == MOTOR_B) {
-        digitalWrite(MOTOR_B_DIR, dirState);
-        analogWrite(MOTOR_B_PWM, pwmValue);
+        digitalWrite(MOTOR_B_IN1, in1State);
+        digitalWrite(MOTOR_B_IN2, in2State);
+        analogWrite(MOTOR_B_ENB, pwmValue);
     }
 }
 
@@ -37,36 +36,29 @@ void DCConfig::setMotorSpeed(uint8_t motor, int speed) {
     speed = constrain(speed, -255, 255);
     
     if (speed > 0) {
-        // Forward
-        setMotorDirection(motor, FORWARD);
-        if (motor == MOTOR_A) {
-            analogWrite(MOTOR_A_PWM, speed);
-        } else if (motor == MOTOR_B) {
-            analogWrite(MOTOR_B_PWM, speed);
-        }
+        // Forward: IN1=HIGH, IN2=LOW
+        setMotorPins(motor, HIGH, LOW, speed);
     } else if (speed < 0) {
-        // Backward
-        setMotorDirection(motor, BACKWARD);
-        if (motor == MOTOR_A) {
-            analogWrite(MOTOR_A_PWM, abs(speed));
-        } else if (motor == MOTOR_B) {
-            analogWrite(MOTOR_B_PWM, abs(speed));
-        }
+        // Backward: IN1=LOW, IN2=HIGH
+        setMotorPins(motor, LOW, HIGH, abs(speed));
     } else {
-        // Stop
+        // Stop: IN1=LOW, IN2=LOW
         stopMotor(motor);
     }
 }
 
 void DCConfig::setMotorDirection(uint8_t motor, uint8_t direction) {
     if (direction == FORWARD) {
-        setMotorPins(motor, HIGH, 0);
+        // Forward: IN1=HIGH, IN2=LOW, PWM=0 (will be set by speed)
+        setMotorPins(motor, HIGH, LOW, 0);
     } else if (direction == BACKWARD) {
-        setMotorPins(motor, LOW, 0);
+        // Backward: IN1=LOW, IN2=HIGH, PWM=0 (will be set by speed)
+        setMotorPins(motor, LOW, HIGH, 0);
     } else if (direction == BRAKE) {
         brakeMotor(motor);
     } else {
-        setMotorPins(motor, LOW, 0);
+        // Stop: IN1=LOW, IN2=LOW
+        stopMotor(motor);
     }
 }
 
@@ -74,49 +66,27 @@ void DCConfig::moveMotor(uint8_t motor, uint8_t direction, uint8_t speed) {
     speed = constrain(speed, 0, 255);
     
     if (direction == FORWARD) {
-        setMotorPins(motor, HIGH, speed);
+        // Forward: IN1=HIGH, IN2=LOW
+        setMotorPins(motor, HIGH, LOW, speed);
     } else if (direction == BACKWARD) {
-        setMotorPins(motor, LOW, speed);
+        // Backward: IN1=LOW, IN2=HIGH
+        setMotorPins(motor, LOW, HIGH, speed);
     } else if (direction == BRAKE) {
         brakeMotor(motor);
     } else {
+        // Stop: IN1=LOW, IN2=LOW
         stopMotor(motor);
     }
 }
 
 void DCConfig::stopMotor(uint8_t motor) {
-    setMotorPins(motor, LOW, 0);
+    // Stop: IN1=LOW, IN2=LOW, PWM=0
+    setMotorPins(motor, LOW, LOW, 0);
 }
 
 void DCConfig::brakeMotor(uint8_t motor) {
-    // Since no dedicated brake pin, use high PWM for braking
-    if (motor == MOTOR_A) {
-        analogWrite(MOTOR_A_PWM, 255);
-        delay(100); // Short brake pulse
-        analogWrite(MOTOR_A_PWM, 0);
-    } else if (motor == MOTOR_B) {
-        analogWrite(MOTOR_B_PWM, 255);
-        delay(100);
-        analogWrite(MOTOR_B_PWM, 0);
-    }
-}
-
-void DCConfig::updateWatchdog() {
-    static unsigned long lastToggleA = 0;
-    static unsigned long lastToggleB = 0;
-    unsigned long now = millis();
-    
-    // Toggle watchdog for Motor A every 500ms
-    if (now - lastToggleA >= 500) {
-        digitalWrite(MOTOR_A_WD, !digitalRead(MOTOR_A_WD));
-        lastToggleA = now;
-    }
-    
-    // Toggle watchdog for Motor B every 500ms
-    if (now - lastToggleB >= 500) {
-        digitalWrite(MOTOR_B_WD, !digitalRead(MOTOR_B_WD));
-        lastToggleB = now;
-    }
+    // Brake: IN1=HIGH, IN2=HIGH, PWM=255
+    setMotorPins(motor, HIGH, HIGH, 255);
 }
 
 void DCConfig::testMotors() {

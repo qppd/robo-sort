@@ -8,16 +8,16 @@
 // Default I2C Address: 0x40
 #define SERVO_OE_PIN 2   // Output Enable pin connected to GPIO2
 
-// ===== DC MOTOR DRIVER (E-Gizmo HPMD-3.1) PINS =====
-// Motor A Pins
-#define MOTOR_A_PWM 11   // PWM pin for Motor A speed control
-#define MOTOR_A_DIR 10   // Direction pin for Motor A
-#define MOTOR_A_WD 9     // Watchdog pin for Motor A
+// ===== DC MOTOR DRIVER (L298N) PINS =====
+// L298N Module 1 - Motor A Pins
+#define MOTOR_A_IN1 7    // IN1 pin for Motor A
+#define MOTOR_A_IN2 9    // IN2 pin for Motor A
+#define MOTOR_A_ENA 11   // ENA (PWM) pin for Motor A speed control
 
-// Motor B Pins
-#define MOTOR_B_PWM 8    // PWM pin for Motor B speed control
-#define MOTOR_B_DIR 7    // Direction pin for Motor B
-#define MOTOR_B_WD 6     // Watchdog pin for Motor B
+// L298N Module 2 - Motor B Pins
+#define MOTOR_B_IN1 10   // IN1 pin for Motor B
+#define MOTOR_B_IN2 11   // IN2 pin for Motor B
+#define MOTOR_B_ENB 8    // ENB (PWM) pin for Motor B speed control
 
 // ===== ULTRASONIC SENSOR (HC-SR04) PINS =====
 #define TRIG_PIN 4       // Trigger pin for ultrasonic sensor
