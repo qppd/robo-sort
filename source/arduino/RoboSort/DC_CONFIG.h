@@ -27,7 +27,7 @@ public:
     void stopContinuousTest();
     void update();
 private:
-    void setMotorPins(uint8_t motor, uint8_t in1State, uint8_t in2State, uint8_t pwmValue);
+    void setMotorPins(uint8_t motor, uint8_t in1State, uint8_t in2State);
     bool _continuousTest;
     unsigned long _lastChangeTime;
     uint8_t _direction;
