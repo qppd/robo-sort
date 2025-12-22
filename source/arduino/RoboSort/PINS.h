@@ -11,22 +11,21 @@
 // ===== DC MOTOR DRIVER (L298N) PINS =====
 // L298N Module 1 - Motor A Pins
 #define MOTOR_A_IN1 7    // IN1 pin for Motor A
-#define MOTOR_A_IN2 9    // IN2 pin for Motor A
-#define MOTOR_A_ENA 11   // ENA (PWM) pin for Motor A speed control
+#define MOTOR_A_IN2 8    // IN2 pin for Motor A
 
 // L298N Module 2 - Motor B Pins
 #define MOTOR_B_IN1 10   // IN1 pin for Motor B
-#define MOTOR_B_IN2 12   // IN2 pin for Motor B
-#define MOTOR_B_ENB 8    // ENB (PWM) pin for Motor B speed control
+#define MOTOR_B_IN2 11   // IN2 pin for Motor B
+
 
 // ===== ULTRASONIC SENSOR (HC-SR04) PINS =====
-#define TRIG_PIN 4       // Trigger pin for ultrasonic sensor
-#define ECHO_PIN 5       // Echo pin for ultrasonic sensor
+#define TRIG_PIN 33       // Trigger pin for ultrasonic sensor
+#define ECHO_PIN 34       // Echo pin for ultrasonic sensor
 
 // ===== STEPPER MOTOR DRIVER (TB6600) PINS =====
 #define STEPPER_STEP_PIN 3  // PUL+ connected to pin 3
-#define STEPPER_DIR_PIN 22  // DIR+ connected to pin 22
-#define STEPPER_ENA_PIN 23  // ENA+ connected to pin 23
+#define STEPPER_DIR_PIN 4   // DIR+ connected to pin 4
+#define STEPPER_ENA_PIN 5   // ENA+ connected to pin 5
 
 // ===== BUZZER PIN =====
 #define BUZZER_PIN 6        // Buzzer connected to pin 6
