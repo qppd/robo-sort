@@ -18,9 +18,22 @@
 #define MOTOR_B_IN2 11   // IN2 pin for Motor B
 
 
-// ===== ULTRASONIC SENSOR (HC-SR04) PINS =====
-#define TRIG_PIN 33       // Trigger pin for ultrasonic sensor
-#define ECHO_PIN 34       // Echo pin for ultrasonic sensor
+// ===== ULTRASONIC SENSORS (HC-SR04) PINS =====
+// Ultrasonic Sensor 1
+#define ULTRASONIC1_TRIG_PIN 25  // Trigger pin for ultrasonic sensor 1
+#define ULTRASONIC1_ECHO_PIN 23  // Echo pin for ultrasonic sensor 1
+
+// Ultrasonic Sensor 2
+#define ULTRASONIC2_TRIG_PIN 27  // Trigger pin for ultrasonic sensor 2
+#define ULTRASONIC2_ECHO_PIN 29  // Echo pin for ultrasonic sensor 2
+
+// Ultrasonic Sensor 3
+#define ULTRASONIC3_TRIG_PIN 31  // Trigger pin for ultrasonic sensor 3
+#define ULTRASONIC3_ECHO_PIN 33  // Echo pin for ultrasonic sensor 3
+
+// Ultrasonic Sensor 4
+#define ULTRASONIC4_TRIG_PIN 35  // Trigger pin for ultrasonic sensor 4
+#define ULTRASONIC4_ECHO_PIN 37  // Echo pin for ultrasonic sensor 4
 
 // ===== STEPPER MOTOR DRIVER (TB6600) PINS =====
 #define STEPPER_STEP_PIN 3  // PUL+ connected to pin 3
