@@ -1,0 +1,25 @@
+[10.186s] Invoking command in '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors/build --no-deps symlink_data
+[14.264s] running develop
+[17.077s] running egg_info
+[17.091s] creating camjam_sensors.egg-info
+[17.365s] writing camjam_sensors.egg-info/PKG-INFO
+[17.369s] writing dependency_links to camjam_sensors.egg-info/dependency_links.txt
+[17.374s] writing entry points to camjam_sensors.egg-info/entry_points.txt
+[17.375s] writing requirements to camjam_sensors.egg-info/requires.txt
+[17.375s] writing top-level names to camjam_sensors.egg-info/top_level.txt
+[17.388s] writing manifest file 'camjam_sensors.egg-info/SOURCES.txt'
+[18.167s] reading manifest file 'camjam_sensors.egg-info/SOURCES.txt'
+[18.174s] writing manifest file 'camjam_sensors.egg-info/SOURCES.txt'
+[18.590s] running build_ext
+[18.595s] Creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/lib/python3.12/site-packages/camjam-sensors.egg-link (link to .)
+[18.606s] Installing distance script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/lib/camjam_sensors
+[18.616s] Installing line script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/lib/camjam_sensors
+[18.621s] 
+[18.635s] Installed /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors
+[18.641s] running symlink_data
+[18.651s] creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/share/ament_index
+[18.659s] creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/share/ament_index/resource_index
+[18.688s] creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/share/ament_index/resource_index/packages
+[18.698s] symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors/resource/camjam_sensors -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/share/ament_index/resource_index/packages
+[18.710s] symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors/package.xml -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/share/camjam_sensors
+[19.061s] Invoked command in '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors/build --no-deps symlink_data

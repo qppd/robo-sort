@@ -1,0 +1,36 @@
+{
+  "type_description_msg": {
+    "type_description": {
+      "type_name": "robosort_interfaces/srv/SetServo_Request",
+      "fields": [
+        {
+          "name": "servo_num",
+          "type": {
+            "type_id": 6,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": ""
+          },
+          "default_value": ""
+        },
+        {
+          "name": "angle",
+          "type": {
+            "type_id": 6,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": ""
+          },
+          "default_value": ""
+        }
+      ]
+    },
+    "referenced_type_descriptions": []
+  },
+  "type_hashes": [
+    {
+      "type_name": "robosort_interfaces/srv/SetServo_Request",
+      "hash_string": "RIHS01_544831656b48b9d5e5651b6b0e02af9ad86a5e1b0830c8bd1011ead9db276dea"
+    }
+  ]
+}

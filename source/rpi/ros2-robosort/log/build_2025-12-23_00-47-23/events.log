@@ -1,0 +1,153 @@
+[0.000000] (-) TimerEvent: {}
+[0.000794] (-) JobUnselected: {'identifier': 'camjam_control'}
+[0.001603] (-) JobUnselected: {'identifier': 'camjam_sensors'}
+[0.002754] (-) JobUnselected: {'identifier': 'robosort_interfaces'}
+[0.003735] (robosort_vision) JobQueued: {'identifier': 'robosort_vision', 'dependencies': OrderedDict({'robosort_interfaces': '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces'})}
+[0.007210] (robosort_vision) JobStarted: {'identifier': 'robosort_vision'}
+[0.099009] (-) TimerEvent: {}
+[0.199896] (-) TimerEvent: {}
+[0.300618] (-) TimerEvent: {}
+[0.402809] (-) TimerEvent: {}
+[0.504192] (-) TimerEvent: {}
+[0.609120] (-) TimerEvent: {}
+[0.710601] (-) TimerEvent: {}
+[0.819933] (-) TimerEvent: {}
+[0.923631] (-) TimerEvent: {}
+[1.024705] (-) TimerEvent: {}
+[1.127457] (-) TimerEvent: {}
+[1.228463] (-) TimerEvent: {}
+[1.329099] (-) TimerEvent: {}
+[1.429797] (-) TimerEvent: {}
+[1.530489] (-) TimerEvent: {}
+[1.631305] (-) TimerEvent: {}
+[1.732078] (-) TimerEvent: {}
+[1.833152] (-) TimerEvent: {}
+[1.934359] (-) TimerEvent: {}
+[2.036941] (-) TimerEvent: {}
+[2.137735] (-) TimerEvent: {}
+[2.238533] (-) TimerEvent: {}
+[2.339157] (-) TimerEvent: {}
+[2.439850] (-) TimerEvent: {}
+[2.540583] (-) TimerEvent: {}
+[2.641504] (-) TimerEvent: {}
+[2.742865] (-) TimerEvent: {}
+[2.843655] (-) TimerEvent: {}
+[2.945200] (-) TimerEvent: {}
+[3.049388] (-) TimerEvent: {}
+[3.150016] (-) TimerEvent: {}
+[3.250681] (-) TimerEvent: {}
+[3.351341] (-) TimerEvent: {}
+[3.451982] (-) TimerEvent: {}
+[3.552685] (-) TimerEvent: {}
+[3.654317] (-) TimerEvent: {}
+[3.754931] (-) TimerEvent: {}
+[3.855587] (-) TimerEvent: {}
+[3.956380] (-) TimerEvent: {}
+[4.057784] (-) TimerEvent: {}
+[4.159133] (-) TimerEvent: {}
+[4.259934] (-) TimerEvent: {}
+[4.360859] (-) TimerEvent: {}
+[4.461641] (-) TimerEvent: {}
+[4.564557] (-) TimerEvent: {}
+[4.667989] (-) TimerEvent: {}
+[4.770306] (-) TimerEvent: {}
+[4.873691] (-) TimerEvent: {}
+[4.977399] (-) TimerEvent: {}
+[5.078792] (-) TimerEvent: {}
+[5.184877] (-) TimerEvent: {}
+[5.287387] (-) TimerEvent: {}
+[5.388888] (-) TimerEvent: {}
+[5.491392] (-) TimerEvent: {}
+[5.593036] (-) TimerEvent: {}
+[5.695790] (-) TimerEvent: {}
+[5.797941] (-) TimerEvent: {}
+[5.902505] (-) TimerEvent: {}
+[6.003723] (-) TimerEvent: {}
+[6.106125] (-) TimerEvent: {}
+[6.206884] (-) TimerEvent: {}
+[6.307508] (-) TimerEvent: {}
+[6.408277] (-) TimerEvent: {}
+[6.509778] (-) TimerEvent: {}
+[6.614360] (-) TimerEvent: {}
+[6.679545] (robosort_vision) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/build', '--no-deps', 'symlink_data'], 'cwd': '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision', 'env': {'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'robosort', 'GZ_CONFIG_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/share/gz:/opt/ros/jazzy/opt/sdformat_vendor/share/gz:/opt/ros/jazzy/opt/gz_gui_vendor/share/gz:/opt/ros/jazzy/opt/gz_transport_vendor/share/gz:/opt/ros/jazzy/opt/gz_rendering_vendor/share/gz:/opt/ros/jazzy/opt/gz_plugin_vendor/share/gz:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/share/gz:/opt/ros/jazzy/opt/gz_msgs_vendor/share/gz:/opt/ros/jazzy/opt/gz_common_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'GIT_ASKPASS': '/usr/share/code-insiders/resources/app/extensions/git/dist/askpass.sh', 'CLUTTER_DISABLE_MIPMAPPED_TEXT': '1', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib:/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/robosort', 'CHROME_DESKTOP': 'code-insiders.desktop', 'OLDPWD': '/home/robosort/robo-sort/source/rpi/ros2-robosort/src', 'TERM_PROGRAM_VERSION': '1.108.0-insider', 'DESKTOP_SESSION': 'ubuntu', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/code-insiders.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'VSCODE_GIT_ASKPASS_MAIN': '/usr/share/code-insiders/resources/app/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/usr/share/code-insiders/code-insiders', 'MANAGERPID': '1456', 'SYSTEMD_EXEC_PID': '1656', 'IM_CONFIG_CHECK_ENV': '1', 'VSCODE_PYTHON_AUTOACTIVATE_GUARD': '1', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '8743', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/robosort/robo-sort/source/rpi/ros2-robosort/install', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'robosort', 'JOURNAL_STREAM': '8:13304', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@wayland.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'robosort', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'FC_FONTATIONS': '1', 'PATH': '/opt/ros/jazzy/opt/gz_msgs_vendor/bin:/opt/ros/jazzy/opt/gz_tools_vendor/bin:/opt/ros/jazzy/opt/gz_ogre_next_vendor/bin:/opt/ros/jazzy/bin:/home/robosort/.config/Code - Insiders/User/globalStorage/github.copilot-chat/debugCommand:/home/robosort/.config/Code - Insiders/User/globalStorage/github.copilot-chat/copilotCli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/robosort-desktop:@/tmp/.ICE-unix/1614,unix/robosort-desktop:/tmp/.ICE-unix/1614', 'INVOCATION_ID': '244752fd1ae54fcc86b6d78f296cbac0', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'GDK_BACKEND': 'wayland', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.TL0PH3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'SBX_CHROME_API_RQ': '1', 'VSCODE_GIT_IPC_HANDLE': '/run/user/1000/vscode-git-6ce583beac.sock', 'TERM_PROGRAM': 'vscode', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control:/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GJS_DEBUG_OUTPUT': 'stderr', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'GIT_PAGER': 'cat', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/python3.12/site-packages:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages:/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/lib/python3.12/site-packages:/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'CMAKE_PREFIX_PATH': '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}, 'shell': False}
+[6.714497] (-) TimerEvent: {}
+[6.815306] (-) TimerEvent: {}
+[6.916136] (-) TimerEvent: {}
+[7.017093] (-) TimerEvent: {}
+[7.118084] (-) TimerEvent: {}
+[7.219302] (-) TimerEvent: {}
+[7.320089] (-) TimerEvent: {}
+[7.420764] (-) TimerEvent: {}
+[7.521445] (-) TimerEvent: {}
+[7.622284] (-) TimerEvent: {}
+[7.723855] (-) TimerEvent: {}
+[7.826703] (-) TimerEvent: {}
+[7.928103] (-) TimerEvent: {}
+[8.030420] (-) TimerEvent: {}
+[8.135312] (-) TimerEvent: {}
+[8.235972] (-) TimerEvent: {}
+[8.336631] (-) TimerEvent: {}
+[8.437611] (-) TimerEvent: {}
+[8.539922] (-) TimerEvent: {}
+[8.640755] (-) TimerEvent: {}
+[8.741604] (-) TimerEvent: {}
+[8.842266] (-) TimerEvent: {}
+[8.942971] (-) TimerEvent: {}
+[9.043880] (-) TimerEvent: {}
+[9.047022] (robosort_vision) StdoutLine: {'line': b'running develop\n'}
+[9.144045] (-) TimerEvent: {}
+[9.244954] (-) TimerEvent: {}
+[9.345666] (-) TimerEvent: {}
+[9.446323] (-) TimerEvent: {}
+[9.547010] (-) TimerEvent: {}
+[9.647901] (-) TimerEvent: {}
+[9.748658] (-) TimerEvent: {}
+[9.849325] (-) TimerEvent: {}
+[9.949989] (-) TimerEvent: {}
+[10.050850] (-) TimerEvent: {}
+[10.151642] (-) TimerEvent: {}
+[10.252283] (-) TimerEvent: {}
+[10.352951] (-) TimerEvent: {}
+[10.453627] (-) TimerEvent: {}
+[10.554315] (-) TimerEvent: {}
+[10.655021] (-) TimerEvent: {}
+[10.679440] (robosort_vision) StdoutLine: {'line': b'running egg_info\n'}
+[10.680244] (robosort_vision) StdoutLine: {'line': b'creating robosort_vision.egg-info\n'}
+[10.755183] (-) TimerEvent: {}
+[10.803551] (robosort_vision) StdoutLine: {'line': b'writing robosort_vision.egg-info/PKG-INFO\n'}
+[10.804950] (robosort_vision) StdoutLine: {'line': b'writing dependency_links to robosort_vision.egg-info/dependency_links.txt\n'}
+[10.805816] (robosort_vision) StdoutLine: {'line': b'writing entry points to robosort_vision.egg-info/entry_points.txt\n'}
+[10.807162] (robosort_vision) StdoutLine: {'line': b'writing requirements to robosort_vision.egg-info/requires.txt\n'}
+[10.808437] (robosort_vision) StdoutLine: {'line': b'writing top-level names to robosort_vision.egg-info/top_level.txt\n'}
+[10.809174] (robosort_vision) StdoutLine: {'line': b"writing manifest file 'robosort_vision.egg-info/SOURCES.txt'\n"}
+[10.855345] (-) TimerEvent: {}
+[10.958547] (-) TimerEvent: {}
+[11.059255] (-) TimerEvent: {}
+[11.160118] (-) TimerEvent: {}
+[11.241074] (robosort_vision) StdoutLine: {'line': b"reading manifest file 'robosort_vision.egg-info/SOURCES.txt'\n"}
+[11.243911] (robosort_vision) StdoutLine: {'line': b"writing manifest file 'robosort_vision.egg-info/SOURCES.txt'\n"}
+[11.260374] (-) TimerEvent: {}
+[11.362825] (-) TimerEvent: {}
+[11.376136] (robosort_vision) StdoutLine: {'line': b'running build_ext\n'}
+[11.376933] (robosort_vision) StdoutLine: {'line': b'Creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/python3.12/site-packages/robosort-vision.egg-link (link to .)\n'}
+[11.379609] (robosort_vision) StdoutLine: {'line': b'Installing arduino_serial script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/robosort_vision\n'}
+[11.381461] (robosort_vision) StdoutLine: {'line': b'Installing waste_segregation_controller script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/robosort_vision\n'}
+[11.382448] (robosort_vision) StdoutLine: {'line': b'Installing yolo_detector script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/robosort_vision\n'}
+[11.383642] (robosort_vision) StdoutLine: {'line': b'\n'}
+[11.384295] (robosort_vision) StdoutLine: {'line': b'Installed /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision\n'}
+[11.385036] (robosort_vision) StdoutLine: {'line': b'running symlink_data\n'}
+[11.386007] (robosort_vision) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/ament_index\n'}
+[11.386852] (robosort_vision) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/ament_index/resource_index\n'}
+[11.387417] (robosort_vision) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/ament_index/resource_index/packages\n'}
+[11.388198] (robosort_vision) StdoutLine: {'line': b'symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/resource/robosort_vision -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/ament_index/resource_index/packages\n'}
+[11.389427] (robosort_vision) StdoutLine: {'line': b'symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/package.xml -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/robosort_vision\n'}
+[11.390608] (robosort_vision) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/robosort_vision/launch\n'}
+[11.392680] (robosort_vision) StdoutLine: {'line': b'symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/launch/robosort.launch.py -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/robosort_vision/launch\n'}
+[11.394380] (robosort_vision) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/robosort_vision/config\n'}
+[11.396105] (robosort_vision) StdoutLine: {'line': b'symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/config/robosort.rviz -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/robosort_vision/config\n'}
+[11.463191] (-) TimerEvent: {}
+[11.564445] (-) TimerEvent: {}
+[11.604835] (robosort_vision) CommandEnded: {'returncode': 0}
+[11.664836] (-) TimerEvent: {}
+[11.691503] (robosort_vision) JobEnded: {'identifier': 'robosort_vision', 'rc': 0}
+[11.694658] (-) EventReactorShutdown: {}

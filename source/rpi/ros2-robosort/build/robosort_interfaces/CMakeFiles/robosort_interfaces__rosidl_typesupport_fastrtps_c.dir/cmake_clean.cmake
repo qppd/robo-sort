@@ -1,0 +1,25 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/get_distance__type_support_c.cpp.o"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/get_distance__type_support_c.cpp.o.d"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/move_robot_arm__type_support_c.cpp.o"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/move_robot_arm__type_support_c.cpp.o.d"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/rotate_bin__type_support_c.cpp.o"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/rotate_bin__type_support_c.cpp.o.d"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/set_servo__type_support_c.cpp.o"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/set_servo__type_support_c.cpp.o.d"
+  "librobosort_interfaces__rosidl_typesupport_fastrtps_c.pdb"
+  "librobosort_interfaces__rosidl_typesupport_fastrtps_c.so"
+  "rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/get_distance__rosidl_typesupport_fastrtps_c.h"
+  "rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/get_distance__type_support_c.cpp"
+  "rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/move_robot_arm__rosidl_typesupport_fastrtps_c.h"
+  "rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/move_robot_arm__type_support_c.cpp"
+  "rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/rotate_bin__rosidl_typesupport_fastrtps_c.h"
+  "rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/rotate_bin__type_support_c.cpp"
+  "rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/set_servo__rosidl_typesupport_fastrtps_c.h"
+  "rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/set_servo__type_support_c.cpp"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

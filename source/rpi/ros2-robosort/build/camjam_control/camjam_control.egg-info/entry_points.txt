@@ -1,0 +1,3 @@
+[console_scripts]
+control = camjam_control.camjam_controller:main
+move = camjam_control.camjam_movement:main

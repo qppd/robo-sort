@@ -1,0 +1,30 @@
+[6.678s] Invoking command in '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/build --no-deps symlink_data
+[9.039s] running develop
+[10.671s] running egg_info
+[10.672s] creating robosort_vision.egg-info
+[10.795s] writing robosort_vision.egg-info/PKG-INFO
+[10.796s] writing dependency_links to robosort_vision.egg-info/dependency_links.txt
+[10.797s] writing entry points to robosort_vision.egg-info/entry_points.txt
+[10.799s] writing requirements to robosort_vision.egg-info/requires.txt
+[10.800s] writing top-level names to robosort_vision.egg-info/top_level.txt
+[10.801s] writing manifest file 'robosort_vision.egg-info/SOURCES.txt'
+[11.232s] reading manifest file 'robosort_vision.egg-info/SOURCES.txt'
+[11.235s] writing manifest file 'robosort_vision.egg-info/SOURCES.txt'
+[11.368s] running build_ext
+[11.368s] Creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/python3.12/site-packages/robosort-vision.egg-link (link to .)
+[11.371s] Installing arduino_serial script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/robosort_vision
+[11.373s] Installing waste_segregation_controller script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/robosort_vision
+[11.374s] Installing yolo_detector script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/robosort_vision
+[11.375s] 
+[11.376s] Installed /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision
+[11.377s] running symlink_data
+[11.378s] creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/ament_index
+[11.378s] creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/ament_index/resource_index
+[11.379s] creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/ament_index/resource_index/packages
+[11.380s] symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/resource/robosort_vision -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/ament_index/resource_index/packages
+[11.381s] symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/package.xml -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/robosort_vision
+[11.383s] creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/robosort_vision/launch
+[11.385s] symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/launch/robosort.launch.py -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/robosort_vision/launch
+[11.387s] creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/robosort_vision/config
+[11.388s] symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/config/robosort.rviz -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/share/robosort_vision/config
+[11.598s] Invoked command in '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_vision/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_vision/build --no-deps symlink_data

@@ -1,0 +1,21 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from robosort_interfaces/srv/MoveRobotArm.srv
+// generated code does not contain a copyright notice
+
+
+module robosort_interfaces {
+  module srv {
+    @verbatim (language="comment", text=
+      "Service to move robot arm to position")
+    struct MoveRobotArm_Request {
+      @verbatim (language="comment", text=
+        "Joint angles [base, shoulder, elbow, wrist, gripper, lifter]")
+      sequence<float> joint_angles;
+    };
+    struct MoveRobotArm_Response {
+      boolean success;
+
+      string message;
+    };
+  };
+};

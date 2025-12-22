@@ -1,0 +1,9 @@
+source;share/camjam_sensors/hook/pythonpath.ps1
+source;share/camjam_sensors/hook/pythonpath.dsv
+source;share/camjam_sensors/hook/pythonpath.sh
+source;share/camjam_sensors/hook/ament_prefix_path.ps1
+source;share/camjam_sensors/hook/ament_prefix_path.dsv
+source;share/camjam_sensors/hook/ament_prefix_path.sh
+source;../../build/camjam_sensors/share/camjam_sensors/hook/pythonpath_develop.ps1
+source;../../build/camjam_sensors/share/camjam_sensors/hook/pythonpath_develop.dsv
+source;../../build/camjam_sensors/share/camjam_sensors/hook/pythonpath_develop.sh

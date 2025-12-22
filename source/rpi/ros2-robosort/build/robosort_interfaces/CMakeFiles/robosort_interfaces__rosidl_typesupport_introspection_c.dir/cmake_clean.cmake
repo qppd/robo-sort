@@ -1,0 +1,25 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/get_distance__type_support.c.o"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/get_distance__type_support.c.o.d"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/move_robot_arm__type_support.c.o"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/move_robot_arm__type_support.c.o.d"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/rotate_bin__type_support.c.o"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/rotate_bin__type_support.c.o.d"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/set_servo__type_support.c.o"
+  "CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/set_servo__type_support.c.o.d"
+  "librobosort_interfaces__rosidl_typesupport_introspection_c.pdb"
+  "librobosort_interfaces__rosidl_typesupport_introspection_c.so"
+  "rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/get_distance__rosidl_typesupport_introspection_c.h"
+  "rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/get_distance__type_support.c"
+  "rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/move_robot_arm__rosidl_typesupport_introspection_c.h"
+  "rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/move_robot_arm__type_support.c"
+  "rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/rotate_bin__rosidl_typesupport_introspection_c.h"
+  "rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/rotate_bin__type_support.c"
+  "rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/set_servo__rosidl_typesupport_introspection_c.h"
+  "rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/set_servo__type_support.c"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang C)
+  include(CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

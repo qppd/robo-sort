@@ -1,0 +1,25 @@
+running develop
+running egg_info
+creating camjam_control.egg-info
+writing camjam_control.egg-info/PKG-INFO
+writing dependency_links to camjam_control.egg-info/dependency_links.txt
+writing entry points to camjam_control.egg-info/entry_points.txt
+writing requirements to camjam_control.egg-info/requires.txt
+writing top-level names to camjam_control.egg-info/top_level.txt
+writing manifest file 'camjam_control.egg-info/SOURCES.txt'
+reading manifest file 'camjam_control.egg-info/SOURCES.txt'
+writing manifest file 'camjam_control.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/lib/python3.12/site-packages/camjam-control.egg-link (link to .)
+Installing control script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/lib/camjam_control
+Installing move script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/lib/camjam_control
+
+Installed /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control
+running symlink_data
+creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/ament_index
+creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/ament_index/resource_index
+creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/ament_index/resource_index/packages
+symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control/resource/camjam_control -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/ament_index/resource_index/packages
+symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control/package.xml -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/camjam_control
+creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/camjam_control/launch
+symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control/launch/camjam_control.launch.py -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/camjam_control/launch

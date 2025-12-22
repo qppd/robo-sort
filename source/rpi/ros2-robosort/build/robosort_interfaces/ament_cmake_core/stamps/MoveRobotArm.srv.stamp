@@ -1,0 +1,5 @@
+# Service to move robot arm to position
+float32[] joint_angles  # Joint angles [base, shoulder, elbow, wrist, gripper, lifter]
+---
+bool success
+string message

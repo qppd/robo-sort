@@ -1,0 +1,21 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from robosort_interfaces/srv/RotateBin.srv
+// generated code does not contain a copyright notice
+
+
+module robosort_interfaces {
+  module srv {
+    @verbatim (language="comment", text=
+      "Service to rotate bin to specific compartment")
+    struct RotateBin_Request {
+      @verbatim (language="comment", text=
+        "Compartment 0-3 (0=paper, 1=plastic, 2=metal, 3=other)")
+      int32 compartment_number;
+    };
+    struct RotateBin_Response {
+      boolean success;
+
+      string message;
+    };
+  };
+};

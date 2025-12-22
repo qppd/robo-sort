@@ -1,0 +1,247 @@
+[0.000000] (-) TimerEvent: {}
+[0.007070] (camjam_control) JobQueued: {'identifier': 'camjam_control', 'dependencies': OrderedDict()}
+[0.011033] (camjam_sensors) JobQueued: {'identifier': 'camjam_sensors', 'dependencies': OrderedDict()}
+[0.011643] (camjam_control) JobStarted: {'identifier': 'camjam_control'}
+[0.096981] (-) TimerEvent: {}
+[0.110743] (camjam_sensors) JobStarted: {'identifier': 'camjam_sensors'}
+[0.197160] (-) TimerEvent: {}
+[0.303890] (-) TimerEvent: {}
+[0.411098] (-) TimerEvent: {}
+[0.516992] (-) TimerEvent: {}
+[0.620687] (-) TimerEvent: {}
+[0.722354] (-) TimerEvent: {}
+[0.823787] (-) TimerEvent: {}
+[0.924931] (-) TimerEvent: {}
+[1.025721] (-) TimerEvent: {}
+[1.127668] (-) TimerEvent: {}
+[1.230764] (-) TimerEvent: {}
+[1.331980] (-) TimerEvent: {}
+[1.435969] (-) TimerEvent: {}
+[1.540886] (-) TimerEvent: {}
+[1.641923] (-) TimerEvent: {}
+[1.746380] (-) TimerEvent: {}
+[1.847793] (-) TimerEvent: {}
+[1.950762] (-) TimerEvent: {}
+[2.052125] (-) TimerEvent: {}
+[2.153085] (-) TimerEvent: {}
+[2.255625] (-) TimerEvent: {}
+[2.357937] (-) TimerEvent: {}
+[2.462430] (-) TimerEvent: {}
+[2.563054] (-) TimerEvent: {}
+[2.663764] (-) TimerEvent: {}
+[2.764902] (-) TimerEvent: {}
+[2.867650] (-) TimerEvent: {}
+[2.968731] (-) TimerEvent: {}
+[3.070117] (-) TimerEvent: {}
+[3.171110] (-) TimerEvent: {}
+[3.272392] (-) TimerEvent: {}
+[3.373355] (-) TimerEvent: {}
+[3.474270] (-) TimerEvent: {}
+[3.576235] (-) TimerEvent: {}
+[3.677393] (-) TimerEvent: {}
+[3.778511] (-) TimerEvent: {}
+[3.879440] (-) TimerEvent: {}
+[3.980053] (-) TimerEvent: {}
+[4.080813] (-) TimerEvent: {}
+[4.182174] (-) TimerEvent: {}
+[4.283167] (-) TimerEvent: {}
+[4.384809] (-) TimerEvent: {}
+[4.487441] (-) TimerEvent: {}
+[4.590732] (-) TimerEvent: {}
+[4.692198] (-) TimerEvent: {}
+[4.793059] (-) TimerEvent: {}
+[4.894147] (-) TimerEvent: {}
+[4.995250] (-) TimerEvent: {}
+[5.096348] (-) TimerEvent: {}
+[5.199148] (-) TimerEvent: {}
+[5.303824] (-) TimerEvent: {}
+[5.408834] (-) TimerEvent: {}
+[5.509608] (-) TimerEvent: {}
+[5.611003] (-) TimerEvent: {}
+[5.719952] (-) TimerEvent: {}
+[5.820842] (-) TimerEvent: {}
+[5.921947] (-) TimerEvent: {}
+[6.025080] (-) TimerEvent: {}
+[6.130329] (-) TimerEvent: {}
+[6.232921] (-) TimerEvent: {}
+[6.337768] (-) TimerEvent: {}
+[6.438739] (-) TimerEvent: {}
+[6.539406] (-) TimerEvent: {}
+[6.640129] (-) TimerEvent: {}
+[6.742643] (-) TimerEvent: {}
+[6.843413] (-) TimerEvent: {}
+[6.945430] (-) TimerEvent: {}
+[7.046067] (-) TimerEvent: {}
+[7.146792] (-) TimerEvent: {}
+[7.247427] (-) TimerEvent: {}
+[7.349372] (-) TimerEvent: {}
+[7.450364] (-) TimerEvent: {}
+[7.551057] (-) TimerEvent: {}
+[7.651801] (-) TimerEvent: {}
+[7.752437] (-) TimerEvent: {}
+[7.853728] (-) TimerEvent: {}
+[7.954434] (-) TimerEvent: {}
+[8.055084] (-) TimerEvent: {}
+[8.155725] (-) TimerEvent: {}
+[8.256312] (-) TimerEvent: {}
+[8.357004] (-) TimerEvent: {}
+[8.457683] (-) TimerEvent: {}
+[8.558339] (-) TimerEvent: {}
+[8.659178] (-) TimerEvent: {}
+[8.759843] (-) TimerEvent: {}
+[8.860562] (-) TimerEvent: {}
+[8.962623] (-) TimerEvent: {}
+[9.064563] (-) TimerEvent: {}
+[9.165310] (-) TimerEvent: {}
+[9.266903] (-) TimerEvent: {}
+[9.367621] (-) TimerEvent: {}
+[9.470687] (-) TimerEvent: {}
+[9.572000] (-) TimerEvent: {}
+[9.675385] (-) TimerEvent: {}
+[9.777070] (-) TimerEvent: {}
+[9.879173] (-) TimerEvent: {}
+[9.981225] (-) TimerEvent: {}
+[10.085217] (-) TimerEvent: {}
+[10.193000] (-) TimerEvent: {}
+[10.268809] (camjam_sensors) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors/build', '--no-deps', 'symlink_data'], 'cwd': '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors', 'env': {'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'robosort', 'GZ_CONFIG_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/share/gz:/opt/ros/jazzy/opt/sdformat_vendor/share/gz:/opt/ros/jazzy/opt/gz_gui_vendor/share/gz:/opt/ros/jazzy/opt/gz_transport_vendor/share/gz:/opt/ros/jazzy/opt/gz_rendering_vendor/share/gz:/opt/ros/jazzy/opt/gz_plugin_vendor/share/gz:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/share/gz:/opt/ros/jazzy/opt/gz_msgs_vendor/share/gz:/opt/ros/jazzy/opt/gz_common_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'GIT_ASKPASS': '/usr/share/code-insiders/resources/app/extensions/git/dist/askpass.sh', 'CLUTTER_DISABLE_MIPMAPPED_TEXT': '1', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/robosort', 'CHROME_DESKTOP': 'code-insiders.desktop', 'OLDPWD': '/home/robosort/robo-sort', 'TERM_PROGRAM_VERSION': '1.108.0-insider', 'DESKTOP_SESSION': 'ubuntu', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/code-insiders.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'VSCODE_GIT_ASKPASS_MAIN': '/usr/share/code-insiders/resources/app/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/usr/share/code-insiders/code-insiders', 'MANAGERPID': '1456', 'SYSTEMD_EXEC_PID': '1656', 'IM_CONFIG_CHECK_ENV': '1', 'VSCODE_PYTHON_AUTOACTIVATE_GUARD': '1', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '8743', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'robosort', 'JOURNAL_STREAM': '8:13304', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@wayland.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'robosort', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'FC_FONTATIONS': '1', 'PATH': '/opt/ros/jazzy/opt/gz_msgs_vendor/bin:/opt/ros/jazzy/opt/gz_tools_vendor/bin:/opt/ros/jazzy/opt/gz_ogre_next_vendor/bin:/opt/ros/jazzy/bin:/home/robosort/.config/Code - Insiders/User/globalStorage/github.copilot-chat/debugCommand:/home/robosort/.config/Code - Insiders/User/globalStorage/github.copilot-chat/copilotCli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/robosort-desktop:@/tmp/.ICE-unix/1614,unix/robosort-desktop:/tmp/.ICE-unix/1614', 'INVOCATION_ID': '244752fd1ae54fcc86b6d78f296cbac0', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'GDK_BACKEND': 'wayland', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.TL0PH3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'SBX_CHROME_API_RQ': '1', 'VSCODE_GIT_IPC_HANDLE': '/run/user/1000/vscode-git-6ce583beac.sock', 'TERM_PROGRAM': 'vscode', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GJS_DEBUG_OUTPUT': 'stderr', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'GIT_PAGER': 'cat', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'CMAKE_PREFIX_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}, 'shell': False}
+[10.297447] (-) TimerEvent: {}
+[10.413259] (-) TimerEvent: {}
+[10.507721] (camjam_control) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control/build', '--no-deps', 'symlink_data'], 'cwd': '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control', 'env': {'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'robosort', 'GZ_CONFIG_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/share/gz:/opt/ros/jazzy/opt/sdformat_vendor/share/gz:/opt/ros/jazzy/opt/gz_gui_vendor/share/gz:/opt/ros/jazzy/opt/gz_transport_vendor/share/gz:/opt/ros/jazzy/opt/gz_rendering_vendor/share/gz:/opt/ros/jazzy/opt/gz_plugin_vendor/share/gz:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/share/gz:/opt/ros/jazzy/opt/gz_msgs_vendor/share/gz:/opt/ros/jazzy/opt/gz_common_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'GIT_ASKPASS': '/usr/share/code-insiders/resources/app/extensions/git/dist/askpass.sh', 'CLUTTER_DISABLE_MIPMAPPED_TEXT': '1', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/robosort', 'CHROME_DESKTOP': 'code-insiders.desktop', 'OLDPWD': '/home/robosort/robo-sort', 'TERM_PROGRAM_VERSION': '1.108.0-insider', 'DESKTOP_SESSION': 'ubuntu', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/code-insiders.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'VSCODE_GIT_ASKPASS_MAIN': '/usr/share/code-insiders/resources/app/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/usr/share/code-insiders/code-insiders', 'MANAGERPID': '1456', 'SYSTEMD_EXEC_PID': '1656', 'IM_CONFIG_CHECK_ENV': '1', 'VSCODE_PYTHON_AUTOACTIVATE_GUARD': '1', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '8743', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'robosort', 'JOURNAL_STREAM': '8:13304', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@wayland.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'robosort', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'FC_FONTATIONS': '1', 'PATH': '/opt/ros/jazzy/opt/gz_msgs_vendor/bin:/opt/ros/jazzy/opt/gz_tools_vendor/bin:/opt/ros/jazzy/opt/gz_ogre_next_vendor/bin:/opt/ros/jazzy/bin:/home/robosort/.config/Code - Insiders/User/globalStorage/github.copilot-chat/debugCommand:/home/robosort/.config/Code - Insiders/User/globalStorage/github.copilot-chat/copilotCli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/robosort-desktop:@/tmp/.ICE-unix/1614,unix/robosort-desktop:/tmp/.ICE-unix/1614', 'INVOCATION_ID': '244752fd1ae54fcc86b6d78f296cbac0', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'GDK_BACKEND': 'wayland', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.TL0PH3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'SBX_CHROME_API_RQ': '1', 'VSCODE_GIT_IPC_HANDLE': '/run/user/1000/vscode-git-6ce583beac.sock', 'TERM_PROGRAM': 'vscode', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GJS_DEBUG_OUTPUT': 'stderr', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'GIT_PAGER': 'cat', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'CMAKE_PREFIX_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}, 'shell': False}
+[10.517798] (-) TimerEvent: {}
+[10.618920] (-) TimerEvent: {}
+[10.720162] (-) TimerEvent: {}
+[10.821621] (-) TimerEvent: {}
+[10.926960] (-) TimerEvent: {}
+[11.030357] (-) TimerEvent: {}
+[11.131273] (-) TimerEvent: {}
+[11.235784] (-) TimerEvent: {}
+[11.336787] (-) TimerEvent: {}
+[11.438698] (-) TimerEvent: {}
+[11.543354] (-) TimerEvent: {}
+[11.647394] (-) TimerEvent: {}
+[11.750190] (-) TimerEvent: {}
+[11.854710] (-) TimerEvent: {}
+[11.958117] (-) TimerEvent: {}
+[12.059624] (-) TimerEvent: {}
+[12.161654] (-) TimerEvent: {}
+[12.266786] (-) TimerEvent: {}
+[12.369308] (-) TimerEvent: {}
+[12.474927] (-) TimerEvent: {}
+[12.578922] (-) TimerEvent: {}
+[12.680671] (-) TimerEvent: {}
+[12.781564] (-) TimerEvent: {}
+[12.882796] (-) TimerEvent: {}
+[12.988428] (-) TimerEvent: {}
+[13.093738] (-) TimerEvent: {}
+[13.196748] (-) TimerEvent: {}
+[13.301761] (-) TimerEvent: {}
+[13.404302] (-) TimerEvent: {}
+[13.507691] (-) TimerEvent: {}
+[13.608821] (-) TimerEvent: {}
+[13.709590] (-) TimerEvent: {}
+[13.810227] (-) TimerEvent: {}
+[13.911885] (-) TimerEvent: {}
+[14.012694] (-) TimerEvent: {}
+[14.115652] (-) TimerEvent: {}
+[14.216891] (-) TimerEvent: {}
+[14.319298] (-) TimerEvent: {}
+[14.372917] (camjam_sensors) StdoutLine: {'line': b'running develop\n'}
+[14.420575] (-) TimerEvent: {}
+[14.522796] (-) TimerEvent: {}
+[14.541713] (camjam_control) StdoutLine: {'line': b'running develop\n'}
+[14.624767] (-) TimerEvent: {}
+[14.728711] (-) TimerEvent: {}
+[14.829510] (-) TimerEvent: {}
+[14.930664] (-) TimerEvent: {}
+[15.040139] (-) TimerEvent: {}
+[15.144734] (-) TimerEvent: {}
+[15.248137] (-) TimerEvent: {}
+[15.349588] (-) TimerEvent: {}
+[15.450380] (-) TimerEvent: {}
+[15.551271] (-) TimerEvent: {}
+[15.654786] (-) TimerEvent: {}
+[15.755657] (-) TimerEvent: {}
+[15.859673] (-) TimerEvent: {}
+[15.962948] (-) TimerEvent: {}
+[16.064720] (-) TimerEvent: {}
+[16.166118] (-) TimerEvent: {}
+[16.268795] (-) TimerEvent: {}
+[16.370646] (-) TimerEvent: {}
+[16.474666] (-) TimerEvent: {}
+[16.575617] (-) TimerEvent: {}
+[16.676893] (-) TimerEvent: {}
+[16.779731] (-) TimerEvent: {}
+[16.885168] (-) TimerEvent: {}
+[16.985950] (-) TimerEvent: {}
+[17.086682] (-) TimerEvent: {}
+[17.186961] (camjam_sensors) StdoutLine: {'line': b'running egg_info\n'}
+[17.187753] (-) TimerEvent: {}
+[17.196032] (camjam_sensors) StdoutLine: {'line': b'creating camjam_sensors.egg-info\n'}
+[17.289655] (-) TimerEvent: {}
+[17.357051] (camjam_control) StdoutLine: {'line': b'running egg_info\n'}
+[17.357877] (camjam_control) StdoutLine: {'line': b'creating camjam_control.egg-info\n'}
+[17.395549] (-) TimerEvent: {}
+[17.475863] (camjam_sensors) StdoutLine: {'line': b'writing camjam_sensors.egg-info/PKG-INFO\n'}
+[17.479803] (camjam_sensors) StdoutLine: {'line': b'writing dependency_links to camjam_sensors.egg-info/dependency_links.txt\n'}
+[17.484413] (camjam_sensors) StdoutLine: {'line': b'writing entry points to camjam_sensors.egg-info/entry_points.txt\n'}
+[17.485126] (camjam_sensors) StdoutLine: {'line': b'writing requirements to camjam_sensors.egg-info/requires.txt\n'}
+[17.485784] (camjam_sensors) StdoutLine: {'line': b'writing top-level names to camjam_sensors.egg-info/top_level.txt\n'}
+[17.486383] (camjam_sensors) StdoutLine: {'line': b"writing manifest file 'camjam_sensors.egg-info/SOURCES.txt'\n"}
+[17.499359] (-) TimerEvent: {}
+[17.607828] (-) TimerEvent: {}
+[17.663909] (camjam_control) StdoutLine: {'line': b'writing camjam_control.egg-info/PKG-INFO\n'}
+[17.667346] (camjam_control) StdoutLine: {'line': b'writing dependency_links to camjam_control.egg-info/dependency_links.txt\n'}
+[17.668094] (camjam_control) StdoutLine: {'line': b'writing entry points to camjam_control.egg-info/entry_points.txt\n'}
+[17.669214] (camjam_control) StdoutLine: {'line': b'writing requirements to camjam_control.egg-info/requires.txt\n'}
+[17.670126] (camjam_control) StdoutLine: {'line': b'writing top-level names to camjam_control.egg-info/top_level.txt\n'}
+[17.672157] (camjam_control) StdoutLine: {'line': b"writing manifest file 'camjam_control.egg-info/SOURCES.txt'\n"}
+[17.710089] (-) TimerEvent: {}
+[17.811280] (-) TimerEvent: {}
+[17.916156] (-) TimerEvent: {}
+[18.019733] (-) TimerEvent: {}
+[18.122103] (-) TimerEvent: {}
+[18.223046] (-) TimerEvent: {}
+[18.267217] (camjam_control) StdoutLine: {'line': b"reading manifest file 'camjam_control.egg-info/SOURCES.txt'\n"}
+[18.273438] (camjam_control) StdoutLine: {'line': b"writing manifest file 'camjam_control.egg-info/SOURCES.txt'\n"}
+[18.276893] (camjam_sensors) StdoutLine: {'line': b"reading manifest file 'camjam_sensors.egg-info/SOURCES.txt'\n"}
+[18.283586] (camjam_sensors) StdoutLine: {'line': b"writing manifest file 'camjam_sensors.egg-info/SOURCES.txt'\n"}
+[18.323657] (-) TimerEvent: {}
+[18.426617] (-) TimerEvent: {}
+[18.529719] (-) TimerEvent: {}
+[18.583805] (camjam_control) StdoutLine: {'line': b'running build_ext\n'}
+[18.584547] (camjam_control) StdoutLine: {'line': b'Creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/lib/python3.12/site-packages/camjam-control.egg-link (link to .)\n'}
+[18.593262] (camjam_control) StdoutLine: {'line': b'Installing control script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/lib/camjam_control\n'}
+[18.596318] (camjam_control) StdoutLine: {'line': b'Installing move script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/lib/camjam_control\n'}
+[18.598040] (camjam_control) StdoutLine: {'line': b'\n'}
+[18.600162] (camjam_control) StdoutLine: {'line': b'Installed /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control\n'}
+[18.605984] (camjam_control) StdoutLine: {'line': b'running symlink_data\n'}
+[18.607375] (camjam_control) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/ament_index\n'}
+[18.608390] (camjam_control) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/ament_index/resource_index\n'}
+[18.613449] (camjam_control) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/ament_index/resource_index/packages\n'}
+[18.624640] (camjam_control) StdoutLine: {'line': b'symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control/resource/camjam_control -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/ament_index/resource_index/packages\n'}
+[18.631814] (-) TimerEvent: {}
+[18.634175] (camjam_control) StdoutLine: {'line': b'symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control/package.xml -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/camjam_control\n'}
+[18.636881] (camjam_control) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/camjam_control/launch\n'}
+[18.638082] (camjam_control) StdoutLine: {'line': b'symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control/launch/camjam_control.launch.py -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control/share/camjam_control/launch\n'}
+[18.694019] (camjam_sensors) StdoutLine: {'line': b'running build_ext\n'}
+[18.704902] (camjam_sensors) StdoutLine: {'line': b'Creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/lib/python3.12/site-packages/camjam-sensors.egg-link (link to .)\n'}
+[18.710902] (camjam_sensors) StdoutLine: {'line': b'Installing distance script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/lib/camjam_sensors\n'}
+[18.720448] (camjam_sensors) StdoutLine: {'line': b'Installing line script to /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/lib/camjam_sensors\n'}
+[18.730790] (camjam_sensors) StdoutLine: {'line': b'\n'}
+[18.732446] (-) TimerEvent: {}
+[18.741217] (camjam_sensors) StdoutLine: {'line': b'Installed /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors\n'}
+[18.746493] (camjam_sensors) StdoutLine: {'line': b'running symlink_data\n'}
+[18.755360] (camjam_sensors) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/share/ament_index\n'}
+[18.768383] (camjam_sensors) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/share/ament_index/resource_index\n'}
+[18.770164] (camjam_sensors) StdoutLine: {'line': b'creating /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/share/ament_index/resource_index/packages\n'}
+[18.799773] (camjam_sensors) StdoutLine: {'line': b'symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors/resource/camjam_sensors -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/share/ament_index/resource_index/packages\n'}
+[18.809505] (camjam_sensors) StdoutLine: {'line': b'symbolically linking /home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_sensors/package.xml -> /home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors/share/camjam_sensors\n'}
+[18.836582] (-) TimerEvent: {}
+[18.942681] (-) TimerEvent: {}
+[18.997869] (camjam_control) CommandEnded: {'returncode': 0}
+[19.045018] (-) TimerEvent: {}
+[19.152214] (-) TimerEvent: {}
+[19.160701] (camjam_control) JobEnded: {'identifier': 'camjam_control', 'rc': 0}
+[19.168900] (camjam_sensors) CommandEnded: {'returncode': 0}
+[19.231733] (camjam_sensors) JobEnded: {'identifier': 'camjam_sensors', 'rc': 0}
+[19.236371] (-) EventReactorShutdown: {}

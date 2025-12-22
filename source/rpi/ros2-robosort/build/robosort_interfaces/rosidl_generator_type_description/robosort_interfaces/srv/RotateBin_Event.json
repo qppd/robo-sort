@@ -1,0 +1,173 @@
+{
+  "type_description_msg": {
+    "type_description": {
+      "type_name": "robosort_interfaces/srv/RotateBin_Event",
+      "fields": [
+        {
+          "name": "info",
+          "type": {
+            "type_id": 1,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": "service_msgs/msg/ServiceEventInfo"
+          },
+          "default_value": ""
+        },
+        {
+          "name": "request",
+          "type": {
+            "type_id": 97,
+            "capacity": 1,
+            "string_capacity": 0,
+            "nested_type_name": "robosort_interfaces/srv/RotateBin_Request"
+          },
+          "default_value": ""
+        },
+        {
+          "name": "response",
+          "type": {
+            "type_id": 97,
+            "capacity": 1,
+            "string_capacity": 0,
+            "nested_type_name": "robosort_interfaces/srv/RotateBin_Response"
+          },
+          "default_value": ""
+        }
+      ]
+    },
+    "referenced_type_descriptions": [
+      {
+        "type_name": "builtin_interfaces/msg/Time",
+        "fields": [
+          {
+            "name": "sec",
+            "type": {
+              "type_id": 6,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          },
+          {
+            "name": "nanosec",
+            "type": {
+              "type_id": 7,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "robosort_interfaces/srv/RotateBin_Request",
+        "fields": [
+          {
+            "name": "compartment_number",
+            "type": {
+              "type_id": 6,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "robosort_interfaces/srv/RotateBin_Response",
+        "fields": [
+          {
+            "name": "success",
+            "type": {
+              "type_id": 15,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          },
+          {
+            "name": "message",
+            "type": {
+              "type_id": 17,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "service_msgs/msg/ServiceEventInfo",
+        "fields": [
+          {
+            "name": "event_type",
+            "type": {
+              "type_id": 3,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          },
+          {
+            "name": "stamp",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "builtin_interfaces/msg/Time"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "client_gid",
+            "type": {
+              "type_id": 51,
+              "capacity": 16,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          },
+          {
+            "name": "sequence_number",
+            "type": {
+              "type_id": 8,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      }
+    ]
+  },
+  "type_hashes": [
+    {
+      "type_name": "robosort_interfaces/srv/RotateBin_Event",
+      "hash_string": "RIHS01_3a635cef81d90ea6595ab06dd678f198404f7c65a2dc06d534d1601ded567095"
+    },
+    {
+      "type_name": "builtin_interfaces/msg/Time",
+      "hash_string": "RIHS01_b106235e25a4c5ed35098aa0a61a3ee9c9b18d197f398b0e4206cea9acf9c197"
+    },
+    {
+      "type_name": "robosort_interfaces/srv/RotateBin_Request",
+      "hash_string": "RIHS01_65f4155ace66f9c3147a599c2fbb562c95e3aaf59e3efcf007886e1f62b787e7"
+    },
+    {
+      "type_name": "robosort_interfaces/srv/RotateBin_Response",
+      "hash_string": "RIHS01_45ca4c89b6ccc55e94ab98eb3917304e809052104acc41838173108cea2c98db"
+    },
+    {
+      "type_name": "service_msgs/msg/ServiceEventInfo",
+      "hash_string": "RIHS01_41bcbbe07a75c9b52bc96bfd5c24d7f0fc0a08c0cb7921b3373c5732345a6f45"
+    }
+  ]
+}

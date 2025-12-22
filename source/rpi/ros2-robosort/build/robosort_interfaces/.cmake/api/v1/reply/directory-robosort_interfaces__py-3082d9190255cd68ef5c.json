@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "robosort_interfaces__py",
+		"source" : "/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/robosort_interfaces__py"
+	}
+}

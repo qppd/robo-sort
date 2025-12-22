@@ -1,0 +1,14 @@
+{
+  "package_name": "robosort_interfaces",
+  "output_dir": "/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/rosidl_generator_type_description/robosort_interfaces",
+  "idl_tuples": [
+    "/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/rosidl_adapter/robosort_interfaces:srv/SetServo.idl",
+    "/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/rosidl_adapter/robosort_interfaces:srv/MoveRobotArm.idl",
+    "/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/rosidl_adapter/robosort_interfaces:srv/RotateBin.idl",
+    "/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/rosidl_adapter/robosort_interfaces:srv/GetDistance.idl"
+  ],
+  "include_paths": [
+    "service_msgs:/opt/ros/jazzy/share/service_msgs",
+    "builtin_interfaces:/opt/ros/jazzy/share/builtin_interfaces"
+  ]
+}
