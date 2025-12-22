@@ -661,6 +661,34 @@ The RoboSort Lifter Servo Coupling Adapter is a custom-designed 3D-printed coupl
 
 ---
 
+### RoboSort Lifter Servo Mount
+![RoboSort Lifter Servo Mount](model/RoboSort_Lifter_Servo_Mount.png)
+
+**Description:**
+The RoboSort Lifter Servo Mount is a custom-designed 3D-printed bracket specifically engineered to securely hold and position the servo motor responsible for the lifter mechanism in the RoboSort platform. This mount provides stable support and precise alignment for the servo, ensuring optimal performance of the vertical lifting system during waste sorting operations.
+
+**Key Features:**
+- **Precision Alignment:** Designed with exact tolerances to match standard servo motor dimensions for secure, wobble-free mounting.
+- **Vibration Dampening:** Includes features to minimize servo vibration during operation, improving control accuracy.
+- **Cable Management:** Integrated channels or clips for organizing servo power and signal cables.
+- **Adjustable Positioning:** Allows fine-tuning of servo orientation and height for optimal lifter mechanism operation.
+- **Material:** Recommended to print in PETG or ABS for strength, durability, and heat resistance.
+- **Mounting:** Attaches to the RoboSort frame using M3 screws and heat-set inserts for robust installation.
+
+**Usage:**
+- Position the servo motor into the mount and secure with screws.
+- Route the servo cables through the provided channels to prevent interference with moving parts.
+- Mount the assembly on the designated frame location for the lifter mechanism.
+- Ensure proper alignment with the lifter coupling adapter for efficient power transmission.
+- The mount supports the servo during continuous lifting and lowering operations.
+
+**3D Model Files:**
+- STL file: `RoboSort_Lifter_Servo_Mount.stl` is available in the `model/` directory.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ## Project Structure
 ```
 robo-sort/
