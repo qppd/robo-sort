@@ -1,26 +1,46 @@
 #include "ULTRASONIC_CONFIG.h"
 
-UltrasonicConfig::UltrasonicConfig() : _continuousMonitor(false), _monitorStartTime(0), _lastReadTime(0) {
-    // Constructor
+UltrasonicConfig::UltrasonicConfig() {
+    // Initialize pin arrays
+    _trigPins[0] = ULTRASONIC1_TRIG_PIN;
+    _trigPins[1] = ULTRASONIC2_TRIG_PIN;
+    _trigPins[2] = ULTRASONIC3_TRIG_PIN;
+    _trigPins[3] = ULTRASONIC4_TRIG_PIN;
+    
+    _echoPins[0] = ULTRASONIC1_ECHO_PIN;
+    _echoPins[1] = ULTRASONIC2_ECHO_PIN;
+    _echoPins[2] = ULTRASONIC3_ECHO_PIN;
+    _echoPins[3] = ULTRASONIC4_ECHO_PIN;
+    
+    // Initialize monitoring arrays
+    for (uint8_t i = 0; i < NUM_ULTRASONIC; i++) {
+        _continuousMonitor[i] = false;
+        _monitorStartTime[i] = 0;
+        _lastReadTime[i] = 0;
+    }
 }
 
 void UltrasonicConfig::begin() {
-    pinMode(TRIG_PIN, OUTPUT);
-    pinMode(ECHO_PIN, INPUT);
-    digitalWrite(TRIG_PIN, LOW);
+    for (uint8_t i = 0; i < NUM_ULTRASONIC; i++) {
+        pinMode(_trigPins[i], OUTPUT);
+        pinMode(_echoPins[i], INPUT);
+        digitalWrite(_trigPins[i], LOW);
+    }
     delayMicroseconds(2);
 }
 
-long UltrasonicConfig::measureDistance() {
+long UltrasonicConfig::measureDistance(uint8_t sensor) {
+    if (sensor >= NUM_ULTRASONIC) return 0;
+    
     // Send ultrasonic pulse
-    digitalWrite(TRIG_PIN, LOW);
+    digitalWrite(_trigPins[sensor], LOW);
     delayMicroseconds(2);
-    digitalWrite(TRIG_PIN, HIGH);
+    digitalWrite(_trigPins[sensor], HIGH);
     delayMicroseconds(10);
-    digitalWrite(TRIG_PIN, LOW);
+    digitalWrite(_trigPins[sensor], LOW);
     
     // Read echo pulse
-    long duration = pulseIn(ECHO_PIN, HIGH, TIMEOUT);
+    long duration = pulseIn(_echoPins[sensor], HIGH, TIMEOUT);
     
     // Calculate distance in cm
     // Speed of sound is 343 m/s or 29.1 microseconds per cm
@@ -35,41 +55,46 @@ long UltrasonicConfig::measureDistance() {
     return distance;
 }
 
-long UltrasonicConfig::getDistance() {
-    return measureDistance();
+long UltrasonicConfig::getDistance(uint8_t sensor) {
+    return measureDistance(sensor);
 }
 
-long UltrasonicConfig::getDistanceAverage(uint8_t samples) {
+long UltrasonicConfig::getDistanceAverage(uint8_t sensor, uint8_t samples) {
+    if (sensor >= NUM_ULTRASONIC) return 0;
+    
     long sum = 0;
     uint8_t validSamples = 0;
     
     for (uint8_t i = 0; i < samples; i++) {
-        long distance = measureDistance();
+        long distance = measureDistance(sensor);
         if (distance > 0) {
             sum += distance;
             validSamples++;
         }
-        delay(10); // Small delay between samples
+        delay(10); // Small delay between measurements
     }
     
-    if (validSamples == 0) {
-        return 0;
-    }
-    
+    if (validSamples == 0) return 0;
     return sum / validSamples;
 }
 
-bool UltrasonicConfig::isObjectDetected(long threshold) {
-    long distance = getDistance();
-    return (distance > 0 && distance < threshold);
+bool UltrasonicConfig::isObjectDetected(uint8_t sensor, long threshold) {
+    if (sensor >= NUM_ULTRASONIC) return false;
+    
+    long distance = getDistance(sensor);
+    return (distance > 0 && distance <= threshold);
 }
 
-void UltrasonicConfig::testSensor() {
-    Serial.println("=== Ultrasonic Sensor Test ===");
+void UltrasonicConfig::testSensor(uint8_t sensor) {
+    if (sensor >= NUM_ULTRASONIC) return;
+    
+    Serial.print("=== Ultrasonic Sensor ");
+    Serial.print(sensor + 1);
+    Serial.println(" Test ===");
     Serial.println("Taking 10 readings...");
     
     for (int i = 0; i < 10; i++) {
-        long distance = getDistance();
+        long distance = getDistance(sensor);
         Serial.print("Reading ");
         Serial.print(i + 1);
         Serial.print(": ");
@@ -85,7 +110,7 @@ void UltrasonicConfig::testSensor() {
     }
     
     Serial.println("\nAverage distance test (5 samples):");
-    long avgDistance = getDistanceAverage(5);
+    long avgDistance = getDistanceAverage(sensor, 5);
     if (avgDistance == 0) {
         Serial.println("No valid readings");
     } else {
@@ -97,39 +122,58 @@ void UltrasonicConfig::testSensor() {
     Serial.println("=== Test Complete ===");
 }
 
-void UltrasonicConfig::startContinuousMonitor() {
-    _continuousMonitor = true;
-    _monitorStartTime = millis();
-    _lastReadTime = 0;
-    Serial.println("Ultrasonic continuous monitoring started (20 seconds).");
+void UltrasonicConfig::testAllSensors() {
+    for (uint8_t i = 0; i < NUM_ULTRASONIC; i++) {
+        testSensor(i);
+        Serial.println();
+    }
 }
 
-void UltrasonicConfig::stopContinuousMonitor() {
-    _continuousMonitor = false;
-    Serial.println("Ultrasonic continuous monitoring stopped.");
+void UltrasonicConfig::startContinuousMonitor(uint8_t sensor) {
+    if (sensor >= NUM_ULTRASONIC) return;
+    
+    _continuousMonitor[sensor] = true;
+    _monitorStartTime[sensor] = millis();
+    _lastReadTime[sensor] = 0;
+    Serial.print("Ultrasonic ");
+    Serial.print(sensor + 1);
+    Serial.println(" continuous monitoring started (20 seconds).");
+}
+
+void UltrasonicConfig::stopContinuousMonitor(uint8_t sensor) {
+    if (sensor >= NUM_ULTRASONIC) return;
+    
+    _continuousMonitor[sensor] = false;
+    Serial.print("Ultrasonic ");
+    Serial.print(sensor + 1);
+    Serial.println(" continuous monitoring stopped.");
 }
 
 void UltrasonicConfig::update() {
-    if (_continuousMonitor) {
-        unsigned long now = millis();
-        
-        // Check if 20 seconds elapsed
-        if (now - _monitorStartTime >= 20000) {
-            stopContinuousMonitor();
-            return;
-        }
-        
-        // Read distance every 500ms
-        if (now - _lastReadTime >= 500) {
-            long distance = getDistance();
-            Serial.print("Distance: ");
-            if (distance == 0) {
-                Serial.println("Out of range");
-            } else {
-                Serial.print(distance);
-                Serial.println(" cm");
+    unsigned long now = millis();
+    
+    for (uint8_t sensor = 0; sensor < NUM_ULTRASONIC; sensor++) {
+        if (_continuousMonitor[sensor]) {
+            // Check if 20 seconds elapsed
+            if (now - _monitorStartTime[sensor] >= 20000) {
+                stopContinuousMonitor(sensor);
+                continue;
             }
-            _lastReadTime = now;
+            
+            // Read distance every 500ms
+            if (now - _lastReadTime[sensor] >= 500) {
+                long distance = getDistance(sensor);
+                Serial.print("Ultrasonic ");
+                Serial.print(sensor + 1);
+                Serial.print(" Distance: ");
+                if (distance == 0) {
+                    Serial.println("Out of range");
+                } else {
+                    Serial.print(distance);
+                    Serial.println(" cm");
+                }
+                _lastReadTime[sensor] = now;
+            }
         }
     }
 }

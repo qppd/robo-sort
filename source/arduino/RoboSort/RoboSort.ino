@@ -26,7 +26,8 @@ void setup() {
   Serial.println("  Motors: A or B");
   Serial.println("  Directions: F (forward), B (backward), S (stop), BR (brake)");
   Serial.println("  Speed: 0-255");
-  Serial.println("Ultrasonic Commands: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>, UCTEST, UCSTOP");
+  Serial.println("Ultrasonic Commands: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
+  Serial.println("  Sensors: 1-4 (default: 1)");
   Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP");
   Serial.println("  Dir: 0 (CW), 1 (CCW)");
   Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING");
@@ -130,57 +131,128 @@ void loop() {
       }
     }
     // Ultrasonic commands
-    else if (input.equalsIgnoreCase("UTEST")) {
-      ultrasonicConfig.testSensor();
-    } else if (input.equalsIgnoreCase("UDIST")) {
-      long distance = ultrasonicConfig.getDistance();
+    else if (input.startsWith("UTEST")) {
+      int sensor = 0; // Default sensor 1 (0-indexed)
+      int spaceIdx = input.indexOf(' ');
+      if (spaceIdx > 0) {
+        sensor = input.substring(spaceIdx + 1).toInt() - 1; // Convert to 0-indexed
+        if (sensor < 0 || sensor >= NUM_ULTRASONIC) {
+          Serial.println("Invalid sensor number. Range: 1-4");
+          return;
+        }
+      }
+      ultrasonicConfig.testSensor(sensor);
+    } else if (input.startsWith("UDIST")) {
+      int sensor = 0; // Default sensor 1
+      int spaceIdx = input.indexOf(' ');
+      if (spaceIdx > 0) {
+        sensor = input.substring(spaceIdx + 1).toInt() - 1;
+        if (sensor < 0 || sensor >= NUM_ULTRASONIC) {
+          Serial.println("Invalid sensor number. Range: 1-4");
+          return;
+        }
+      }
+      long distance = ultrasonicConfig.getDistance(sensor);
+      Serial.print("Ultrasonic ");
+      Serial.print(sensor + 1);
+      Serial.print(" Distance: ");
       if (distance == 0) {
-        Serial.println("Distance: Out of range or no echo");
+        Serial.println("Out of range or no echo");
       } else {
-        Serial.print("Distance: ");
         Serial.print(distance);
         Serial.println(" cm");
       }
     } else if (input.startsWith("UAVG")) {
-      int spaceIdx = input.indexOf(' ');
+      // Parse: UAVG <sensor> <samples>
+      input = input.substring(4); // Remove 'UAVG'
+      int firstSpace = input.indexOf(' ');
+      int secondSpace = input.indexOf(' ', firstSpace + 1);
+      
+      int sensor = 0; // Default sensor 1
       int samples = 3; // Default
-      if (spaceIdx > 0) {
-        samples = input.substring(spaceIdx + 1).toInt();
+      
+      if (firstSpace > 0) {
+        sensor = input.substring(0, firstSpace).toInt() - 1;
+        if (sensor < 0 || sensor >= NUM_ULTRASONIC) {
+          Serial.println("Invalid sensor number. Range: 1-4");
+          return;
+        }
+        
+        if (secondSpace > firstSpace) {
+          samples = input.substring(secondSpace + 1).toInt();
+        } else {
+          samples = input.substring(firstSpace + 1).toInt();
+        }
+        
         if (samples < 1 || samples > 10) {
           Serial.println("Invalid sample count. Range: 1-10");
           return;
         }
       }
-      long avgDistance = ultrasonicConfig.getDistanceAverage(samples);
+      
+      long avgDistance = ultrasonicConfig.getDistanceAverage(sensor, samples);
+      Serial.print("Ultrasonic ");
+      Serial.print(sensor + 1);
+      Serial.print(" Average distance (");
+      Serial.print(samples);
+      Serial.print(" samples): ");
       if (avgDistance == 0) {
-        Serial.println("Average distance: No valid readings");
+        Serial.println("No valid readings");
       } else {
-        Serial.print("Average distance (");
-        Serial.print(samples);
-        Serial.print(" samples): ");
         Serial.print(avgDistance);
         Serial.println(" cm");
       }
     } else if (input.startsWith("UDETECT")) {
+      // Parse: UDETECT <sensor> <threshold>
+      input = input.substring(7); // Remove 'UDETECT'
       int spaceIdx = input.indexOf(' ');
+      
+      int sensor = 0; // Default sensor 1
+      long threshold = 50; // Default threshold
+      
       if (spaceIdx > 0) {
-        long threshold = input.substring(spaceIdx + 1).toInt();
+        sensor = input.substring(0, spaceIdx).toInt() - 1;
+        threshold = input.substring(spaceIdx + 1).toInt();
+        
+        if (sensor < 0 || sensor >= NUM_ULTRASONIC) {
+          Serial.println("Invalid sensor number. Range: 1-4");
+          return;
+        }
         if (threshold < 1 || threshold > MAX_DISTANCE) {
           Serial.println("Invalid threshold. Range: 1-400 cm");
           return;
         }
-        bool detected = ultrasonicConfig.isObjectDetected(threshold);
-        Serial.print("Object detection (threshold: ");
-        Serial.print(threshold);
-        Serial.print(" cm): ");
-        Serial.println(detected ? "DETECTED" : "NOT DETECTED");
-      } else {
-        Serial.println("Invalid command format. Use: UDETECT <threshold>");
       }
-    } else if (input.equalsIgnoreCase("UCTEST")) {
-      ultrasonicConfig.startContinuousMonitor();
-    } else if (input.equalsIgnoreCase("UCSTOP")) {
-      ultrasonicConfig.stopContinuousMonitor();
+      
+      bool detected = ultrasonicConfig.isObjectDetected(sensor, threshold);
+      Serial.print("Ultrasonic ");
+      Serial.print(sensor + 1);
+      Serial.print(" Object detection (threshold: ");
+      Serial.print(threshold);
+      Serial.print(" cm): ");
+      Serial.println(detected ? "DETECTED" : "NOT DETECTED");
+    } else if (input.startsWith("UCTEST")) {
+      int sensor = 0; // Default sensor 1
+      int spaceIdx = input.indexOf(' ');
+      if (spaceIdx > 0) {
+        sensor = input.substring(spaceIdx + 1).toInt() - 1;
+        if (sensor < 0 || sensor >= NUM_ULTRASONIC) {
+          Serial.println("Invalid sensor number. Range: 1-4");
+          return;
+        }
+      }
+      ultrasonicConfig.startContinuousMonitor(sensor);
+    } else if (input.startsWith("UCSTOP")) {
+      int sensor = 0; // Default sensor 1
+      int spaceIdx = input.indexOf(' ');
+      if (spaceIdx > 0) {
+        sensor = input.substring(spaceIdx + 1).toInt() - 1;
+        if (sensor < 0 || sensor >= NUM_ULTRASONIC) {
+          Serial.println("Invalid sensor number. Range: 1-4");
+          return;
+        }
+      }
+      ultrasonicConfig.stopContinuousMonitor(sensor);
     }
     // Stepper commands
     else if (input.equalsIgnoreCase("STEPTEST")) {
@@ -247,7 +319,7 @@ void loop() {
       Serial.println("Unknown command.");
       Serial.println("Servo: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
       Serial.println("Motor: MTEST, M<motor> <direction> <speed>, MSTOP, MCTEST, MCSTOP");
-      Serial.println("Ultrasonic: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>, UCTEST, UCSTOP");
+      Serial.println("Ultrasonic: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
       Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP");
       Serial.println("Buzzer: BTEST, BSUCCESS, BERROR, BWARNING");
     }
