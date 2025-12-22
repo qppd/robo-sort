@@ -25,8 +25,8 @@
 
 // ===== STEPPER MOTOR DRIVER (TB6600) PINS =====
 #define STEPPER_STEP_PIN 3  // PUL+ connected to pin 3
-#define STEPPER_DIR_PIN 13  // DIR+ connected to pin 13
-#define STEPPER_ENA_PIN 14  // ENA+ connected to pin 14
+#define STEPPER_DIR_PIN 22  // DIR+ connected to pin 22
+#define STEPPER_ENA_PIN 23  // ENA+ connected to pin 23
 
 // ===== BUZZER PIN =====
 #define BUZZER_PIN 6        // Buzzer connected to pin 6
