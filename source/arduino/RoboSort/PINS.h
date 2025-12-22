@@ -16,7 +16,7 @@
 
 // L298N Module 2 - Motor B Pins
 #define MOTOR_B_IN1 10   // IN1 pin for Motor B
-#define MOTOR_B_IN2 11   // IN2 pin for Motor B
+#define MOTOR_B_IN2 12   // IN2 pin for Motor B
 #define MOTOR_B_ENB 8    // ENB (PWM) pin for Motor B speed control
 
 // ===== ULTRASONIC SENSOR (HC-SR04) PINS =====
@@ -25,8 +25,8 @@
 
 // ===== STEPPER MOTOR DRIVER (TB6600) PINS =====
 #define STEPPER_STEP_PIN 3  // PUL+ connected to pin 3
-#define STEPPER_DIR_PIN 4   // DIR+ connected to pin 4
-#define STEPPER_ENA_PIN 5   // ENA+ connected to pin 5
+#define STEPPER_DIR_PIN 13  // DIR+ connected to pin 13
+#define STEPPER_ENA_PIN 14  // ENA+ connected to pin 14
 
 // ===== BUZZER PIN =====
 #define BUZZER_PIN 6        // Buzzer connected to pin 6
