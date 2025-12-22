@@ -28,4 +28,7 @@
 #define STEPPER_DIR_PIN 4   // DIR+ connected to pin 4
 #define STEPPER_ENA_PIN 5   // ENA+ connected to pin 5
 
+// ===== BUZZER PIN =====
+#define BUZZER_PIN 6        // Buzzer connected to pin 6
+
 #endif // PINS_H
