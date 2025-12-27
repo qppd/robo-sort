@@ -634,6 +634,32 @@ The RoboSort Bearing Bin Guide Mount is a custom-designed 3D-printed bracket spe
 
 ---
 
+### RoboSort Bin Gear
+![RoboSort Bin Gear](model/RoboSort_Bin_Gear.png)
+
+**Description:**
+The RoboSort Bin Gear is a custom-designed 3D-printed gear component specifically engineered for the bin rotation mechanism in the RoboSort platform. This gear provides the necessary torque transmission and rotational motion for sorting bins, ensuring precise positioning during waste segregation operations.
+
+**Key Features:**
+- **Precision Teeth:** Designed with accurate gear teeth for smooth and reliable rotation.
+- **Secure Mounting:** Includes mounting holes for M3 screws and heat-set inserts for robust attachment.
+- **Torque Transmission:** Optimized for efficient power transfer from the motor to the bin mechanism.
+- **Modular Design:** Allows for easy integration with the bin rotation system.
+- **Material:** Recommended to print in PETG or ABS for strength and wear resistance.
+- **Mounting:** Attaches to the RoboSort bin assembly using standard fasteners.
+
+**Usage:**
+- Install the gear onto the bin rotation shaft according to specifications.
+- Ensure proper meshing with the drive gear for optimal performance.
+- Mount the assembly on the designated bin location for rotational sorting.
+
+**3D Model Files:**
+- STL file: `RoboSort_Bin_Gear.stl` is available in the `model/` directory.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ### RoboSort Ultrasonic Case
 ![RoboSort Ultrasonic Case](model/RoboSort_Ultrasonic_Case.png)
 
