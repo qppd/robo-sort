@@ -607,6 +607,33 @@ The RoboSort Plate Holder is a custom-designed 3D-printed bracket specifically e
 
 ---
 
+### RoboSort Bearing Bin Guide Mount
+![RoboSort Bearing Bin Guide Mount](model/RoboSort_Bearing_Bin_Guide_Mount.png)
+
+**Description:**
+The RoboSort Bearing Bin Guide Mount is a custom-designed 3D-printed bracket specifically engineered to securely hold bearings and guide rails for the bin mechanism in the RoboSort platform. This mount provides precise alignment and support for smooth linear motion of the sorting bins, ensuring accurate positioning during waste segregation operations.
+
+**Key Features:**
+- **Precision Alignment:** Designed with exact tolerances for bearing and guide rail installation.
+- **Secure Mounting:** Includes mounting holes for M3 screws and heat-set inserts for robust attachment.
+- **Vibration Resistance:** Features designed to minimize vibration and ensure smooth operation.
+- **Modular Design:** Allows for easy assembly and maintenance of the bin mechanism.
+- **Material:** Recommended to print in PETG or ABS for strength and durability.
+- **Mounting:** Attaches to the RoboSort frame using standard fasteners.
+
+**Usage:**
+- Install bearings and guide rails into the mount according to specifications.
+- Mount the assembly on the designated frame location for bin guidance.
+- Ensure proper alignment for smooth linear motion of the sorting bins.
+
+**3D Model Files:**
+- STL file: `RoboSort_Bearing_Bin_Guide_Mount.stl` is available in the `model/` directory.
+- G-code file: `CE3V3SE_RoboSort_Bearing_Bin_Guide_Mount.gcode` (pre-sliced for Creality Ender-3 V3 SE printer).
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ### RoboSort Ultrasonic Case
 ![RoboSort Ultrasonic Case](model/RoboSort_Ultrasonic_Case.png)
 
