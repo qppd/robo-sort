@@ -16,6 +16,10 @@
 *.gcode
 *.GCODE
 
+# Ignore build directories
+build/
+*/build/
+
 # Ignore backup and temp files
 *.bak
 *.tmp
