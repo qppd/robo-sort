@@ -1,0 +1,1 @@
+/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/get_distance__rosidl_typesupport_fastrtps_c.h

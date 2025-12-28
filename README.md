@@ -742,6 +742,34 @@ The RoboSort Lifter Servo Mount is a custom-designed 3D-printed bracket specific
 
 ---
 
+### RoboSort Gripper
+![RoboSort Gripper](model/robosort-arm-gripper.jpg)
+
+**Description:**
+The RoboSort Gripper is a custom-designed robotic gripper specifically engineered for handling and manipulating waste materials in the RoboSort system. This gripper provides precise and reliable grasping capabilities for paper and plastic items during the automated sorting process. The model is sourced from Thingiverse (https://www.thingiverse.com/thing:6782186) and has been integrated into the RoboSort platform for optimal performance.
+
+**Key Features:**
+- **Precision Gripping:** Designed for secure handling of various waste materials without damage.
+- **Robotic Arm Integration:** Compatible with the 5-DOF robotic arm for coordinated material transfer.
+- **Lightweight Construction:** Optimized design to minimize load on servo motors during operation.
+- **Adjustable Grip:** Allows for different grip strengths based on material type and size.
+- **Durable Materials:** Recommended to print in PETG or ABS for strength and wear resistance.
+- **Modular Design:** Easy to assemble and maintain as part of the robotic system.
+
+**Usage:**
+- Install the gripper onto the robotic arm's end effector.
+- Calibrate grip strength for different material types (paper vs plastic).
+- Use in conjunction with the vision system for targeted material pickup.
+- Ensure proper alignment with the plate and bin mechanisms for smooth sorting operations.
+
+**3D Model Files:**
+- STL files available from Thingiverse: https://www.thingiverse.com/thing:6782186
+- Reference images: `robosort-arm-gripper.jpg` and `robosort-arm-gripper-2.jpg` in the `model/` directory.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ## Project Structure
 ```
 robo-sort/
