@@ -513,9 +513,6 @@ The RoboSort Lidar Mount is a custom-designed 3D-printed bracket specifically en
 - Route the cables through the provided channels to prevent tangling or snagging during arm movement.
 - The mount is positioned to provide a clear 360° scan without obstruction from the robotic arm or bins.
 
-**3D Model File:**
-- The STL file for the Lidar Mount (`RoboSort_Lidar_Mount.stl`) is available in the `model/` directory (ignored by git, but the image is shown here for reference).
-
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
 ---
@@ -540,10 +537,6 @@ The RoboSort Limit Switch Mount is a custom-designed 3D-printed bracket engineer
 - Adjust the switch position to trigger at the correct boundary point.
 - Connect the switch to the Arduino for homing and safety limit detection.
 
-**3D Model File:**
-- The STL file for the Limit Switch Mount (`RoboSort_Limit_Switch_Mount.stl`) is available in the `model/` directory (ignored by git, but the image is shown here for reference).
-
-
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
 ---
@@ -567,10 +560,6 @@ The RoboSort Plate is a custom-designed 3D-printed platform component specifical
 - Ensure proper alignment with the Plate Holder for smooth up/down movement.
 - The plate moves vertically with the arm to position materials at different heights for sorting.
 - Works in conjunction with the gripper system for material transfer.
-
-**3D Model Files:**
-- G-code file: `CE3V3SE_RoboSort_Plate.gcode` (pre-sliced for Creality Ender-3 V3 SE printer).
-
 
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
@@ -598,11 +587,6 @@ The RoboSort Plate Holder is a custom-designed 3D-printed bracket specifically e
 - Ensure the plate is level and properly aligned for smooth vertical movement.
 - The holder maintains plate position during the entire up/down sorting cycle.
 
-**3D Model Files:**
-- STL file: `RoboSort_Plate_Holder.stl` is available in the `model/` directory.
-- G-code file: `CE3V3SE_RoboSort_Plate_Holder.gcode` (pre-sliced for Creality Ender-3 V3 SE printer).
-
-
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
 ---
@@ -625,10 +609,6 @@ The RoboSort Bearing Bin Guide Mount is a custom-designed 3D-printed bracket spe
 - Install bearings and guide rails into the mount according to specifications.
 - Mount the assembly on the designated frame location for bin guidance.
 - Ensure proper alignment for smooth linear motion of the sorting bins.
-
-**3D Model Files:**
-- STL file: `RoboSort_Bearing_Bin_Guide_Mount.stl` is available in the `model/` directory.
-- G-code file: `CE3V3SE_RoboSort_Bearing_Bin_Guide_Mount.gcode` (pre-sliced for Creality Ender-3 V3 SE printer).
 
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
@@ -653,9 +633,6 @@ The RoboSort Bin Gear is a custom-designed 3D-printed gear component specificall
 - Ensure proper meshing with the drive gear for optimal performance.
 - Mount the assembly on the designated bin location for rotational sorting.
 
-**3D Model Files:**
-- STL file: `RoboSort_Bin_Gear.stl` is available in the `model/` directory.
-
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
 ---
@@ -678,10 +655,6 @@ The RoboSort Ultrasonic Case is a custom-designed 3D-printed enclosure specifica
 - Place the HC-SR04 sensor into the case, align the pins, and secure with screws.
 - Route the cables through the provided channels to prevent tangling.
 - Mount the case on the designated frame location for optimal sensor positioning.
-
-**3D Model Files:**
-- STL file: `RoboSort_Ultrasonic_Case.stl` is available in the `model/` directory.
-
 
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
@@ -706,9 +679,6 @@ The RoboSort Lifter Servo Coupling Adapter is a custom-designed 3D-printed coupl
 - Connect the adapter to the lifter mechanism's drive input.
 - Ensure proper alignment to prevent binding during operation.
 - The adapter transmits servo rotation to linear lifting motion for material handling.
-
-**3D Model Files:**
-- STL file: `RoboSort_Lifter_Servo_Coupling_Adapter.stl` is available in the `model/` directory.
 
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
@@ -735,9 +705,6 @@ The RoboSort Lifter Servo Mount is a custom-designed 3D-printed bracket specific
 - Ensure proper alignment with the lifter coupling adapter for efficient power transmission.
 - The mount supports the servo during continuous lifting and lowering operations.
 
-**3D Model Files:**
-- STL file: `RoboSort_Lifter_Servo_Mount.stl` is available in the `model/` directory.
-
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
 ---
@@ -762,9 +729,54 @@ The RoboSort Gripper is a custom-designed robotic gripper specifically engineere
 - Use in conjunction with the vision system for targeted material pickup.
 - Ensure proper alignment with the plate and bin mechanisms for smooth sorting operations.
 
-**3D Model Files:**
-- STL files available from Thingiverse: https://www.thingiverse.com/thing:6782186
-- Reference images: `robosort-arm-gripper.jpg` and `robosort-arm-gripper-2.jpg` in the `model/` directory.
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
+### RoboSort Bin Entrance Safety Mount
+![RoboSort Bin Entrance Safety Mount](model/RoboSort_Bin_Entrance_Safety_Mount.png)
+
+**Description:**
+The RoboSort Bin Entrance Safety Mount is a custom-designed 3D-printed safety component specifically engineered to protect users from sharp edges at the bin entrance. Since the material bins are constructed from plain sheet metal with potentially hazardous sharp edges, this mount provides a protective barrier and smooth entry surface to prevent cuts and injuries during waste material insertion.
+
+**Key Features:**
+- **Safety Protection:** Designed with rounded edges and protective padding to eliminate sharp contact points.
+- **Secure Mounting:** Includes mounting holes for M3 screws and heat-set inserts for robust attachment to the bin entrance.
+- **Smooth Surface:** Provides a gentle, curved entry guide for safe material insertion.
+- **Durable Construction:** Recommended to print in PETG or ABS for strength and impact resistance.
+- **Universal Fit:** Compatible with standard bin designs and can be adapted for different bin sizes.
+- **Easy Installation:** Modular design allows for quick assembly and maintenance.
+
+**Usage:**
+- Install the safety mount at the entrance of each sorting bin.
+- Ensure the protective surface is positioned to cover all sharp edges.
+- Regularly inspect for wear and replace as needed to maintain safety standards.
+- Works in conjunction with the bin rotation system for complete waste segregation safety.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
+### RoboSort Bin Stepper Mount
+![RoboSort Bin Stepper Mount](model/RoboSort_Bin_Stepper_Mount.png)
+
+**Description:**
+The RoboSort Bin Stepper Mount is a custom-designed 3D-printed bracket specifically engineered to securely hold and position the stepper motor responsible for bin rotation in the RoboSort platform. This mount provides precise alignment and stable support for the stepper motor, ensuring accurate and reliable rotational movement of the sorting bins during waste segregation operations.
+
+**Key Features:**
+- **Precision Alignment:** Designed with exact tolerances to match standard NEMA stepper motor dimensions for secure, wobble-free mounting.
+- **Vibration Dampening:** Includes features to minimize motor vibration during operation, improving control accuracy.
+- **Cable Management:** Integrated channels or clips for organizing stepper motor power and signal cables.
+- **Adjustable Positioning:** Allows fine-tuning of motor orientation for optimal bin rotation performance.
+- **Material:** Recommended to print in PETG or ABS for strength, durability, and heat resistance.
+- **Mounting:** Attaches to the RoboSort frame using M3 screws and heat-set inserts for robust installation.
+
+**Usage:**
+- Position the stepper motor into the mount and secure with screws.
+- Route the motor cables through the provided channels to prevent interference with moving parts.
+- Mount the assembly on the designated frame location for the bin rotation mechanism.
+- Ensure proper alignment with the bin gear system for efficient power transmission.
+- The mount supports the stepper motor during continuous bin rotation operations.
 
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
