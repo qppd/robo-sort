@@ -782,6 +782,59 @@ The RoboSort Bin Stepper Mount is a custom-designed 3D-printed bracket specifica
 
 ---
 
+### RoboSort Bin Tensioner Mount
+![RoboSort Bin Tensioner Mount](model/RoboSort_Bin_Tensioner_Mount.png)
+
+**Description:**
+The RoboSort Bin Tensioner Mount is a custom-designed 3D-printed bracket specifically engineered to securely hold and position the belt tensioner for the bin stepper motor system in the RoboSort platform. This mount provides proper tensioning of the drive belt, ensuring smooth and reliable power transmission from the stepper motor to the bin rotation mechanism during waste segregation operations.
+
+**Key Features:**
+- **Belt Tensioning:** Designed to maintain optimal belt tension for efficient power transfer.
+- **Secure Mounting:** Includes mounting holes for M3 screws and heat-set inserts for robust attachment.
+- **Adjustable Tension:** Allows fine-tuning of belt tension for optimal performance and longevity.
+- **Vibration Dampening:** Features designed to minimize belt vibration during operation.
+- **Modular Design:** Allows for easy assembly and maintenance of the bin drive system.
+- **Material:** Recommended to print in PETG or ABS for strength and durability.
+- **Mounting:** Attaches to the RoboSort frame using standard fasteners.
+
+**Usage:**
+- Install the tensioner into the mount and secure with appropriate hardware.
+- Position the mount to achieve proper belt tension for the bin stepper system.
+- Adjust tension as needed to ensure smooth bin rotation without slippage.
+- Regularly inspect belt condition and tension for optimal performance.
+- The mount maintains belt tension during continuous sorting operations.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
+### RoboSort Bin Tensioner Pulley Mount
+![RoboSort Bin Tensioner Pulley Mount](model/RoboSort_Bin_Tensioner_Pulley_Mount.png)
+
+**Description:**
+The RoboSort Bin Tensioner Pulley Mount is a custom-designed 3D-printed bracket specifically engineered to securely hold the pulley bearing that tensions the drive belt in the bin stepper motor system. This mount works in conjunction with the Bin Tensioner Mount, connected via an 8mm bolt (55mm length), to provide adjustable belt tensioning for smooth and reliable power transmission during waste segregation operations.
+
+**Key Features:**
+- **Pulley Bearing Support:** Designed to securely hold the pulley bearing for optimal belt contact.
+- **Tensioner Integration:** Connects to the Bin Tensioner Mount using an 8mm bolt (55mm length) for adjustable tension.
+- **Precision Alignment:** Ensures proper pulley positioning for efficient belt tracking and tension.
+- **Secure Mounting:** Includes mounting holes for M3 screws and heat-set inserts for robust attachment.
+- **Bearing Compatibility:** Designed to accommodate standard pulley bearings for belt drive systems.
+- **Material:** Recommended to print in PETG or ABS for strength and wear resistance.
+- **Modular Design:** Allows for easy assembly and tension adjustment.
+
+**Usage:**
+- Install the pulley bearing into the mount according to specifications.
+- Connect to the Bin Tensioner Mount using the 8mm bolt (55mm length).
+- Position the assembly to achieve proper belt tension and alignment.
+- Adjust the tensioner position as needed to maintain optimal belt performance.
+- Regularly inspect bearing condition and belt wear for maintenance.
+- The mount ensures consistent belt tension during continuous bin rotation operations.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ## Project Structure
 ```
 robo-sort/
