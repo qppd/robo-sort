@@ -835,6 +835,33 @@ The RoboSort Bin Tensioner Pulley Mount is a custom-designed 3D-printed bracket 
 
 ---
 
+### RoboSort Bin Limit Switch Trigger
+![RoboSort Bin Limit Switch Trigger](model/RoboSort_Bin_Limit_Switch_Trigger.png)
+
+**Description:**
+The RoboSort Bin Limit Switch Trigger is a custom-designed 3D-printed mechanical component specifically engineered to activate limit switches during bin rotation in the RoboSort platform. This trigger provides precise position detection and homing capabilities for the bin stepper motor system, ensuring accurate and safe rotational movement during waste segregation operations. The trigger works in conjunction with limit switches to establish reference positions and prevent over-rotation of the sorting bins.
+
+**Key Features:**
+- **Precision Activation:** Designed with exact geometry to reliably trigger limit switches at specific bin positions.
+- **Secure Mounting:** Includes mounting holes for M3 screws and heat-set inserts for robust attachment to the bin assembly.
+- **Adjustable Positioning:** Allows fine-tuning of trigger placement for optimal switch activation timing.
+- **Durable Construction:** Recommended to print in PETG or ABS for impact resistance and dimensional stability.
+- **Modular Design:** Easy to install and replace as part of the bin rotation safety system.
+- **Homing Functionality:** Enables automatic bin positioning and reference point establishment.
+- **Safety Integration:** Works with limit switches to prevent mechanical damage from over-rotation.
+
+**Usage:**
+- Mount the trigger on the rotating bin assembly at the desired reference position.
+- Position the corresponding limit switch to be activated by the trigger during bin rotation.
+- Adjust trigger placement to ensure switch activation occurs at the correct bin orientation.
+- Connect the limit switch to the Arduino for position feedback and homing operations.
+- Test the trigger mechanism to verify reliable switch activation during full bin rotation cycles.
+- The trigger provides position feedback for automated bin positioning and safety limits.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ## Project Structure
 ```
 robo-sort/
