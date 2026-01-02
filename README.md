@@ -791,24 +791,24 @@ The RoboSort Arm Gripper Rotator Mount is a custom-designed 3D-printed bracket s
 ![RoboSort Arm Gripper Servo Hand Mount](model/RoboSort_Arm_Gripper_Servo_Hand_Mount.png)
 
 **Description:**
-The RoboSort Arm Gripper Servo Hand Mount is a custom-designed 3D-printed bracket specifically engineered to securely hold and position the servo motor that controls the gripper hand mechanism in the RoboSort robotic arm system. This mount provides precise alignment and stable support for the gripper actuation servo, enabling reliable opening and closing of the gripper fingers during waste material handling. The mount works in conjunction with the gripper system to provide precise grasping control for accurate material pickup and placement.
+The RoboSort Arm Gripper Servo Hand Mount is a custom-designed 3D-printed coupling component specifically engineered to connect the gripper hand mechanism to the servo shaft of the gripper rotator mount servo in the RoboSort robotic arm system. This mount provides a secure interface between the rotating servo output and the gripper hand assembly, enabling coordinated rotational and grasping movements during waste material handling. The mount works in conjunction with both the gripper rotator servo and the gripper hand mechanism to provide precise multi-axis manipulation capabilities for accurate material pickup and placement.
 
 **Key Features:**
-- **Precision Alignment:** Designed with exact tolerances to match standard servo motor dimensions for secure, wobble-free mounting.
-- **Gripper Control:** Enables precise servo-driven opening and closing of gripper fingers for material handling.
-- **Vibration Dampening:** Includes features to minimize servo vibration during operation, improving control accuracy.
+- **Servo Shaft Coupling:** Designed with exact tolerances to securely attach to the gripper rotator servo output shaft.
+- **Rotational Interface:** Provides stable connection between the rotating servo and gripper hand assembly.
+- **Vibration Dampening:** Includes features to minimize vibration transmission during operation, improving control accuracy.
 - **Cable Management:** Integrated channels or clips for organizing servo power and signal cables.
-- **Adjustable Positioning:** Allows fine-tuning of servo orientation for optimal gripper performance.
+- **Adjustable Positioning:** Allows fine-tuning of gripper hand orientation relative to the servo shaft.
 - **Material:** Recommended to print in PETG or ABS for strength, durability, and heat resistance.
-- **Mounting:** Attaches to the robotic arm structure using M3 screws and heat-set inserts for robust installation.
+- **Mounting:** Attaches to the gripper rotator servo shaft using set screws or press-fit connections for robust installation.
 
 **Usage:**
-- Position the servo motor into the mount and secure with screws.
+- Attach the mount to the output shaft of the gripper rotator servo using set screws or press-fit connection.
 - Route the servo cables through the provided channels to prevent interference with moving parts.
-- Mount the assembly on the designated robotic arm location for gripper hand control.
-- Ensure proper alignment with the gripper mechanism for efficient power transmission.
-- Calibrate the servo angles for optimal gripper opening and closing during material handling.
-- The mount supports the servo during continuous gripper operation cycles.
+- Mount the gripper hand assembly to the mount for coordinated rotational movement.
+- Ensure proper alignment between the servo shaft and gripper hand for efficient power transmission.
+- Calibrate the servo angles for optimal gripper rotation and hand positioning during material handling.
+- The mount enables synchronized rotational and grasping movements during continuous operation cycles.
 
 **Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
 
