@@ -760,6 +760,33 @@ The RoboSort Gripper is a custom-designed robotic gripper specifically engineere
 
 ---
 
+### RoboSort Arm Gripper Rotator Mount
+![RoboSort Arm Gripper Rotator Mount](model/RoboSort_Arm_Gripper_Rotator_Mount.png)
+
+**Description:**
+The RoboSort Arm Gripper Rotator Mount is a custom-designed 3D-printed bracket specifically engineered to securely hold and position a servo motor for gripper rotation in the RoboSort robotic arm system. This mount provides precise alignment and stable support for rotational control of the gripper, enabling the robotic arm to orient waste materials at optimal angles during the sorting process. The mount works in conjunction with the gripper system to provide enhanced manipulation capabilities for accurate material placement.
+
+**Key Features:**
+- **Precision Alignment:** Designed with exact tolerances to match standard servo motor dimensions for secure, wobble-free mounting.
+- **Rotational Control:** Enables 360° gripper rotation for optimal material orientation during sorting.
+- **Vibration Dampening:** Includes features to minimize servo vibration during operation, improving control accuracy.
+- **Cable Management:** Integrated channels or clips for organizing servo power and signal cables.
+- **Adjustable Positioning:** Allows fine-tuning of servo orientation for optimal gripper rotation performance.
+- **Material:** Recommended to print in PETG or ABS for strength, durability, and heat resistance.
+- **Mounting:** Attaches to the robotic arm structure using M3 screws and heat-set inserts for robust installation.
+
+**Usage:**
+- Position the servo motor into the mount and secure with screws.
+- Route the servo cables through the provided channels to prevent interference with moving parts.
+- Mount the assembly on the designated robotic arm location for gripper rotation control.
+- Ensure proper alignment with the gripper mechanism for efficient rotational power transmission.
+- Calibrate the servo angles for optimal material orientation during sorting operations.
+- The mount supports the servo during continuous gripper rotation operations.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ### RoboSort Bin Entrance Safety Mount
 ![RoboSort Bin Entrance Safety Mount](model/RoboSort_Bin_Entrance_Safety_Mount.png)
 
