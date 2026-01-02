@@ -709,6 +709,33 @@ The RoboSort Lifter Servo Mount is a custom-designed 3D-printed bracket specific
 
 ---
 
+### RoboSort Lifter Limit Switch Mount
+![RoboSort Lifter Limit Switch Mount](model/RoboSort_Lifter_Limit_Switch_Mount.png)
+
+**Description:**
+The RoboSort Lifter Limit Switch Mount is a custom-designed 3D-printed bracket specifically engineered to securely hold and position limit switches for the lifter mechanism in the RoboSort platform. This mount provides precise positioning for end-stop sensors, ensuring accurate vertical movement control and safety limits for the lifting system during waste sorting operations. The mount works in conjunction with the lifter servo system to establish reference positions and prevent over-travel of the vertical mechanism.
+
+**Key Features:**
+- **Precision Alignment:** Designed with exact tolerances for accurate limit switch positioning and activation.
+- **Secure Mounting:** Includes mounting holes for M3 screws and heat-set inserts for robust attachment to the lifter assembly.
+- **Adjustable Switch Position:** Allows fine-tuning of limit switch placement for optimal activation timing.
+- **Cable Management:** Integrated channels or clips for organizing limit switch wiring and preventing cable strain.
+- **Durable Construction:** Recommended to print in PETG or ABS for impact resistance and dimensional stability.
+- **Modular Design:** Easy to install and maintain as part of the lifter safety system.
+- **Homing Capability:** Enables automatic lifter positioning and reference point establishment.
+
+**Usage:**
+- Mount the limit switch into the bracket and secure with appropriate hardware.
+- Position the mount at the desired end-stop locations on the lifter mechanism (top and bottom limits).
+- Adjust switch position to trigger at the correct vertical travel boundaries.
+- Connect the limit switches to the Arduino for position feedback and safety limits.
+- Test the limit switches to verify reliable activation during full lifter travel range.
+- The mount provides position feedback for automated lifter control and safety protection.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ### RoboSort Gripper
 ![RoboSort Gripper](model/robosort-arm-gripper.jpg)
 
