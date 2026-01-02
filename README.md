@@ -814,6 +814,33 @@ The RoboSort Arm Gripper Servo Hand Mount is a custom-designed 3D-printed coupli
 
 ---
 
+### RoboSort Arm Gripper Hand Extension
+![RoboSort Arm Gripper Hand Extension](model/RoboSort_Arm_Gripper_Hand_Extension.png)
+
+**Description:**
+The RoboSort Arm Gripper Hand Extension is a custom-designed 3D-printed extension component specifically engineered to extend the reach and positioning of the gripper hand mechanism in the RoboSort robotic arm system. This extension provides additional length and flexibility for the gripper assembly, enabling better access to waste materials in various positions during the sorting process. The extension works in conjunction with the gripper hand mount and rotator system to provide enhanced manipulation capabilities for accurate material pickup and placement.
+
+**Key Features:**
+- **Extended Reach:** Provides additional length to improve gripper access to materials in different positions.
+- **Flexible Positioning:** Allows for better alignment and orientation of the gripper during sorting operations.
+- **Lightweight Design:** Optimized weight distribution to minimize load on servo motors during operation.
+- **Secure Connection:** Designed with precise tolerances for stable attachment to the gripper hand assembly.
+- **Modular Design:** Easy to attach and detach as needed for different sorting requirements.
+- **Material:** Recommended to print in PETG or ABS for strength, durability, and flexibility.
+- **Mounting:** Attaches to the gripper hand mount using screws or snap-fit connections for quick installation.
+
+**Usage:**
+- Attach the extension to the gripper hand mount using the provided connection points.
+- Ensure proper alignment with the gripper fingers for optimal material handling.
+- Position the extension to extend the gripper's reach for materials in hard-to-access locations.
+- Test the extended range during calibration to ensure proper servo control and positioning.
+- Use the extension when additional reach is needed for specific sorting scenarios.
+- The extension enhances the gripper's versatility during continuous sorting operations.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ### RoboSort Bin Entrance Safety Mount
 ![RoboSort Bin Entrance Safety Mount](model/RoboSort_Bin_Entrance_Safety_Mount.png)
 
