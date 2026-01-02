@@ -660,6 +660,33 @@ The RoboSort Ultrasonic Case is a custom-designed 3D-printed enclosure specifica
 
 ---
 
+### RoboSort Servo Driver Mount
+![RoboSort Servo Driver Mount](model/RoboSort_Servo_Driver_Mount.png)
+
+**Description:**
+The RoboSort Servo Driver Mount is a custom-designed 3D-printed bracket specifically engineered to securely hold and position the Adafruit PCA9685 16-channel PWM servo driver on the RoboSort platform. This mount provides stable support and optimal orientation for the servo driver board, ensuring reliable PWM signal generation for coordinated multi-servo control during robotic arm operations. The mount works in conjunction with the servo system to provide precise positioning and movement control for the robotic arm and lifter mechanisms.
+
+**Key Features:**
+- **Precision Alignment:** Designed with exact tolerances to securely hold the PCA9685 servo driver board.
+- **Heat Dissipation:** Includes ventilation features to prevent overheating during continuous operation.
+- **Cable Management:** Integrated channels or clips for organizing power and signal cables.
+- **Vibration Isolation:** Features designed to minimize vibration transmission to the servo driver.
+- **Secure Mounting:** Includes mounting holes for M3 screws and heat-set inserts for robust attachment.
+- **Modular Design:** Allows for easy access to the servo driver for maintenance and reprogramming.
+- **Material:** Recommended to print in PETG or ABS for strength, durability, and heat resistance.
+
+**Usage:**
+- Position the PCA9685 servo driver board into the mount and secure with screws.
+- Route the power and signal cables through the provided channels to prevent interference.
+- Mount the assembly on the designated frame location for optimal servo control positioning.
+- Ensure proper ventilation around the servo driver for heat dissipation.
+- Connect servo signal wires to the appropriate channels for robotic arm and lifter control.
+- The mount provides stable support during continuous servo operation cycles.
+
+**Section Reference:** See also the [3D Model Documentation](diagrams/3d_model_specification.md) for technical details and print settings.
+
+---
+
 ### RoboSort Lifter Servo Coupling Adapter
 ![RoboSort Lifter Servo Coupling Adapter](model/RoboSort_Lifter_Servo_Coupling_Adapter.png)
 
