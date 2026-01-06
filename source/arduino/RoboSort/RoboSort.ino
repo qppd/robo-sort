@@ -182,6 +182,7 @@ void loop() {
       Serial.print("Rotating left at speed ");
       Serial.println(speed);
       buzzerConfig.successBeep();
+    }
     // Ultrasonic commands
     else if (input.startsWith("UTEST")) {
       int sensor = 0; // Default sensor 1 (0-indexed)
