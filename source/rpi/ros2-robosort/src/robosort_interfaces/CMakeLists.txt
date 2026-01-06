@@ -15,6 +15,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/MoveRobotArm.srv"
   "srv/RotateBin.srv"
   "srv/GetDistance.srv"
+  "srv/GetObjectPosition.srv"
+  "srv/ControlMotor.srv"
 )
 
 if(BUILD_TESTING)
