@@ -47,6 +47,8 @@ void TB6600::stepMany(unsigned long steps, unsigned int pulseUs, unsigned int ga
 void TB6600::setDirection(bool dir) {
   _dir = dir;
   digitalWrite(_dirPin, _dir);
+  Serial.print("Stepper direction: ");
+  Serial.println(dir ? "CCW" : "CW");
 }
 
 // Emergency stop
