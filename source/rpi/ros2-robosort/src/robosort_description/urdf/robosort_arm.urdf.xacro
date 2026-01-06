@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<robot name="robosort_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <!-- Robot Properties -->
+  <xacro:property name="PI" value="3.14159265359"/>
+  
+  <!-- Link dimensions (meters) -->
+  <xacro:property name="base_radius" value="0.05"/>
+  <xacro:property name="base_height" value="0.03"/>
+  <xacro:property name="shoulder_length" value="0.15"/>
+  <xacro:property name="elbow_length" value="0.12"/>
+  <xacro:property name="wrist_length" value="0.08"/>
+  <xacro:property name="gripper_length" value="0.06"/>
+  <xacro:property name="link_radius" value="0.02"/>
+  
+  <!-- Colors -->
+  <material name="black">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+  
+  <material name="blue">
+    <color rgba="0.2 0.4 0.8 1.0"/>
+  </material>
+  
+  <material name="red">
+    <color rgba="0.8 0.2 0.2 1.0"/>
+  </material>
+  
+  <material name="grey">
+    <color rgba="0.5 0.5 0.5 1.0"/>
+  </material>
+
+  <!-- World Frame -->
+  <link name="world"/>
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 ${base_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${base_radius}" length="${base_height}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${base_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${base_radius}" length="${base_height}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+
+  <!-- Base Joint (Servo 0 - Base Rotation) -->
+  <joint name="base_joint" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <joint name="base_revolute" type="revolute">
+    <parent link="base_link"/>
+    <child link="shoulder_link"/>
+    <origin xyz="0 0 ${base_height}" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="${-PI}" upper="${PI}" effort="10.0" velocity="1.0"/>
+  </joint>
+
+  <!-- Shoulder Link (Servo 1) -->
+  <link name="shoulder_link">
+    <visual>
+      <origin xyz="0 0 ${shoulder_length/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${link_radius*2} ${link_radius*2} ${shoulder_length}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${shoulder_length/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${link_radius*2} ${link_radius*2} ${shoulder_length}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.2"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <!-- Shoulder Joint (Servo 1) -->
+  <joint name="shoulder_joint" type="revolute">
+    <parent link="shoulder_link"/>
+    <child link="elbow_link"/>
+    <origin xyz="0 0 ${shoulder_length}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="${-PI/2}" upper="${PI/2}" effort="10.0" velocity="1.0"/>
+  </joint>
+
+  <!-- Elbow Link (Servo 2) -->
+  <link name="elbow_link">
+    <visual>
+      <origin xyz="0 0 ${elbow_length/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${link_radius*2} ${link_radius*2} ${elbow_length}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${elbow_length/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${link_radius*2} ${link_radius*2} ${elbow_length}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.15"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <!-- Elbow Joint (Servo 2) -->
+  <joint name="elbow_joint" type="revolute">
+    <parent link="elbow_link"/>
+    <child link="wrist_link"/>
+    <origin xyz="0 0 ${elbow_length}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="${-PI/2}" upper="${PI/2}" effort="5.0" velocity="1.0"/>
+  </joint>
+
+  <!-- Wrist Link (Servo 3) -->
+  <link name="wrist_link">
+    <visual>
+      <origin xyz="0 0 ${wrist_length/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${link_radius*1.5} ${link_radius*1.5} ${wrist_length}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${wrist_length/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${link_radius*1.5} ${link_radius*1.5} ${wrist_length}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.00005" ixy="0.0" ixz="0.0" iyy="0.00005" iyz="0.0" izz="0.00005"/>
+    </inertial>
+  </link>
+
+  <!-- Wrist Joint (Servo 3) -->
+  <joint name="wrist_joint" type="revolute">
+    <parent link="wrist_link"/>
+    <child link="gripper_base_link"/>
+    <origin xyz="0 0 ${wrist_length}" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="${-PI}" upper="${PI}" effort="5.0" velocity="1.0"/>
+  </joint>
+
+  <!-- Gripper Base Link -->
+  <link name="gripper_base_link">
+    <visual>
+      <origin xyz="0 0 ${gripper_length/3}" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.03 0.03 ${gripper_length/3}"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${gripper_length/3}" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.03 0.03 ${gripper_length/3}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+  </link>
+
+  <!-- Gripper Left Finger Joint (Servo 4) -->
+  <joint name="gripper_left_joint" type="revolute">
+    <parent link="gripper_base_link"/>
+    <child link="gripper_left_link"/>
+    <origin xyz="0 0.015 ${gripper_length/3}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0" upper="${PI/4}" effort="2.0" velocity="0.5"/>
+  </joint>
+
+  <!-- Gripper Left Finger -->
+  <link name="gripper_left_link">
+    <visual>
+      <origin xyz="0 0 ${gripper_length*2/3/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.005 ${gripper_length*2/3}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${gripper_length*2/3/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.005 ${gripper_length*2/3}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.02"/>
+      <inertia ixx="0.000001" ixy="0.0" ixz="0.0" iyy="0.000001" iyz="0.0" izz="0.000001"/>
+    </inertial>
+  </link>
+
+  <!-- Gripper Right Finger Joint (Servo 4 - mimic) -->
+  <joint name="gripper_right_joint" type="revolute">
+    <parent link="gripper_base_link"/>
+    <child link="gripper_right_link"/>
+    <origin xyz="0 -0.015 ${gripper_length/3}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="${-PI/4}" upper="0" effort="2.0" velocity="0.5"/>
+    <mimic joint="gripper_left_joint" multiplier="-1"/>
+  </joint>
+
+  <!-- Gripper Right Finger -->
+  <link name="gripper_right_link">
+    <visual>
+      <origin xyz="0 0 ${gripper_length*2/3/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.005 ${gripper_length*2/3}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${gripper_length*2/3/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.005 ${gripper_length*2/3}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.02"/>
+      <inertia ixx="0.000001" ixy="0.0" ixz="0.0" iyy="0.000001" iyz="0.0" izz="0.000001"/>
+    </inertial>
+  </link>
+
+  <!-- End Effector Frame -->
+  <link name="end_effector_link"/>
+  
+  <joint name="end_effector_joint" type="fixed">
+    <parent link="gripper_base_link"/>
+    <child link="end_effector_link"/>
+    <origin xyz="0 0 ${gripper_length}" rpy="0 0 0"/>
+  </joint>
+
+</robot>

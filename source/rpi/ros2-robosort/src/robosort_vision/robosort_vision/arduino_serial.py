@@ -9,7 +9,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String, Float32MultiArray
 from std_srvs.srv import Trigger
-from robosort_interfaces.srv import SetServo, MoveRobotArm, RotateBin, GetDistance
+from robosort_interfaces.srv import SetServo, MoveRobotArm, RotateBin, GetDistance, ControlMotor
 import serial
 import time
 from typing import Optional, List
@@ -47,9 +47,11 @@ class ArduinoSerialNode(Node):
         self.create_service(MoveRobotArm, '/robosort/move_arm', self.move_arm_callback)
         self.create_service(RotateBin, '/robosort/rotate_bin', self.rotate_bin_callback)
         self.create_service(GetDistance, '/robosort/get_distance', self.get_distance_callback)
+        self.create_service(ControlMotor, '/robosort/control_motor', self.control_motor_callback)
         self.create_service(Trigger, '/robosort/home_arm', self.home_arm_callback)
         self.create_service(Trigger, '/robosort/enable_servos', self.enable_servos_callback)
         self.create_service(Trigger, '/robosort/disable_servos', self.disable_servos_callback)
+        self.create_service(Trigger, '/robosort/test_motors', self.test_motors_callback)
         
         # Timer for periodic ultrasonic sensor reading
         timer_period = 1.0 / ultrasonic_rate
@@ -294,6 +296,57 @@ class ArduinoSerialNode(Node):
                 
         # Publish levels
         self.ultrasonic_pub.publish(levels)
+    
+    def control_motor_callback(self, request, response):
+        """Control DC motor via L298N driver"""
+        motor_id = request.motor_id
+        direction = request.direction
+        speed = request.speed
+        
+        # Map motor ID to letter
+        motor_letter = 'A' if motor_id == 0 else 'B'
+        
+        # Map direction to Arduino command
+        direction_map = {
+            0: 'S',  # STOP
+            1: 'F',  # FORWARD
+            2: 'B',  # BACKWARD
+            3: 'R'   # BRAKE
+        }
+        
+        if direction not in direction_map:
+            response.success = False
+            response.message = 'Invalid direction. Use 0=STOP, 1=FORWARD, 2=BACKWARD, 3=BRAKE'
+            return response
+        
+        # Construct Arduino command: M<motor> <direction> <speed>
+        # Example: MA F 200 (Motor A forward at speed 200)
+        command = f'M{motor_letter} {direction_map[direction]} {speed}'
+        
+        if self.send_command(command):
+            responses = self.read_all_responses(0.5)
+            response.success = True
+            response.message = f'Motor {motor_letter} {direction_map[direction]} at speed {speed}'
+            self.get_logger().info(f'Motor control: {response.message}')
+        else:
+            response.success = False
+            response.message = 'Failed to send motor command'
+            
+        return response
+    
+    def test_motors_callback(self, request, response):
+        """Test both DC motors"""
+        command = 'MTEST'
+        if self.send_command(command):
+            time.sleep(10)  # Motor test takes ~10 seconds
+            response.success = True
+            response.message = 'Motor test sequence completed'
+            self.get_logger().info('Motor test completed')
+        else:
+            response.success = False
+            response.message = 'Failed to start motor test'
+            
+        return response
         
     def destroy_node(self):
         """Cleanup"""

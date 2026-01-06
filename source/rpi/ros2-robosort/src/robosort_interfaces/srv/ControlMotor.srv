@@ -1,0 +1,8 @@
+# Request: Control DC motor
+uint8 motor_id  # 0=Motor A (left), 1=Motor B (right)
+uint8 direction  # 0=STOP, 1=FORWARD, 2=BACKWARD, 3=BRAKE
+uint8 speed  # 0-255 PWM speed
+---
+# Response
+bool success
+string message
