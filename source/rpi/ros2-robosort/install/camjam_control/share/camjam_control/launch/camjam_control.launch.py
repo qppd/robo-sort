@@ -1,1 +1,0 @@
-/home/robosort/robo-sort/source/rpi/ros2-robosort/build/camjam_control/launch/camjam_control.launch.py

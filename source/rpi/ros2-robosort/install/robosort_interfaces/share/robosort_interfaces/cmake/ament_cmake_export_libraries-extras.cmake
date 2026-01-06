@@ -1,1 +1,0 @@
-/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/ament_cmake_export_libraries/ament_cmake_export_libraries-extras.cmake
