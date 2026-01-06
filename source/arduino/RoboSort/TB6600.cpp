@@ -46,7 +46,7 @@ void TB6600::stepMany(unsigned long steps, unsigned int pulseUs, unsigned int ga
 // Set direction
 void TB6600::setDirection(bool dir) {
   _dir = dir;
-  digitalWrite(_dirPin, _dir);
+  digitalWrite(_dirPin, !_dir);  // Inverted for correct rotation
   Serial.print("Stepper direction: ");
   Serial.println(dir ? "CCW" : "CW");
 }
