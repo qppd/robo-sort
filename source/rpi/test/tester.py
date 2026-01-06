@@ -13,19 +13,13 @@ print("Limit switch test started. Press the buttons...")
 
 try:
     while True:
-        statuses = []
-        pressed_pins = []
         for pin in pins:
-            state = GPIO.input(pin)
-            status = 'pressed' if state == GPIO.LOW else 'not pressed'
-            statuses.append(f"GPIO{pin}: {status}")
-            if state == GPIO.LOW:
-                pressed_pins.append(pin)
+            if GPIO.input(pin) == GPIO.LOW:  # Button pressed
+                print(f"Button on GPIO {pin} pressed!")
                 # Wait until button is released to avoid multiple prints
                 while GPIO.input(pin) == GPIO.LOW:
                     time.sleep(0.01)
-        print(", ".join(statuses))
-        time.sleep(0.1)  # Small delay to reduce CPU usage and make output readable
+        time.sleep(0.01)  # Small delay to reduce CPU usage
 
 except KeyboardInterrupt:
     print("\nExiting...")
