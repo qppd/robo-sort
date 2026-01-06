@@ -1,5 +1,6 @@
 from gpiozero import Button
 from signal import pause
+import time
 
 pins = [17, 27, 22]
 
@@ -13,7 +14,7 @@ pin_names = {
 buttons = []
 for p in pins:
     b = Button(p, pull_up=True, bounce_time=0.1)
-    b.when_pressed = lambda p=p: print(f"{pin_names[p]} button pressed")
+    b.when_pressed = lambda p=p: print(f"{time.time():.2f}: {pin_names[p]} button pressed")
     buttons.append(b)
 
 print("Waiting for button presses...")
