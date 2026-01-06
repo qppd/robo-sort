@@ -22,15 +22,12 @@ public:
     void stopMotor(uint8_t motor);
     void brakeMotor(uint8_t motor);
     void stopAll();
-    void testMotors();
-    void startContinuousTest();
-    void stopContinuousTest();
-    void update();
+    void moveForward(uint8_t speed);
+    void moveBackward(uint8_t speed);
+    void rotateRight(uint8_t speed);
+    void rotateLeft(uint8_t speed);
 private:
     void setMotorPins(uint8_t motor, uint8_t in1State, uint8_t in2State);
-    bool _continuousTest;
-    unsigned long _lastChangeTime;
-    uint8_t _direction;
 };
 
 #endif // DC_CONFIG_H

@@ -1,6 +1,6 @@
 #include "DC_CONFIG.h"
 
-DCConfig::DCConfig() : _continuousTest(false), _lastChangeTime(0), _direction(FORWARD) {
+DCConfig::DCConfig() {
     // Constructor
 }
 
@@ -85,89 +85,28 @@ void DCConfig::brakeMotor(uint8_t motor) {
     setMotorPins(motor, HIGH, HIGH);
 }
 
-void DCConfig::testMotors() {
-    Serial.println("Testing Motor A...");
-    
-    // Motor A Forward
-    Serial.println("Motor A: Forward at 150 speed");
-    moveMotor(MOTOR_A, FORWARD, 150);
-    delay(2000);
-    
-    // Motor A Backward
-    Serial.println("Motor A: Backward at 150 speed");
-    moveMotor(MOTOR_A, BACKWARD, 150);
-    delay(2000);
-    
-    // Motor A Stop
-    Serial.println("Motor A: Stop");
-    stopMotor(MOTOR_A);
-    delay(1000);
-    
-    Serial.println("Testing Motor B...");
-    
-    // Motor B Forward
-    Serial.println("Motor B: Forward at 150 speed");
-    moveMotor(MOTOR_B, FORWARD, 150);
-    delay(2000);
-    
-    // Motor B Backward
-    Serial.println("Motor B: Backward at 150 speed");
-    moveMotor(MOTOR_B, BACKWARD, 150);
-    delay(2000);
-    
-    // Motor B Stop
-    Serial.println("Motor B: Stop");
-    stopMotor(MOTOR_B);
-    delay(1000);
-    
-    Serial.println("Testing both motors...");
-    
-    // Both motors forward (robot moves forward: motors rotate opposite)
-    Serial.println("Robot forward: Motor A Forward, Motor B Backward at 180 speed");
-    moveMotor(MOTOR_A, FORWARD, 180);
-    moveMotor(MOTOR_B, BACKWARD, 180);
-    delay(2000);
-    
-    // Both motors backward (robot moves backward: motors rotate opposite)
-    Serial.println("Robot backward: Motor A Backward, Motor B Forward at 180 speed");
-    moveMotor(MOTOR_A, BACKWARD, 180);
-    moveMotor(MOTOR_B, FORWARD, 180);
-    delay(2000);
-    
-    // Stop all
-    Serial.println("All motors: Stop");
-    stopAll();
-    
-    Serial.println("Motor test complete!");
+void DCConfig::moveForward(uint8_t speed) {
+    // Robot forward: motors rotate opposite directions since they face each other
+    moveMotor(MOTOR_A, FORWARD, speed);
+    moveMotor(MOTOR_B, BACKWARD, speed);
 }
 
-void DCConfig::startContinuousTest() {
-    _continuousTest = true;
-    _direction = FORWARD;
-    _lastChangeTime = millis();
-    // For forward movement, motors rotate opposite directions since they face each other
-    moveMotor(MOTOR_A, _direction, 150);
-    moveMotor(MOTOR_B, (_direction == FORWARD) ? BACKWARD : FORWARD, 150);
-    Serial.println("Continuous motor test started.");
+void DCConfig::moveBackward(uint8_t speed) {
+    // Robot backward: motors rotate opposite directions since they face each other
+    moveMotor(MOTOR_A, BACKWARD, speed);
+    moveMotor(MOTOR_B, FORWARD, speed);
 }
 
-void DCConfig::stopContinuousTest() {
-    _continuousTest = false;
-    stopAll();
-    Serial.println("Continuous motor test stopped.");
+void DCConfig::rotateRight(uint8_t speed) {
+    // Rotate right: both motors same direction for rotation
+    moveMotor(MOTOR_A, FORWARD, speed);
+    moveMotor(MOTOR_B, FORWARD, speed);
 }
 
-void DCConfig::update() {
-    if (_continuousTest) {
-        unsigned long now = millis();
-        if (now - _lastChangeTime >= 2000) { // Change direction every 2 seconds
-            _direction = (_direction == FORWARD) ? BACKWARD : FORWARD;
-            // For movement, motors rotate opposite directions since they face each other
-            moveMotor(MOTOR_A, _direction, 150);
-            moveMotor(MOTOR_B, (_direction == FORWARD) ? BACKWARD : FORWARD, 150);
-            _lastChangeTime = now;
-        }
-    }
+void DCConfig::rotateLeft(uint8_t speed) {
+    // Rotate left: both motors same direction for rotation
+    moveMotor(MOTOR_A, BACKWARD, speed);
+    moveMotor(MOTOR_B, BACKWARD, speed);
 }
 
 void DCConfig::stopAll() {
