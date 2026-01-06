@@ -20,8 +20,8 @@
 
 // ===== ULTRASONIC SENSORS (HC-SR04) PINS =====
 // Ultrasonic Sensor 1
-#define ULTRASONIC1_TRIG_PIN 9  // Trigger pin for ultrasonic sensor 1
-#define ULTRASONIC1_ECHO_PIN 6  // Echo pin for ultrasonic sensor 1
+#define ULTRASONIC1_TRIG_PIN 25  // Trigger pin for ultrasonic sensor 1
+#define ULTRASONIC1_ECHO_PIN 23  // Echo pin for ultrasonic sensor 1
 
 // Ultrasonic Sensor 2
 #define ULTRASONIC2_TRIG_PIN 29  // Trigger pin for ultrasonic sensor 2
@@ -41,6 +41,6 @@
 #define STEPPER_ENA_PIN 5   // ENA+ connected to pin 5
 
 // ===== BUZZER PIN =====
-#define BUZZER_PIN 6        // Buzzer connected to pin 6
+#define BUZZER_PIN 33        // Buzzer connected to pin 6
 
 #endif // PINS_H
