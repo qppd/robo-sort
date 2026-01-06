@@ -20,6 +20,14 @@
 build/
 */build/
 
+# Ignore install directories
+install/
+*/install/
+
+# Ignore log directories
+log/
+*/log/
+
 # Ignore backup and temp files
 *.bak
 *.tmp
