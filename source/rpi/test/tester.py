@@ -1,28 +1,13 @@
-import RPi.GPIO as GPIO
-import time
+from gpiozero import Button
+from signal import pause
 
-# GPIO BCM pin numbers (not physical pin numbers)
 pins = [17, 27, 22]
 
-# Setup
-GPIO.setmode(GPIO.BCM)  # Use BCM numbering
-for pin in pins:
-    GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Assuming switches connect to GND when pressed
+buttons = []
+for p in pins:
+    b = Button(p, pull_up=True)
+    b.when_pressed = lambda p=p: print(f"GPIO {p} pressed")
+    buttons.append(b)
 
-print("Limit switch test started. Press the buttons...")
-
-try:
-    while True:
-        for pin in pins:
-            if GPIO.input(pin) == GPIO.LOW:  # Button pressed
-                print(f"Button on GPIO {pin} pressed!")
-                # Wait until button is released to avoid multiple prints
-                while GPIO.input(pin) == GPIO.LOW:
-                    time.sleep(0.01)
-        time.sleep(0.01)  # Small delay to reduce CPU usage
-
-except KeyboardInterrupt:
-    print("\nExiting...")
-
-finally:
-    GPIO.cleanup()
+print("Waiting for button presses...")
+pause()
