@@ -27,17 +27,15 @@ def print_menu():
     print("  1. Test all servos")
     print("  2. Set specific servo angle")
     print("\nSTEPPER MOTOR COMMANDS:")
-    print("  3. Test stepper motor")
-    print("  4. Control stepper motor movement")
-    print("  5. Home stepper motor")
-    print("  6. Stop stepper motor")
+    print("  3. Home stepper motor (BIN_HOME)")
+    print("  4. Move to max position (BIN_MAX)")
     print("\nULTRASONIC COMMANDS:")
-    print("  7. Test ultrasonic sensor")
-    print("  8. Get distance measurement")
-    print("  9. Get average distance")
-    print("  10. Detect object (with threshold)")
+    print("  5. Test ultrasonic sensor")
+    print("  6. Get distance measurement")
+    print("  7. Get average distance")
+    print("  8. Detect object (with threshold)")
     print("\nSYSTEM COMMANDS:")
-    print("  11. Send custom command")
+    print("  9. Send custom command")
     print("  0. Exit")
     print("=" * 60)
 
@@ -177,35 +175,22 @@ def main():
             elif choice == "2":
                 set_servo_angle(serial_conn)
             elif choice == "3":
-                # Test stepper motor - send STEPTEST
-                print("\n--- Testing Stepper Motor ---")
-                serial_conn.send_and_receive("STEPTEST", wait_time=2)
-            elif choice == "4":
-                # Control stepper motor movement
-                try:
-                    steps = int(input("Enter steps to move: "))
-                    direction = int(input("Enter direction (0=CW, 1=CCW): "))
-                    print(f"\n--- Moving Stepper {steps} steps {'CW' if direction == 0 else 'CCW'} ---")
-                    serial_conn.send_and_receive(f"STEP {steps} {direction}", wait_time=2)
-                except ValueError:
-                    print("✗ Invalid input.")
-            elif choice == "5":
                 # Home stepper motor
                 print("\n--- Homing Stepper Motor ---")
                 serial_conn.send_and_receive("BIN_HOME", wait_time=5)  # Longer wait for homing
-            elif choice == "6":
-                # Stop stepper motor
-                print("\n--- Stopping Stepper Motor ---")
-                serial_conn.send_and_receive("STEPSTOP", wait_time=1)
-            elif choice == "7":
+            elif choice == "4":
+                # Move to max position
+                print("\n--- Moving Stepper to Max Position ---")
+                serial_conn.send_and_receive("BIN_MAX", wait_time=5)  # Wait for 3800 steps
+            elif choice == "5":
                 test_ultrasonic(serial_conn)
-            elif choice == "8":
+            elif choice == "6":
                 get_distance(serial_conn)
-            elif choice == "9":
+            elif choice == "7":
                 get_average_distance(serial_conn)
-            elif choice == "10":
+            elif choice == "8":
                 detect_object(serial_conn)
-            elif choice == "11":
+            elif choice == "9":
                 send_custom_command(serial_conn)
             else:
                 print("\n✗ Invalid choice. Please try again.")

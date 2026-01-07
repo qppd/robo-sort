@@ -181,18 +181,13 @@ python yolo_detect.py --model model.pt --source usb0 --record --resolution 640x4
   - Example: `S2 90` - Set servo 2 to 90 degrees
 
 #### Stepper Motor Commands
-- `STEPTEST`: Runs a test sequence (CW then CCW rotation)
-- `STEP <steps> <direction>`: Moves stepper motor specified number of steps
-  - Steps: Number of steps to move
-  - Direction: `0` (CW - clockwise) or `1` (CCW - counter-clockwise)
-  - Example: `BIN_MAX` - Move 3800 steps clockwise (max bin position)
-- `STEPSTOP`: Immediately stops stepper motor movement
-- `STEPCTEST`: Starts continuous alternating CW/CCW rotation test
-- `STEPCSTOP`: Stops continuous rotation test
 - `BIN_HOME`: **Bin homing command** - Rotates CCW until BIN limit switch is triggered
   - Measures and displays exact steps to home position
   - **Correct command for bin operation CCW rotation**
   - Example output: "Exact steps to home position: 2347"
+- `BIN_MAX`: Moves stepper motor to maximum bin position (3800 steps CW)
+  - Moves stepper to the far CW position for bin operation
+  - 3800 steps = maximum rotation for your setup
 
 **Bin Operation Commands:**
 - `BIN_HOME` - Rotate CCW to home position (limit switch triggered)
@@ -358,10 +353,6 @@ The Arduino Mega handles direct stepper motor control with precise positioning c
 ```
 BIN_HOME               - CCW rotation until limit switch (homing)
 BIN_MAX                - CW rotation 3800 steps (max position)
-STEPTEST               - Test sequence (CW then CCW)
-STEPSTOP               - Emergency stop
-STEPCTEST              - Continuous alternating test
-STEPCSTOP              - Stop continuous test
 ```
 
 #### Example Usage
@@ -369,7 +360,6 @@ STEPCSTOP              - Stop continuous test
 # Send commands via serial terminal or Python script
 BIN_HOME               # Home to limit switch position
 BIN_MAX                # Move to max bin position
-STEP 2000 1           # Move 2000 steps CCW
 ```
 
 **Note:** All stepper commands now use slow, safe timing (750us pulse + 1500us gap) for precise control.
@@ -404,12 +394,8 @@ SSTOP         # Stop continuous test
 
 **Testing Stepper Motor:**
 ```
-STEPTEST      # Run test sequence (200 steps CW then CCW)
-STEP 200 0    # Move 200 steps CW
-STEP 200 1    # Move 200 steps CCW
-STEPSTOP      # Emergency stop
-STEPCTEST     # Start continuous test (5 sec CW, 5 sec CCW)
-STEPCSTOP     # Stop continuous test
+BIN_HOME      # Rotate CCW until BIN limit switch is triggered
+BIN_MAX       # Move to max bin position (3800 steps CW)
 ```
 
 **Testing Ultrasonic Sensor:**
