@@ -41,9 +41,9 @@ void setup() {
   Serial.println("  Speed: 0-255 (default: 150)");
   Serial.println("Ultrasonic Commands: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
   Serial.println("  Sensors: 1-4 (default: 1)");
-  Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, STEPBIN, STEPBINSTOP");
+  Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, STEPBIN");
   Serial.println("  Dir: 0 (CW), 1 (CCW)");
-  Serial.println("  STEPBIN: Rotate CCW until BIN limit switch stops it");
+  Serial.println("  STEPBIN: Rotate CCW until BIN limit switch is triggered");
   Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING");
   Serial.println("Limit Switch Commands: LTEST, LREAD, LCTEST, LCSTOP");
 }
@@ -399,16 +399,12 @@ void loop() {
         stepper.setDirection(1); // CCW direction
         stepper.startContinuousTest();
         stepperLimitTestingActive = true;
-        Serial.println("Stepper rotating CCW until BIN limit switch is pressed...");
-        Serial.println("Use STEPBINSTOP to emergency stop if needed.");
+        Serial.println("Stepper rotating CCW until BIN limit switch is triggered...");
       } else {
-        Serial.println("Stepper limit testing already active. Use STEPBINSTOP to stop.");
+        Serial.println("Stepper limit testing already active.");
       }
-    } else if (input.equalsIgnoreCase("STEPBINSTOP")) {
-      stepper.stopContinuousTest();
-      stepperLimitTestingActive = false;
-      Serial.println("Stepper limit testing stopped manually.");
     }
+    // Buzzer commands
     else if (input.equalsIgnoreCase("BTEST")) {
       buzzerConfig.beep();
       Serial.println("Buzzer test beep.");
@@ -457,7 +453,7 @@ void loop() {
       Serial.println("Motor: FORWARD <speed>, BACKWARD <speed>, RIGHT <speed>, LEFT <speed>, MSTOP");
       Serial.println("  Individual: M<motor> <direction> <speed>");
       Serial.println("Ultrasonic: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
-      Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, STEPBIN, STEPBINSTOP");
+      Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, STEPBIN");
       Serial.println("Buzzer: BTEST, BSUCCESS, BERROR, BWARNING");
       Serial.println("Limit Switch: LTEST, LREAD, LCTEST, LCSTOP");
     }
