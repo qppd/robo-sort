@@ -19,6 +19,7 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   lifterDirection = false;
   lifterStartTime = 0;
   lifterTimeout = 3000;  // Default 3 seconds
+  currentArmAngle = 90;  // Initialize arm to center position
 }
 
 void ServoConfig::begin() {
@@ -147,8 +148,25 @@ void ServoConfig::armRotate(int angle) {
     return;
   }
   
-  setServoAngle(1, angle);  // Channel 1 for MG996R arm servo
-  Serial.print("ARM rotated to ");
+  Serial.print("ARM rotating from ");
+  Serial.print(currentArmAngle);
+  Serial.print(" to ");
+  Serial.print(angle);
+  Serial.println(" degrees (50% speed)");
+  
+  // Move incrementally for 50% speed reduction
+  int step = (angle > currentArmAngle) ? 1 : -1;  // Direction of movement
+  
+  for (int pos = currentArmAngle; pos != angle; pos += step) {
+    setServoAngle(1, pos);  // Channel 1 for MG996R arm servo
+    delay(20);  // 20ms delay per degree = 50% speed reduction
+  }
+  
+  // Set final position
+  setServoAngle(1, angle);
+  currentArmAngle = angle;  // Update current position
+  
+  Serial.print("ARM rotation complete at ");
   Serial.print(angle);
   Serial.println(" degrees");
 }

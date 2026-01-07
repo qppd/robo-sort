@@ -22,6 +22,9 @@ private:
   unsigned long lifterStartTime;  // For DOWN timer only
   unsigned long lifterTimeout;    // Variable timeout for DOWN (3s or 75s)
   
+  // Arm servo position tracking
+  int currentArmAngle;  // Track current position of channel 1 arm servo
+  
 public:
   ServoConfig();
   void begin();
