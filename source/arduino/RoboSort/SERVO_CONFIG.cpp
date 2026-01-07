@@ -83,8 +83,30 @@ void ServoConfig::lifterDown() {
     Serial.println("Lifter moving DOWN - 3 rotations then stop");
 }
 
-void ServoConfig::enableServos() {
-    digitalWrite(SERVO_OE_PIN, LOW);
+void ServoConfig::testServos() {
+    for (uint8_t i = 0; i < NUM_SERVOS; i++) {
+        if (servoTypes[i] == CONTINUOUS_SERVO) {
+            // For continuous servos, just test stop and slow speeds
+            setContinuousSpeed(i, 0);   // Stop
+            delay(500);
+            setContinuousSpeed(i, 30);  // Slow one direction
+            delay(1000);
+            setContinuousSpeed(i, -30); // Slow other direction
+            delay(1000);
+            setContinuousSpeed(i, 0);   // Stop
+            delay(500);
+        } else {
+            // Standard position servo test
+            setServoAngle(i, 0);
+            delay(500);
+            setServoAngle(i, 90);
+            delay(500);
+            setServoAngle(i, 180);
+            delay(500);
+            setServoAngle(i, 90);
+            delay(500);
+        }
+    }
 }
 
 void ServoConfig::disableServos() {
