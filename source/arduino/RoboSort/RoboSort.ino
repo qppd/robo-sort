@@ -19,6 +19,7 @@ bool lastBinState = HIGH;
 
 // Stepper limit testing variables
 bool stepperLimitTestingActive = false;
+bool stepperNeedsRestart = false;
 
 void setup() {
   Serial.begin(9600);
@@ -76,10 +77,15 @@ void loop() {
   if (stepperLimitTestingActive) {
     bool binState = digitalRead(BIN_LIMIT_PIN);
     if (binState == LOW) {  // Bin limit switch pressed
-      stepper.stopContinuousTest();
+      stepper.emergencyStop();
       stepperLimitTestingActive = false;
+      stepperNeedsRestart = false;
       Serial.println("Stepper stopped by BIN limit switch!");
       buzzerConfig.successBeep();
+    } else if (!stepper.isBusy() && stepperNeedsRestart) {
+      // Restart stepper in CCW direction
+      stepper.setDirection(1); // CCW
+      stepper.startSteps(10000, 100, 800); // Large number of steps
     }
   }
   
@@ -397,8 +403,9 @@ void loop() {
     } else if (input.equalsIgnoreCase("STEPBIN")) {
       if (!stepperLimitTestingActive) {
         stepper.setDirection(1); // CCW direction
-        stepper.startContinuousTest();
+        stepper.startSteps(10000, 100, 800); // Start with large number of steps
         stepperLimitTestingActive = true;
+        stepperNeedsRestart = true;
         Serial.println("Stepper rotating CCW until BIN limit switch is triggered...");
       } else {
         Serial.println("Stepper limit testing already active.");
