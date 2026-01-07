@@ -122,6 +122,14 @@ void ServoConfig::testServos() {
 
 void ServoConfig::enableServos() {
     digitalWrite(SERVO_OE_PIN, LOW);
+    // Ensure all servos are in safe state when enabled
+    for (uint8_t i = 0; i < NUM_SERVOS; i++) {
+        if (servoTypes[i] == CONTINUOUS_SERVO) {
+            setContinuousSpeed(i, 0); // Stop continuous servos
+        } else {
+            setServoAngle(i, 90); // Center position servos
+        }
+    }
 }
 
 void ServoConfig::disableServos() {
