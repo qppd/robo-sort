@@ -158,13 +158,20 @@ void ServoConfig::armRotate(int angle) {
     return;
   }
   
-  Serial.print("ARM rotating to ");
+  Serial.print("ARM rotating from ");
+  Serial.print(currentArmAngle);
+  Serial.print(" to ");
   Serial.print(angle);
-  Serial.println(" degrees");
+  Serial.println(" degrees (smooth)");
   
-  // Set servo to angle directly
-  setServoAngle(1, angle);
-  currentArmAngle = angle;
+  // Smooth movement with 1-degree steps
+  int step = (angle > currentArmAngle) ? 1 : -1;
+  
+  while (currentArmAngle != angle) {
+    currentArmAngle += step;
+    setServoAngle(1, currentArmAngle);
+    delay(15);  // 15ms per degree for smooth motion
+  }
   
   Serial.print("ARM rotation complete at ");
   Serial.print(angle);
