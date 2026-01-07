@@ -5,6 +5,11 @@
 #define SERVO_MIN_PULSE  150
 #define SERVO_MAX_PULSE  600
 
+// Microsecond ranges matching Adafruit sample
+#define SERVO_MIN_US     600
+#define SERVO_MAX_US     2400
+#define SERVO_NEUTRAL_US 1500
+
 // Continuous servo timing (approximate for 360° servos)
 // One full rotation takes about 1-2 seconds depending on servo
 #define ROTATION_TIME_MS 1500  // Time for one full rotation
@@ -25,7 +30,9 @@ void ServoConfig::begin() {
     pinMode(SERVO_OE_PIN, OUTPUT);
     digitalWrite(SERVO_OE_PIN, HIGH); // Disable servos at startup
     pwm.begin();
+    pwm.setOscillatorFrequency(27000000);
     pwm.setPWMFreq(50); // Analog servos run at ~50 Hz
+    delay(10);
     
     // Ensure continuous servo is stopped at startup
     setContinuousSpeed(0, 0);
@@ -48,9 +55,14 @@ void ServoConfig::setServoAngle(uint8_t servo, uint16_t angle) {
 
 void ServoConfig::setContinuousSpeed(uint8_t servo, int8_t speed) {
     if (servo >= NUM_SERVOS || servoTypes[servo] != CONTINUOUS_SERVO) return;
-    
-    uint16_t pulse = speedToPulse(speed);
-    pwm.setPWM(servoChannels[servo], 0, pulse);
+    int8_t s = constrain(speed, -100, 100);
+    uint16_t micros;
+    if (s < 0) {
+        micros = map(s, -100, 0, SERVO_MIN_US, SERVO_NEUTRAL_US);
+    } else {
+        micros = map(s, 0, 100, SERVO_NEUTRAL_US, SERVO_MAX_US);
+    }
+    pwm.writeMicroseconds(servoChannels[servo], micros);
 }
 
 uint16_t ServoConfig::angleToPulse(uint16_t angle) {
