@@ -43,4 +43,8 @@
 // ===== BUZZER PIN =====
 #define BUZZER_PIN 33        // Buzzer connected to pin 6
 
+// ===== LIMIT SWITCH PINS =====
+#define ARM_LIMIT_PIN 52     // Arm limit switch connected to pin 52
+#define BIN_LIMIT_PIN 53     // Bin limit switch connected to pin 53
+
 #endif // PINS_H

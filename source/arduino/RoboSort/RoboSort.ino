@@ -12,8 +12,18 @@ UltrasonicConfig ultrasonicConfig;
 TB6600 stepper(STEPPER_DIR_PIN, STEPPER_STEP_PIN, STEPPER_ENA_PIN);
 BuzzerConfig buzzerConfig;
 
+// Limit switch variables
+bool limitTestingActive = false;
+unsigned long lastLimitPrint = 0;
+const unsigned long LIMIT_PRINT_INTERVAL = 500; // Print every 500ms during continuous testing
+
 void setup() {
   Serial.begin(9600);
+  
+  // Initialize limit switches as INPUT_PULLUP
+  pinMode(ARM_LIMIT_PIN, INPUT_PULLUP);
+  pinMode(BIN_LIMIT_PIN, INPUT_PULLUP);
+  
   servoConfig.begin();
   dcConfig.begin();
   ultrasonicConfig.begin();
@@ -31,6 +41,7 @@ void setup() {
   Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP");
   Serial.println("  Dir: 0 (CW), 1 (CCW)");
   Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING");
+  Serial.println("Limit Switch Commands: LTEST, LREAD, LCTEST, LCSTOP");
 }
 
 void loop() {
@@ -38,6 +49,21 @@ void loop() {
   servoConfig.update();
   ultrasonicConfig.update();
   buzzerConfig.update();
+  
+  // Handle continuous limit switch testing
+  if (limitTestingActive) {
+    unsigned long currentMillis = millis();
+    if (currentMillis - lastLimitPrint >= LIMIT_PRINT_INTERVAL) {
+      lastLimitPrint = currentMillis;
+      bool armState = digitalRead(ARM_LIMIT_PIN);
+      bool binState = digitalRead(BIN_LIMIT_PIN);
+      Serial.print("Limit Switches - Arm: ");
+      Serial.print(armState ? "OPEN" : "PRESSED");
+      Serial.print(", Bin: ");
+      Serial.println(binState ? "OPEN" : "PRESSED");
+    }
+  }
+  
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
     input.trim();
@@ -363,6 +389,33 @@ void loop() {
     } else if (input.equalsIgnoreCase("BWARNING")) {
       buzzerConfig.warningBeep();
       Serial.println("Warning beep pattern.");
+    }
+    // Limit switch commands
+    else if (input.equalsIgnoreCase("LTEST")) {
+      bool armState = digitalRead(ARM_LIMIT_PIN);
+      bool binState = digitalRead(BIN_LIMIT_PIN);
+      Serial.println("=== Limit Switch Test ===");
+      Serial.print("Arm Limit (Pin 52): ");
+      Serial.println(armState ? "OPEN" : "PRESSED");
+      Serial.print("Bin Limit (Pin 53): ");
+      Serial.println(binState ? "OPEN" : "PRESSED");
+      Serial.println("=========================");
+      buzzerConfig.successBeep();
+    } else if (input.equalsIgnoreCase("LREAD")) {
+      bool armState = digitalRead(ARM_LIMIT_PIN);
+      bool binState = digitalRead(BIN_LIMIT_PIN);
+      Serial.print("Arm: ");
+      Serial.print(armState ? "OPEN" : "PRESSED");
+      Serial.print(", Bin: ");
+      Serial.println(binState ? "OPEN" : "PRESSED");
+    } else if (input.equalsIgnoreCase("LCTEST")) {
+      limitTestingActive = true;
+      lastLimitPrint = 0;
+      Serial.println("Continuous limit switch testing started.");
+      Serial.println("Press LCSTOP to stop monitoring.");
+    } else if (input.equalsIgnoreCase("LCSTOP")) {
+      limitTestingActive = false;
+      Serial.println("Continuous limit switch testing stopped.");
     } else {
       buzzerConfig.errorBeep();
       Serial.println("Unknown command.");
@@ -372,6 +425,7 @@ void loop() {
       Serial.println("Ultrasonic: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
       Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP");
       Serial.println("Buzzer: BTEST, BSUCCESS, BERROR, BWARNING");
+      Serial.println("Limit Switch: LTEST, LREAD, LCTEST, LCSTOP");
     }
   }
 }
