@@ -23,6 +23,9 @@ bool stepperNeedsRestart = false;
 unsigned long homeStepCount = 0;
 unsigned long homePositionSteps = 0; // Store the exact steps to home position
 
+// Current bin position tracking
+long currentBinPosition = 0; // Track current position in steps (0 = home)
+
 void setup() {
   Serial.begin(9600);
   
@@ -386,42 +389,95 @@ void loop() {
         stepperLimitTestingActive = true;
         stepperNeedsRestart = true;
         homeStepCount = 100; // Count first batch
+        currentBinPosition = 0; // Reset position to home
         Serial.println("Stepper rotating CCW until BIN limit switch is triggered...");
         Serial.println("Counting steps in real-time (100-step batches)...");
       } else {
         Serial.println("Stepper limit testing already active.");
       }
     } else if (input.equalsIgnoreCase("BIN_1")) {
-      stepper.setDirection(0); // CW direction
-      if (stepper.startSteps(950, 750, 1500)) {
-        Serial.println("Moving stepper to BIN 1 position (950 steps CW)...");
-        buzzerConfig.successBeep();
+      long targetPosition = 950;
+      long stepsToMove = targetPosition - currentBinPosition;
+      if (stepsToMove != 0) {
+        stepper.setDirection(stepsToMove > 0 ? 0 : 1); // CW if positive, CCW if negative
+        if (stepper.startSteps(abs(stepsToMove), 750, 1500)) {
+          Serial.print("Moving to BIN 1 from position ");
+          Serial.print(currentBinPosition);
+          Serial.print(" (");
+          Serial.print(abs(stepsToMove));
+          Serial.print(" steps ");
+          Serial.print(stepsToMove > 0 ? "CW" : "CCW");
+          Serial.println(")...");
+          currentBinPosition = targetPosition;
+          buzzerConfig.successBeep();
+        } else {
+          Serial.println("Stepper busy, cannot start new operation.");
+        }
       } else {
-        Serial.println("Stepper busy, cannot start new operation.");
+        Serial.println("Already at BIN 1 position.");
       }
     } else if (input.equalsIgnoreCase("BIN_2")) {
-      stepper.setDirection(0); // CW direction
-      if (stepper.startSteps(1900, 750, 1500)) {
-        Serial.println("Moving stepper to BIN 2 position (1900 steps CW)...");
-        buzzerConfig.successBeep();
+      long targetPosition = 1900;
+      long stepsToMove = targetPosition - currentBinPosition;
+      if (stepsToMove != 0) {
+        stepper.setDirection(stepsToMove > 0 ? 0 : 1); // CW if positive, CCW if negative
+        if (stepper.startSteps(abs(stepsToMove), 750, 1500)) {
+          Serial.print("Moving to BIN 2 from position ");
+          Serial.print(currentBinPosition);
+          Serial.print(" (");
+          Serial.print(abs(stepsToMove));
+          Serial.print(" steps ");
+          Serial.print(stepsToMove > 0 ? "CW" : "CCW");
+          Serial.println(")...");
+          currentBinPosition = targetPosition;
+          buzzerConfig.successBeep();
+        } else {
+          Serial.println("Stepper busy, cannot start new operation.");
+        }
       } else {
-        Serial.println("Stepper busy, cannot start new operation.");
+        Serial.println("Already at BIN 2 position.");
       }
     } else if (input.equalsIgnoreCase("BIN_3")) {
-      stepper.setDirection(0); // CW direction
-      if (stepper.startSteps(2850, 750, 1500)) {
-        Serial.println("Moving stepper to BIN 3 position (2850 steps CW)...");
-        buzzerConfig.successBeep();
+      long targetPosition = 2850;
+      long stepsToMove = targetPosition - currentBinPosition;
+      if (stepsToMove != 0) {
+        stepper.setDirection(stepsToMove > 0 ? 0 : 1); // CW if positive, CCW if negative
+        if (stepper.startSteps(abs(stepsToMove), 750, 1500)) {
+          Serial.print("Moving to BIN 3 from position ");
+          Serial.print(currentBinPosition);
+          Serial.print(" (");
+          Serial.print(abs(stepsToMove));
+          Serial.print(" steps ");
+          Serial.print(stepsToMove > 0 ? "CW" : "CCW");
+          Serial.println(")...");
+          currentBinPosition = targetPosition;
+          buzzerConfig.successBeep();
+        } else {
+          Serial.println("Stepper busy, cannot start new operation.");
+        }
       } else {
-        Serial.println("Stepper busy, cannot start new operation.");
+        Serial.println("Already at BIN 3 position.");
       }
     } else if (input.equalsIgnoreCase("BIN_4")) {
-      stepper.setDirection(0); // CW direction
-      if (stepper.startSteps(3800, 750, 1500)) {
-        Serial.println("Moving stepper to BIN 4 position (3800 steps CW)...");
-        buzzerConfig.successBeep();
+      long targetPosition = 3800;
+      long stepsToMove = targetPosition - currentBinPosition;
+      if (stepsToMove != 0) {
+        stepper.setDirection(stepsToMove > 0 ? 0 : 1); // CW if positive, CCW if negative
+        if (stepper.startSteps(abs(stepsToMove), 750, 1500)) {
+          Serial.print("Moving to BIN 4 from position ");
+          Serial.print(currentBinPosition);
+          Serial.print(" (");
+          Serial.print(abs(stepsToMove));
+          Serial.print(" steps ");
+          Serial.print(stepsToMove > 0 ? "CW" : "CCW");
+          Serial.println(")...");
+          currentBinPosition = targetPosition;
+          buzzerConfig.successBeep();
+        } else {
+          Serial.println("Stepper busy, cannot start new operation.");
+        }
       } else {
-        Serial.println("Stepper busy, cannot start new operation.");
+        Serial.println("Already at BIN 4 position.");
       }
     }
     // Buzzer commands
