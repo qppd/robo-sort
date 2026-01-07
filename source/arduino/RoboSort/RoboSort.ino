@@ -14,8 +14,8 @@ BuzzerConfig buzzerConfig;
 
 // Limit switch variables
 bool limitTestingActive = false;
-unsigned long lastLimitPrint = 0;
-const unsigned long LIMIT_PRINT_INTERVAL = 500; // Print every 500ms during continuous testing
+bool lastArmState = HIGH;  // Track previous states (HIGH = OPEN, LOW = PRESSED)
+bool lastBinState = HIGH;
 
 void setup() {
   Serial.begin(9600);
@@ -52,16 +52,20 @@ void loop() {
   
   // Handle continuous limit switch testing
   if (limitTestingActive) {
-    unsigned long currentMillis = millis();
-    if (currentMillis - lastLimitPrint >= LIMIT_PRINT_INTERVAL) {
-      lastLimitPrint = currentMillis;
-      bool armState = digitalRead(ARM_LIMIT_PIN);
-      bool binState = digitalRead(BIN_LIMIT_PIN);
-      Serial.print("Limit Switches - Arm: ");
-      Serial.print(armState ? "OPEN" : "PRESSED");
-      Serial.print(", Bin: ");
-      Serial.println(binState ? "OPEN" : "PRESSED");
+    bool armState = digitalRead(ARM_LIMIT_PIN);
+    bool binState = digitalRead(BIN_LIMIT_PIN);
+    
+    // Only print when a switch is pressed (state changes from HIGH to LOW)
+    if (armState == LOW && lastArmState == HIGH) {
+      Serial.println("ARM LIMIT SWITCH PRESSED!");
     }
+    if (binState == LOW && lastBinState == HIGH) {
+      Serial.println("BIN LIMIT SWITCH PRESSED!");
+    }
+    
+    // Update previous states
+    lastArmState = armState;
+    lastBinState = binState;
   }
   
   if (Serial.available()) {
@@ -410,9 +414,11 @@ void loop() {
       Serial.println(binState ? "OPEN" : "PRESSED");
     } else if (input.equalsIgnoreCase("LCTEST")) {
       limitTestingActive = true;
-      lastLimitPrint = 0;
+      // Initialize previous states
+      lastArmState = digitalRead(ARM_LIMIT_PIN);
+      lastBinState = digitalRead(BIN_LIMIT_PIN);
       Serial.println("Continuous limit switch testing started.");
-      Serial.println("Press LCSTOP to stop monitoring.");
+      Serial.println("Will only print when switches are PRESSED. Use LCSTOP to stop.");
     } else if (input.equalsIgnoreCase("LCSTOP")) {
       limitTestingActive = false;
       Serial.println("Continuous limit switch testing stopped.");
