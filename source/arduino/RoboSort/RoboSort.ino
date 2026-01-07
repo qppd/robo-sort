@@ -439,6 +439,7 @@ void loop() {
       } else {
         Serial.println("Stepper busy, cannot start new operation.");
       }
+    }
     // Buzzer commands
     else if (input.equalsIgnoreCase("BTEST")) {
       buzzerConfig.beep();
