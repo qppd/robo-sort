@@ -96,8 +96,13 @@ void loop() {
     } else if (!stepper.isBusy() && stepperNeedsRestart) {
       // Restart stepper in CCW direction with another batch
       stepper.setDirection(1); // CCW
-      stepper.startSteps(1000, 750, 1500); // Small batches for precise counting
-      homeStepCount += 1000; // Increment step count by batch size
+      stepper.startSteps(100, 750, 1500); // Small 100-step batches
+      homeStepCount += 100; // Increment step count by batch size
+      // Print progress every 500 steps
+      if (homeStepCount % 500 == 0) {
+        Serial.print("Steps: ");
+        Serial.println(homeStepCount);
+      }
     }
   }
   
@@ -416,12 +421,12 @@ void loop() {
     } else if (input.equalsIgnoreCase("HOME")) {
       if (!stepperLimitTestingActive) {
         stepper.setDirection(1); // CCW direction
-        stepper.startSteps(1000, 750, 1500); // Small batches for precise counting
+        stepper.startSteps(100, 750, 1500); // Small 100-step batches for precise counting
         stepperLimitTestingActive = true;
         stepperNeedsRestart = true;
-        homeStepCount = 0; // Initialize step count
+        homeStepCount = 100; // Count first batch
         Serial.println("Stepper rotating CCW until BIN limit switch is triggered...");
-        Serial.println("Will count exact steps to home position.");
+        Serial.println("Counting steps in real-time (100-step batches)...");
       } else {
         Serial.println("Stepper limit testing already active.");
       }
