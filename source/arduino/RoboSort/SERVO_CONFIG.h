@@ -16,12 +16,10 @@ class ServoConfig {
 private:
   Adafruit_PWMServoDriver pwm;
   
-  // Lifter control variables
-  bool lifterMoving;
-  unsigned long lifterStartTime;
-  bool lifterIsUp;  // Track if lifter is moving up
-  unsigned long lastSwitchCheck; // For debouncing
-  int lastSwitchState;
+  // Lifter control variables (simple ON/OFF for continuous servo)
+  bool lifterRunning;
+  bool lifterDirection;  // true = UP, false = DOWN
+  unsigned long lifterStartTime;  // For DOWN timer only
   
 public:
   ServoConfig();
