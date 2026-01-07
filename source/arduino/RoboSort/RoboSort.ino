@@ -85,7 +85,7 @@ void loop() {
     } else if (!stepper.isBusy() && stepperNeedsRestart) {
       // Restart stepper in CCW direction
       stepper.setDirection(1); // CCW
-      stepper.startSteps(10000, 500, 2000); // Large number of steps (slow speed)
+      stepper.startSteps(10000, 500, 1000); // Large number of steps (slow speed)
     }
   }
   
@@ -403,7 +403,7 @@ void loop() {
     } else if (input.equalsIgnoreCase("HOME")) {
       if (!stepperLimitTestingActive) {
         stepper.setDirection(1); // CCW direction
-        stepper.startSteps(10000, 500, 2000); // Start with large number of steps (slow speed)
+        stepper.startSteps(10000, 500, 1000); // Start with large number of steps (slow speed)
         stepperLimitTestingActive = true;
         stepperNeedsRestart = true;
         Serial.println("Stepper rotating CCW until BIN limit switch is triggered...");
