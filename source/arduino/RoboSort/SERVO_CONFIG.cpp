@@ -10,7 +10,7 @@
 #define ROTATION_TIME_MS 1500  // Time for one full rotation
 
 ServoConfig::ServoConfig() : pwm(0x40), _continuousTest(false), _lastMoveTime(0), _currentAngle(0), _direction(1), 
-                           _lifterMoving(false), _lifterStartTime(0), _lifterRotations(0), _lifterSpeed(0) {
+                           _lifterMoving(false), _lifterGoingUp(false), _lifterStartTime(0), _lifterRotations(0), _lifterSpeed(0) {
     // Default channels for 5 servos (0-4)
     for (uint8_t i = 0; i < NUM_SERVOS; i++) {
         servoChannels[i] = i;
@@ -65,17 +65,19 @@ void ServoConfig::lifterUp() {
     if (_lifterMoving) return; // Already moving
     
     _lifterMoving = true;
+    _lifterGoingUp = true;
     _lifterStartTime = millis();
     _lifterRotations = 0;
     _lifterSpeed = 80; // Medium speed up
     setContinuousSpeed(0, _lifterSpeed); // Servo 0
-    Serial.println("Lifter moving UP - 3 rotations then stop");
+    Serial.println("Lifter moving UP - will stop when ARM limit switch is pressed");
 }
 
 void ServoConfig::lifterDown() {
     if (_lifterMoving) return; // Already moving
     
     _lifterMoving = true;
+    _lifterGoingUp = false;
     _lifterStartTime = millis();
     _lifterRotations = 0;
     _lifterSpeed = -80; // Medium speed down (negative = opposite direction)
@@ -150,21 +152,32 @@ void ServoConfig::update() {
     
     // Handle lifter movement timing
     if (_lifterMoving) {
-        unsigned long now = millis();
-        unsigned long elapsed = now - _lifterStartTime;
-        
-        // Check if one rotation is complete
-        if (elapsed >= ROTATION_TIME_MS) {
-            _lifterRotations++;
-            _lifterStartTime = now;
-            
-            if (_lifterRotations >= 3) {
-                // Stop after 3 rotations
+        if (_lifterGoingUp) {
+            // Check ARM limit switch for UP direction
+            bool armState = digitalRead(ARM_LIMIT_PIN);
+            if (armState == LOW) { // Limit switch pressed
                 setContinuousSpeed(0, 0); // Stop servo
                 _lifterMoving = false;
-                Serial.print("Lifter stopped after ");
-                Serial.print(_lifterRotations);
-                Serial.println(" rotations");
+                Serial.println("Lifter stopped - ARM limit switch pressed!");
+            }
+        } else {
+            // For DOWN direction, use 3-rotation timing
+            unsigned long now = millis();
+            unsigned long elapsed = now - _lifterStartTime;
+            
+            // Check if one rotation is complete
+            if (elapsed >= ROTATION_TIME_MS) {
+                _lifterRotations++;
+                _lifterStartTime = now;
+                
+                if (_lifterRotations >= 3) {
+                    // Stop after 3 rotations
+                    setContinuousSpeed(0, 0); // Stop servo
+                    _lifterMoving = false;
+                    Serial.print("Lifter stopped after ");
+                    Serial.print(_lifterRotations);
+                    Serial.println(" rotations");
+                }
             }
         }
     }

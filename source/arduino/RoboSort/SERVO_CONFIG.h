@@ -34,6 +34,7 @@ private:
     int _direction;
     // Lifter control variables
     bool _lifterMoving;
+    bool _lifterGoingUp; // True = going up, False = going down
     unsigned long _lifterStartTime;
     int _lifterRotations;
     int8_t _lifterSpeed;
