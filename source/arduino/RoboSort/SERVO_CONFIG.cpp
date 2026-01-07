@@ -20,6 +20,8 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   lifterMoving = false;
   lifterStartTime = 0;
   lifterIsUp = false;
+  lastSwitchCheck = 0;
+  lastSwitchState = HIGH; // Default to not pressed
 }
 
 void ServoConfig::begin() {
@@ -51,9 +53,32 @@ void ServoConfig::update() {
   
   // Check if lifter is moving up and arm limit switch is pressed
   if (lifterMoving && lifterIsUp) {
-    if (digitalRead(ARM_LIMIT_PIN) == LOW) {
-      lifterStop();
-      Serial.println("LIFTER UP stopped by ARM limit switch");
+    unsigned long currentTime = millis();
+    
+    // Check switch state every 50ms to debounce
+    if (currentTime - lastSwitchCheck >= 50) {
+      int switchState = digitalRead(ARM_LIMIT_PIN);
+      lastSwitchCheck = currentTime;
+      
+      // Only trigger if switch has been stable for debounce period
+      if (switchState == LOW && lastSwitchState == LOW) {
+        Serial.println("ARM limit switch detected - stopping lifter");
+        lifterStop();
+        // Send stop signal multiple times to ensure servo stops
+        delay(10);
+        pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_STOP);
+        delay(10);
+        pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_STOP);
+        Serial.println("LIFTER UP stopped by ARM limit switch");
+      }
+      
+      lastSwitchState = switchState;
+      
+      // Debug output (less frequent)
+      if (currentTime % 1000 == 0) {
+        Serial.print("ARM switch state: ");
+        Serial.println(switchState);
+      }
     }
   }
 }
@@ -77,7 +102,13 @@ void ServoConfig::lifterDown() {
 }
 
 void ServoConfig::lifterStop() {
+  // Send stop signal multiple times to ensure servo stops completely
   pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_STOP);
+  delay(10);
+  pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_STOP);
+  delay(10);
+  pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_STOP);
+  
   lifterMoving = false;
   Serial.println("LIFTER STOPPED");
 }

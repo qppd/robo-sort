@@ -20,6 +20,8 @@ private:
   bool lifterMoving;
   unsigned long lifterStartTime;
   bool lifterIsUp;  // Track if lifter is moving up
+  unsigned long lastSwitchCheck; // For debouncing
+  int lastSwitchState;
   
 public:
   ServoConfig();
