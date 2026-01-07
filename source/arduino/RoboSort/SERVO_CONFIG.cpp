@@ -151,29 +151,13 @@ void ServoConfig::armRotate(int angle) {
     return;
   }
   
-  Serial.print("ARM rotating from ");
-  Serial.print(currentArmAngle);
-  Serial.print(" to ");
+  Serial.print("ARM rotating to ");
   Serial.print(angle);
-  Serial.println(" degrees (smooth slow motion)");
+  Serial.println(" degrees");
   
-  // Smooth movement with smaller steps and longer delays
-  float step = (angle > currentArmAngle) ? 0.5 : -0.5;  // 0.5 degree steps for smoothness
-  int totalSteps = abs(angle - currentArmAngle) * 2;  // 2 steps per degree
-  
-  for (int i = 0; i < totalSteps; i++) {
-    float pos = currentArmAngle + (step * (i + 1));
-    if ((step > 0 && pos > angle) || (step < 0 && pos < angle)) {
-      pos = angle;  // Don't overshoot
-    }
-    
-    setServoAngle(1, (int)pos);  // Channel 1 for MG996R arm servo
-    delay(30);  // 30ms delay per 0.5 degree step = very smooth and slow
-  }
-  
-  // Set final position precisely
+  // Set servo to angle directly
   setServoAngle(1, angle);
-  currentArmAngle = angle;  // Update current position
+  currentArmAngle = angle;
   
   Serial.print("ARM rotation complete at ");
   Serial.print(angle);
