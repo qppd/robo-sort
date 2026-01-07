@@ -35,6 +35,7 @@ public:
   // Servo control functions
   void testServos();
   void setServoAngle(int servoNum, int angle);
+  void armRotate(int angle);  // Control MG996R on channel 1
   
   // Existing functions (add these if you have them)
   void enableServos();

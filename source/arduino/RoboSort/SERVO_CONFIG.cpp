@@ -140,6 +140,19 @@ void ServoConfig::setServoAngle(int servoNum, int angle) {
   pwm.setPWM(servoNum, 0, pulseLength);
 }
 
+void ServoConfig::armRotate(int angle) {
+  // Control MG996R servo on channel 1 (0-180 degrees)
+  if (angle < 0 || angle > 180) {
+    Serial.println("Invalid angle. Range: 0-180");
+    return;
+  }
+  
+  setServoAngle(1, angle);  // Channel 1 for MG996R arm servo
+  Serial.print("ARM rotated to ");
+  Serial.print(angle);
+  Serial.println(" degrees");
+}
+
 void ServoConfig::enableServos() {
   digitalWrite(SERVO_OE_PIN, LOW);
 }
