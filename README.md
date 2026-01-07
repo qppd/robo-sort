@@ -181,14 +181,22 @@ python yolo_detect.py --model model.pt --source usb0 --record --resolution 640x4
   - Example: `S2 90` - Set servo 2 to 90 degrees
 
 #### Stepper Motor Commands
-- `STEPPER_TEST`: Runs a comprehensive test sequence on the stepper motor
-- `STEP <steps> <direction> <speed>`: Moves stepper motor with specified parameters
-  - Steps: Number of steps to move (1-10000)
-  - Direction: `CW` (clockwise) or `CCW` (counter-clockwise)
-  - Speed: Steps per second (1-1000)
-  - Example: `STEP 200 CW 500` - Move 200 steps clockwise at 500 steps/sec
-- `STEPPER_HOME`: Homes the stepper motor to zero position
-- `STEPPER_STOP`: Immediately stops stepper motor movement
+- `STEPTEST`: Runs a test sequence (CW then CCW rotation)
+- `STEP <steps> <direction>`: Moves stepper motor specified number of steps
+  - Steps: Number of steps to move
+  - Direction: `0` (CW - clockwise) or `1` (CCW - counter-clockwise)
+  - Example: `STEP 3800 0` - Move 3800 steps clockwise (max bin position)
+- `STEPSTOP`: Immediately stops stepper motor movement
+- `STEPCTEST`: Starts continuous alternating CW/CCW rotation test
+- `STEPCSTOP`: Stops continuous rotation test
+- `HOME`: **Bin homing command** - Rotates CCW until BIN limit switch is triggered
+  - Measures and displays exact steps to home position
+  - **Correct command for bin operation CCW rotation**
+  - Example output: "Exact steps to home position: 2347"
+
+**Bin Operation Commands:**
+- `HOME` - Rotate CCW to home position (limit switch triggered)
+- `STEP 3800 0` - Rotate CW to max bin position (3800 steps)
 
 #### Ultrasonic Commands
 - `UTEST`: Runs comprehensive ultrasonic sensor test with multiple readings
@@ -330,15 +338,41 @@ python3 RoboSort.py
 10. Send custom command
 0. Exit
 
-**Python Module Usage Example:**
-```python
-from serial_config import SerialConfig
+### Arduino Stepper Motor Control
 
-# Using context manager (automatic connection/disconnection)
-with SerialConfig(port='/dev/ttyACM0') as serial_conn:
-    # Test components
-    serial_conn.test_servos()
-    serial_conn.get_distance()
+The Arduino Mega handles direct stepper motor control with precise positioning commands:
+
+#### Bin Operation Commands
+**Important: These are the calibrated commands for your specific stepper setup:**
+
+- **`HOME`** - Rotate CCW until BIN limit switch is triggered
+  - Measures exact steps to home position
+  - Displays: "Exact steps to home position: [count]"
+  - Use this to calibrate and find home position
+
+- **`STEP 3800 0`** - Rotate CW to maximum bin position (3800 steps)
+  - Moves stepper to the far CW position for bin operation
+  - 3800 steps = maximum rotation for your setup
+
+#### Stepper Command Reference
+```
+HOME                    - CCW rotation until limit switch (homing)
+STEP 3800 0            - CW rotation 3800 steps (max position)
+STEPTEST               - Test sequence (CW then CCW)
+STEPSTOP               - Emergency stop
+STEPCTEST              - Continuous alternating test
+STEPCSTOP              - Stop continuous test
+```
+
+#### Example Usage
+```bash
+# Send commands via serial terminal or Python script
+HOME                    # Home to limit switch position
+STEP 3800 0           # Move to max bin position
+STEP 2000 1           # Move 2000 steps CCW
+```
+
+**Note:** All stepper commands now use slow, safe timing (750us pulse + 1500us gap) for precise control.
 
     # Control servo
     serial_conn.set_servo(0, 90)
