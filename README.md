@@ -82,7 +82,7 @@ Raspberry Pi (Python) ← Serial USB ← Arduino Mega ← Sensor Feedback
 - **🧠 Advanced AI Vision**: YOLO-based object detection and classification for accurate material identification
 - **📡 LIDAR Integration**: 360° environmental awareness with LD06 LIDAR sensor support
 - **🔄 Automated paper and plastic waste identification** and segregation with real-time confidence scoring
-- **⚙️ Stepper Motor Control**: Precise bin positioning using TB6600 driver with NEMA 23 stepper motor (19kg/cm holding torque) - 4 bin positions (0, 950, 1900, 2850 steps)
+- **⚙️ Stepper Motor Control**: Precise bin positioning using TB6600 driver with NEMA 23 stepper motor (19kg/cm holding torque) - 4 bin positions (0, 1100, 1900, 2850 steps)
 - **🎯 16-channel PWM servo driver (PCA9685)** for coordinated multi-servo control
 - **📹 Multiple Camera Support**: USB cameras, Raspberry Pi Camera, and video file processing
 - **🎥 Real-time Video Processing**: Live object detection with overlay information and recording capabilities

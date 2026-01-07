@@ -50,7 +50,7 @@ void setup() {
   Serial.println("Stepper Commands: BIN_HOME, BIN_1, BIN_2, BIN_3, BIN_4");
   Serial.println("  BIN_HOME: Rotate CCW until BIN limit switch is triggered");
   Serial.println("  BIN_1: Move to bin 1 position (0 steps - HOME position)");
-  Serial.println("  BIN_2: Move to bin 2 position (950 steps)");
+  Serial.println("  BIN_2: Move to bin 2 position (1100 steps)");
   Serial.println("  BIN_3: Move to bin 3 position (1900 steps)");
   Serial.println("  BIN_4: Move to bin 4 position (2850 steps)");
   Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING");
@@ -417,7 +417,7 @@ void loop() {
         Serial.println("Already at BIN 1 position.");
       }
     } else if (input.equalsIgnoreCase("BIN_2")) {
-      long targetPosition = 950;
+      long targetPosition = 1100;
       long stepsToMove = targetPosition - currentBinPosition;
       if (stepsToMove != 0) {
         stepper.setDirection(stepsToMove > 0 ? 0 : 1); // CW if positive, CCW if negative
