@@ -17,6 +17,9 @@ bool limitTestingActive = false;
 bool lastArmState = HIGH;  // Track previous states (HIGH = OPEN, LOW = PRESSED)
 bool lastBinState = HIGH;
 
+// Stepper limit testing variables
+bool stepperLimitTestingActive = false;
+
 void setup() {
   Serial.begin(9600);
   
@@ -38,8 +41,9 @@ void setup() {
   Serial.println("  Speed: 0-255 (default: 150)");
   Serial.println("Ultrasonic Commands: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
   Serial.println("  Sensors: 1-4 (default: 1)");
-  Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP");
+  Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, STEPBIN, STEPBINSTOP");
   Serial.println("  Dir: 0 (CW), 1 (CCW)");
+  Serial.println("  STEPBIN: Rotate CCW until BIN limit switch stops it");
   Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING");
   Serial.println("Limit Switch Commands: LTEST, LREAD, LCTEST, LCSTOP");
 }
@@ -66,6 +70,17 @@ void loop() {
     // Update previous states
     lastArmState = armState;
     lastBinState = binState;
+  }
+  
+  // Handle stepper limit switch testing
+  if (stepperLimitTestingActive) {
+    bool binState = digitalRead(BIN_LIMIT_PIN);
+    if (binState == LOW) {  // Bin limit switch pressed
+      stepper.stopContinuousTest();
+      stepperLimitTestingActive = false;
+      Serial.println("Stepper stopped by BIN limit switch!");
+      buzzerConfig.successBeep();
+    }
   }
   
   if (Serial.available()) {
@@ -379,8 +394,21 @@ void loop() {
     } else if (input.equalsIgnoreCase("STEPCSTOP")) {
       stepper.stopContinuousTest();
       Serial.println("Continuous stepper test stopped.");
+    } else if (input.equalsIgnoreCase("STEPBIN")) {
+      if (!stepperLimitTestingActive) {
+        stepper.setDirection(1); // CCW direction
+        stepper.startContinuousTest();
+        stepperLimitTestingActive = true;
+        Serial.println("Stepper rotating CCW until BIN limit switch is pressed...");
+        Serial.println("Use STEPBINSTOP to emergency stop if needed.");
+      } else {
+        Serial.println("Stepper limit testing already active. Use STEPBINSTOP to stop.");
+      }
+    } else if (input.equalsIgnoreCase("STEPBINSTOP")) {
+      stepper.stopContinuousTest();
+      stepperLimitTestingActive = false;
+      Serial.println("Stepper limit testing stopped manually.");
     }
-    // Buzzer commands
     else if (input.equalsIgnoreCase("BTEST")) {
       buzzerConfig.beep();
       Serial.println("Buzzer test beep.");
@@ -429,7 +457,7 @@ void loop() {
       Serial.println("Motor: FORWARD <speed>, BACKWARD <speed>, RIGHT <speed>, LEFT <speed>, MSTOP");
       Serial.println("  Individual: M<motor> <direction> <speed>");
       Serial.println("Ultrasonic: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
-      Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP");
+      Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, STEPBIN, STEPBINSTOP");
       Serial.println("Buzzer: BTEST, BSUCCESS, BERROR, BWARNING");
       Serial.println("Limit Switch: LTEST, LREAD, LCTEST, LCSTOP");
     }
