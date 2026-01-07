@@ -109,6 +109,10 @@ void ServoConfig::testServos() {
     }
 }
 
+void ServoConfig::enableServos() {
+    digitalWrite(SERVO_OE_PIN, LOW);
+}
+
 void ServoConfig::disableServos() {
     digitalWrite(SERVO_OE_PIN, HIGH);
 }
