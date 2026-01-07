@@ -41,6 +41,7 @@ void setup() {
   Serial.println("RoboSort Control System Ready!");
   buzzerConfig.startupBeep();
   Serial.println("Servo Commands: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
+  Serial.println("  Lifter Commands: LIFTER UP, LIFTER DOWN (3 rotations then stop)");
   Serial.println("Motor Commands: FORWARD <speed>, BACKWARD <speed>, RIGHT <speed>, LEFT <speed>, MSTOP");
   Serial.println("  Individual: M<motor> <direction> <speed>, MSTOP");
   Serial.println("  Motors: A or B, Directions: F (forward), B (backward), S (stop), BR (brake)");
@@ -151,6 +152,10 @@ void loop() {
     } else if (input.equalsIgnoreCase("SDISABLE")) {
       servoConfig.disableServos();
       Serial.println("Servos disabled.");
+    } else if (input.equalsIgnoreCase("LIFTER UP")) {
+      servoConfig.lifterUp();
+    } else if (input.equalsIgnoreCase("LIFTER DOWN")) {
+      servoConfig.lifterDown();
     }
     // Motor commands
     else if (input.equalsIgnoreCase("MSTOP")) {
@@ -526,6 +531,7 @@ void loop() {
       buzzerConfig.errorBeep();
       Serial.println("Unknown command.");
       Serial.println("Servo: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
+      Serial.println("  Lifter: LIFTER UP, LIFTER DOWN");
       Serial.println("Motor: FORWARD <speed>, BACKWARD <speed>, RIGHT <speed>, LEFT <speed>, MSTOP");
       Serial.println("  Individual: M<motor> <direction> <speed>");
       Serial.println("Ultrasonic: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
