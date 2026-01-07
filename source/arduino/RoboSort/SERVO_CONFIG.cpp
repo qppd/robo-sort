@@ -73,8 +73,8 @@ void ServoConfig::lifterDown() {
   
   // Set timeout based on ARM switch state
   if (armSwitchPressed) {
-    lifterTimeout = 75000;  // 75 seconds when ARM switch is pressed
-    Serial.println("LIFTER DOWN - ON (ARM switch pressed, 75s timeout)");
+    lifterTimeout = 72000;  // 72 seconds when ARM switch is pressed
+    Serial.println("LIFTER DOWN - ON (ARM switch pressed, 72s timeout)");
   } else {
     lifterTimeout = 3000;   // 3 seconds normal timeout
     Serial.println("LIFTER DOWN - ON (auto-stop after 3s)");
