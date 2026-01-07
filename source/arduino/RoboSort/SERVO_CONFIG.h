@@ -7,10 +7,10 @@
 #define NUM_SERVOS 6
 #define LIFTER_SERVO_CHANNEL 0  // 360° continuous servo on channel 0
 
-// Continuous servo control values for PCA9685
-#define LIFTER_STOP 1500      // Neutral position (stopped)
-#define LIFTER_UP_SPEED 1300  // Rotate one direction
-#define LIFTER_DOWN_SPEED 1700 // Rotate opposite direction
+// Continuous servo control values for PCA9685 (pulse length: 0-4096)
+#define LIFTER_STOP 310        // Neutral position (stopped)
+#define LIFTER_UP_SPEED 260    // Rotate one direction
+#define LIFTER_DOWN_SPEED 360  // Rotate opposite direction
 
 class ServoConfig {
 private:

@@ -62,7 +62,7 @@ void ServoConfig::update() {
 
 void ServoConfig::lifterUp() {
   // Turn ON - rotate UP until arm limit switch pressed
-  pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_UP_SPEED);
+  pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_UP_SPEED);
   lifterRunning = true;
   lifterDirection = true;  // UP
   Serial.println("LIFTER UP - ON (auto-stop on ARM switch)");
@@ -70,7 +70,7 @@ void ServoConfig::lifterUp() {
 
 void ServoConfig::lifterDown() {
   // Turn ON - rotate DOWN for 3 seconds then auto-stop
-  pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_DOWN_SPEED);
+  pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_DOWN_SPEED);
   lifterRunning = true;
   lifterDirection = false;  // DOWN
   lifterStartTime = millis();
@@ -79,11 +79,11 @@ void ServoConfig::lifterDown() {
 
 void ServoConfig::lifterStop() {
   // Turn OFF - send stop signal multiple times to ensure complete stop
-  pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_STOP);
+  pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_STOP);
   delay(10);
-  pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_STOP);
+  pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_STOP);
   delay(10);
-  pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_STOP);
+  pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_STOP);
   
   lifterRunning = false;
   Serial.println("LIFTER - OFF");
