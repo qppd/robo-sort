@@ -42,9 +42,9 @@ void setup() {
   Serial.println("  Speed: 0-255 (default: 150)");
   Serial.println("Ultrasonic Commands: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
   Serial.println("  Sensors: 1-4 (default: 1)");
-  Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, STEPBIN");
+  Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, HOME");
   Serial.println("  Dir: 0 (CW), 1 (CCW)");
-  Serial.println("  STEPBIN: Rotate CCW until BIN limit switch is triggered");
+  Serial.println("  HOME: Rotate CCW until BIN limit switch is triggered");
   Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING");
   Serial.println("Limit Switch Commands: LTEST, LREAD, LCTEST, LCSTOP");
 }
@@ -370,7 +370,7 @@ void loop() {
     } else if (input.equalsIgnoreCase("STEPSTOP")) {
       stepper.emergencyStop();
       Serial.println("Stepper emergency stop.");
-    } else if (input.startsWith("STEP") && !input.equalsIgnoreCase("STEPTEST") && !input.equalsIgnoreCase("STEPSTOP") && !input.equalsIgnoreCase("STEPCTEST") && !input.equalsIgnoreCase("STEPCSTOP") && !input.equalsIgnoreCase("STEPBIN")) {
+    } else if (input.startsWith("STEP") && !input.equalsIgnoreCase("STEPTEST") && !input.equalsIgnoreCase("STEPSTOP") && !input.equalsIgnoreCase("STEPCTEST") && !input.equalsIgnoreCase("STEPCSTOP") && !input.equalsIgnoreCase("HOME")) {
       // Parse stepper command: STEP <steps> <dir>
       input = input.substring(4); // Remove 'STEP'
       int spaceIdx = input.indexOf(' ');
@@ -400,7 +400,7 @@ void loop() {
     } else if (input.equalsIgnoreCase("STEPCSTOP")) {
       stepper.stopContinuousTest();
       Serial.println("Continuous stepper test stopped.");
-    } else if (input.equalsIgnoreCase("STEPBIN")) {
+    } else if (input.equalsIgnoreCase("HOME")) {
       if (!stepperLimitTestingActive) {
         stepper.setDirection(1); // CCW direction
         stepper.startSteps(10000, 100, 800); // Start with large number of steps
@@ -460,7 +460,7 @@ void loop() {
       Serial.println("Motor: FORWARD <speed>, BACKWARD <speed>, RIGHT <speed>, LEFT <speed>, MSTOP");
       Serial.println("  Individual: M<motor> <direction> <speed>");
       Serial.println("Ultrasonic: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
-      Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, STEPBIN");
+      Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, HOME");
       Serial.println("Buzzer: BTEST, BSUCCESS, BERROR, BWARNING");
       Serial.println("Limit Switch: LTEST, LREAD, LCTEST, LCSTOP");
     }
