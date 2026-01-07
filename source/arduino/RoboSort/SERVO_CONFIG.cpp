@@ -137,8 +137,15 @@ void ServoConfig::testServos() {
 }
 
 void ServoConfig::setServoAngle(int servoNum, int angle) {
-  // Convert angle (0-180) to pulse length (150-600)
+  // Convert angle (0-180) to pulse length (102-512 for 500-2500us)
   int pulseLength = map(angle, 0, 180, SERVO_MIN_PULSE, SERVO_MAX_PULSE);
+  
+  Serial.print("Ch");
+  Serial.print(servoNum);
+  Serial.print(" angle ");
+  Serial.print(angle);
+  Serial.print(" -> pulse ");
+  Serial.println(pulseLength);
   
   // Set the PWM signal
   pwm.setPWM(servoNum, 0, pulseLength);
