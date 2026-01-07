@@ -185,13 +185,17 @@ python yolo_detect.py --model model.pt --source usb0 --record --resolution 640x4
   - Measures and displays exact steps to home position
   - **Correct command for bin operation CCW rotation**
   - Example output: "Exact steps to home position: 2347"
-- `BIN_MAX`: Moves stepper motor to maximum bin position (3800 steps CW)
-  - Moves stepper to the far CW position for bin operation
-  - 3800 steps = maximum rotation for your setup
+- `BIN_1`: Move to bin 1 position (950 steps CW)
+- `BIN_2`: Move to bin 2 position (1900 steps CW)
+- `BIN_3`: Move to bin 3 position (2850 steps CW)
+- `BIN_4`: Move to bin 4 position (3800 steps CW)
 
 **Bin Operation Commands:**
 - `BIN_HOME` - Rotate CCW to home position (limit switch triggered)
-- `BIN_MAX` - Rotate CW to max bin position (3800 steps)
+- `BIN_1` - Move to bin 1 position (quarter rotation: 950 steps)
+- `BIN_2` - Move to bin 2 position (half rotation: 1900 steps)
+- `BIN_3` - Move to bin 3 position (three-quarter rotation: 2850 steps)
+- `BIN_4` - Move to bin 4 position (full rotation: 3800 steps)
 
 #### Ultrasonic Commands
 - `UTEST`: Runs comprehensive ultrasonic sensor test with multiple readings
@@ -345,21 +349,39 @@ The Arduino Mega handles direct stepper motor control with precise positioning c
   - Displays: "Exact steps to home position: [count]"
   - Use this to calibrate and find home position
 
-- **`BIN_MAX`** - Rotate CW to maximum bin position (3800 steps)
-  - Moves stepper to the far CW position for bin operation
-  - 3800 steps = maximum rotation for your setup
+- **`BIN_1`** - Rotate CW to bin 1 position (950 steps)
+  - First bin position (quarter rotation)
+  - 950 steps = 3800 / 4
+
+- **`BIN_2`** - Rotate CW to bin 2 position (1900 steps)
+  - Second bin position (half rotation)
+  - 1900 steps = 3800 / 2
+
+- **`BIN_3`** - Rotate CW to bin 3 position (2850 steps)
+  - Third bin position (three-quarter rotation)
+  - 2850 steps = 3800 * 3 / 4
+
+- **`BIN_4`** - Rotate CW to bin 4 position (3800 steps)
+  - Fourth bin position (full rotation)
+  - 3800 steps = complete rotation
 
 #### Stepper Command Reference
 ```
 BIN_HOME               - CCW rotation until limit switch (homing)
-BIN_MAX                - CW rotation 3800 steps (max position)
+BIN_1                  - CW rotation 950 steps (bin 1 - quarter rotation)
+BIN_2                  - CW rotation 1900 steps (bin 2 - half rotation)
+BIN_3                  - CW rotation 2850 steps (bin 3 - three-quarter rotation)
+BIN_4                  - CW rotation 3800 steps (bin 4 - full rotation)
 ```
 
 #### Example Usage
 ```bash
 # Send commands via serial terminal or Python script
 BIN_HOME               # Home to limit switch position
-BIN_MAX                # Move to max bin position
+BIN_1                  # Move to bin 1 position
+BIN_2                  # Move to bin 2 position
+BIN_3                  # Move to bin 3 position
+BIN_4                  # Move to bin 4 position
 ```
 
 **Note:** All stepper commands now use slow, safe timing (750us pulse + 1500us gap) for precise control.
@@ -395,7 +417,10 @@ SSTOP         # Stop continuous test
 **Testing Stepper Motor:**
 ```
 BIN_HOME      # Rotate CCW until BIN limit switch is triggered
-BIN_MAX       # Move to max bin position (3800 steps CW)
+BIN_1         # Move to bin 1 position (950 steps CW)
+BIN_2         # Move to bin 2 position (1900 steps CW)
+BIN_3         # Move to bin 3 position (2850 steps CW)
+BIN_4         # Move to bin 4 position (3800 steps CW)
 ```
 
 **Testing Ultrasonic Sensor:**

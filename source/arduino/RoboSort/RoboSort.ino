@@ -44,9 +44,12 @@ void setup() {
   Serial.println("  Speed: 0-255 (default: 150)");
   Serial.println("Ultrasonic Commands: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
   Serial.println("  Sensors: 1-4 (default: 1)");
-  Serial.println("Stepper Commands: BIN_HOME, BIN_MAX");
+  Serial.println("Stepper Commands: BIN_HOME, BIN_1, BIN_2, BIN_3, BIN_4");
   Serial.println("  BIN_HOME: Rotate CCW until BIN limit switch is triggered");
-  Serial.println("  BIN_MAX: Rotate CW to max bin position (3800 steps)");
+  Serial.println("  BIN_1: Move to bin 1 position (950 steps)");
+  Serial.println("  BIN_2: Move to bin 2 position (1900 steps)");
+  Serial.println("  BIN_3: Move to bin 3 position (2850 steps)");
+  Serial.println("  BIN_4: Move to bin 4 position (3800 steps)");
   Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING");
   Serial.println("Limit Switch Commands: LTEST, LREAD, LCTEST, LCSTOP");
 }
@@ -388,10 +391,34 @@ void loop() {
       } else {
         Serial.println("Stepper limit testing already active.");
       }
-    } else if (input.equalsIgnoreCase("BIN_MAX")) {
+    } else if (input.equalsIgnoreCase("BIN_1")) {
+      stepper.setDirection(0); // CW direction
+      if (stepper.startSteps(950, 750, 1500)) {
+        Serial.println("Moving stepper to BIN 1 position (950 steps CW)...");
+        buzzerConfig.successBeep();
+      } else {
+        Serial.println("Stepper busy, cannot start new operation.");
+      }
+    } else if (input.equalsIgnoreCase("BIN_2")) {
+      stepper.setDirection(0); // CW direction
+      if (stepper.startSteps(1900, 750, 1500)) {
+        Serial.println("Moving stepper to BIN 2 position (1900 steps CW)...");
+        buzzerConfig.successBeep();
+      } else {
+        Serial.println("Stepper busy, cannot start new operation.");
+      }
+    } else if (input.equalsIgnoreCase("BIN_3")) {
+      stepper.setDirection(0); // CW direction
+      if (stepper.startSteps(2850, 750, 1500)) {
+        Serial.println("Moving stepper to BIN 3 position (2850 steps CW)...");
+        buzzerConfig.successBeep();
+      } else {
+        Serial.println("Stepper busy, cannot start new operation.");
+      }
+    } else if (input.equalsIgnoreCase("BIN_4")) {
       stepper.setDirection(0); // CW direction
       if (stepper.startSteps(3800, 750, 1500)) {
-        Serial.println("Moving stepper to max bin position (3800 steps CW)...");
+        Serial.println("Moving stepper to BIN 4 position (3800 steps CW)...");
         buzzerConfig.successBeep();
       } else {
         Serial.println("Stepper busy, cannot start new operation.");
@@ -446,7 +473,7 @@ void loop() {
       Serial.println("Motor: FORWARD <speed>, BACKWARD <speed>, RIGHT <speed>, LEFT <speed>, MSTOP");
       Serial.println("  Individual: M<motor> <direction> <speed>");
       Serial.println("Ultrasonic: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
-      Serial.println("Stepper: BIN_HOME, BIN_MAX");
+      Serial.println("Stepper: BIN_HOME, BIN_1, BIN_2, BIN_3, BIN_4");
       Serial.println("Buzzer: BTEST, BSUCCESS, BERROR, BWARNING");
       Serial.println("Limit Switch: LTEST, LREAD, LCTEST, LCSTOP");
     }

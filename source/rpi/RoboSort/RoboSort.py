@@ -28,14 +28,17 @@ def print_menu():
     print("  2. Set specific servo angle")
     print("\nSTEPPER MOTOR COMMANDS:")
     print("  3. Home stepper motor (BIN_HOME)")
-    print("  4. Move to max position (BIN_MAX)")
+    print("  4. Move to BIN 1 (950 steps)")
+    print("  5. Move to BIN 2 (1900 steps)")
+    print("  6. Move to BIN 3 (2850 steps)")
+    print("  7. Move to BIN 4 (3800 steps)")
     print("\nULTRASONIC COMMANDS:")
-    print("  5. Test ultrasonic sensor")
-    print("  6. Get distance measurement")
-    print("  7. Get average distance")
-    print("  8. Detect object (with threshold)")
+    print("  8. Test ultrasonic sensor")
+    print("  9. Get distance measurement")
+    print("  10. Get average distance")
+    print("  11. Detect object (with threshold)")
     print("\nSYSTEM COMMANDS:")
-    print("  9. Send custom command")
+    print("  12. Send custom command")
     print("  0. Exit")
     print("=" * 60)
 
@@ -179,18 +182,30 @@ def main():
                 print("\n--- Homing Stepper Motor ---")
                 serial_conn.send_and_receive("BIN_HOME", wait_time=5)  # Longer wait for homing
             elif choice == "4":
-                # Move to max position
-                print("\n--- Moving Stepper to Max Position ---")
-                serial_conn.send_and_receive("BIN_MAX", wait_time=5)  # Wait for 3800 steps
+                # Move to BIN 1
+                print("\n--- Moving to BIN 1 Position ---")
+                serial_conn.send_and_receive("BIN_1", wait_time=3)
             elif choice == "5":
-                test_ultrasonic(serial_conn)
+                # Move to BIN 2
+                print("\n--- Moving to BIN 2 Position ---")
+                serial_conn.send_and_receive("BIN_2", wait_time=4)
             elif choice == "6":
-                get_distance(serial_conn)
+                # Move to BIN 3
+                print("\n--- Moving to BIN 3 Position ---")
+                serial_conn.send_and_receive("BIN_3", wait_time=5)
             elif choice == "7":
-                get_average_distance(serial_conn)
+                # Move to BIN 4
+                print("\n--- Moving to BIN 4 Position ---")
+                serial_conn.send_and_receive("BIN_4", wait_time=5)
             elif choice == "8":
-                detect_object(serial_conn)
+                test_ultrasonic(serial_conn)
             elif choice == "9":
+                get_distance(serial_conn)
+            elif choice == "10":
+                get_average_distance(serial_conn)
+            elif choice == "11":
+                detect_object(serial_conn)
+            elif choice == "12":
                 send_custom_command(serial_conn)
             else:
                 print("\n✗ Invalid choice. Please try again.")
