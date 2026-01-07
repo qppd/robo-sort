@@ -185,18 +185,18 @@ python yolo_detect.py --model model.pt --source usb0 --record --resolution 640x4
 - `STEP <steps> <direction>`: Moves stepper motor specified number of steps
   - Steps: Number of steps to move
   - Direction: `0` (CW - clockwise) or `1` (CCW - counter-clockwise)
-  - Example: `STEP 3800 0` - Move 3800 steps clockwise (max bin position)
+  - Example: `BIN_MAX` - Move 3800 steps clockwise (max bin position)
 - `STEPSTOP`: Immediately stops stepper motor movement
 - `STEPCTEST`: Starts continuous alternating CW/CCW rotation test
 - `STEPCSTOP`: Stops continuous rotation test
-- `HOME`: **Bin homing command** - Rotates CCW until BIN limit switch is triggered
+- `BIN_HOME`: **Bin homing command** - Rotates CCW until BIN limit switch is triggered
   - Measures and displays exact steps to home position
   - **Correct command for bin operation CCW rotation**
   - Example output: "Exact steps to home position: 2347"
 
 **Bin Operation Commands:**
-- `HOME` - Rotate CCW to home position (limit switch triggered)
-- `STEP 3800 0` - Rotate CW to max bin position (3800 steps)
+- `BIN_HOME` - Rotate CCW to home position (limit switch triggered)
+- `BIN_MAX` - Rotate CW to max bin position (3800 steps)
 
 #### Ultrasonic Commands
 - `UTEST`: Runs comprehensive ultrasonic sensor test with multiple readings
@@ -345,19 +345,19 @@ The Arduino Mega handles direct stepper motor control with precise positioning c
 #### Bin Operation Commands
 **Important: These are the calibrated commands for your specific stepper setup:**
 
-- **`HOME`** - Rotate CCW until BIN limit switch is triggered
+- **`BIN_HOME`** - Rotate CCW until BIN limit switch is triggered
   - Measures exact steps to home position
   - Displays: "Exact steps to home position: [count]"
   - Use this to calibrate and find home position
 
-- **`STEP 3800 0`** - Rotate CW to maximum bin position (3800 steps)
+- **`BIN_MAX`** - Rotate CW to maximum bin position (3800 steps)
   - Moves stepper to the far CW position for bin operation
   - 3800 steps = maximum rotation for your setup
 
 #### Stepper Command Reference
 ```
-HOME                    - CCW rotation until limit switch (homing)
-STEP 3800 0            - CW rotation 3800 steps (max position)
+BIN_HOME               - CCW rotation until limit switch (homing)
+BIN_MAX                - CW rotation 3800 steps (max position)
 STEPTEST               - Test sequence (CW then CCW)
 STEPSTOP               - Emergency stop
 STEPCTEST              - Continuous alternating test
@@ -367,8 +367,8 @@ STEPCSTOP              - Stop continuous test
 #### Example Usage
 ```bash
 # Send commands via serial terminal or Python script
-HOME                    # Home to limit switch position
-STEP 3800 0           # Move to max bin position
+BIN_HOME               # Home to limit switch position
+BIN_MAX                # Move to max bin position
 STEP 2000 1           # Move 2000 steps CCW
 ```
 

@@ -44,9 +44,10 @@ void setup() {
   Serial.println("  Speed: 0-255 (default: 150)");
   Serial.println("Ultrasonic Commands: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
   Serial.println("  Sensors: 1-4 (default: 1)");
-  Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, HOME");
+  Serial.println("Stepper Commands: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, BIN_HOME, BIN_MAX");
   Serial.println("  Dir: 0 (CW), 1 (CCW)");
-  Serial.println("  HOME: Rotate CCW until BIN limit switch is triggered");
+  Serial.println("  BIN_HOME: Rotate CCW until BIN limit switch is triggered");
+  Serial.println("  BIN_MAX: Rotate CW to max bin position (3800 steps)");
   Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING");
   Serial.println("Limit Switch Commands: LTEST, LREAD, LCTEST, LCSTOP");
 }
@@ -387,7 +388,7 @@ void loop() {
     } else if (input.equalsIgnoreCase("STEPSTOP")) {
       stepper.emergencyStop();
       Serial.println("Stepper emergency stop.");
-    } else if (input.startsWith("STEP") && !input.equalsIgnoreCase("STEPTEST") && !input.equalsIgnoreCase("STEPSTOP") && !input.equalsIgnoreCase("STEPCTEST") && !input.equalsIgnoreCase("STEPCSTOP") && !input.equalsIgnoreCase("HOME")) {
+    } else if (input.startsWith("STEP") && !input.equalsIgnoreCase("STEPTEST") && !input.equalsIgnoreCase("STEPSTOP") && !input.equalsIgnoreCase("STEPCTEST") && !input.equalsIgnoreCase("STEPCSTOP") && !input.equalsIgnoreCase("BIN_HOME") && !input.equalsIgnoreCase("BIN_MAX")) {
       // Parse stepper command: STEP <steps> <dir>
       input = input.substring(4); // Remove 'STEP'
       input.trim(); // Remove leading/trailing whitespace
@@ -418,7 +419,7 @@ void loop() {
     } else if (input.equalsIgnoreCase("STEPCSTOP")) {
       stepper.stopContinuousTest();
       Serial.println("Continuous stepper test stopped.");
-    } else if (input.equalsIgnoreCase("HOME")) {
+    } else if (input.equalsIgnoreCase("BIN_HOME")) {
       if (!stepperLimitTestingActive) {
         stepper.setDirection(1); // CCW direction
         stepper.startSteps(100, 750, 1500); // Small 100-step batches for precise counting
@@ -430,7 +431,14 @@ void loop() {
       } else {
         Serial.println("Stepper limit testing already active.");
       }
-    }
+    } else if (input.equalsIgnoreCase("BIN_MAX")) {
+      stepper.setDirection(0); // CW direction
+      if (stepper.startSteps(3800, 750, 1500)) {
+        Serial.println("Moving stepper to max bin position (3800 steps CW)...");
+        buzzerConfig.successBeep();
+      } else {
+        Serial.println("Stepper busy, cannot start new operation.");
+      }
     // Buzzer commands
     else if (input.equalsIgnoreCase("BTEST")) {
       buzzerConfig.beep();
@@ -480,7 +488,7 @@ void loop() {
       Serial.println("Motor: FORWARD <speed>, BACKWARD <speed>, RIGHT <speed>, LEFT <speed>, MSTOP");
       Serial.println("  Individual: M<motor> <direction> <speed>");
       Serial.println("Ultrasonic: UTEST <sensor>, UDIST <sensor>, UAVG <sensor> <samples>, UDETECT <sensor> <threshold>, UCTEST <sensor>, UCSTOP <sensor>");
-      Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, HOME");
+      Serial.println("Stepper: STEPTEST, STEP <steps> <dir>, STEPSTOP, STEPCTEST, STEPCSTOP, BIN_HOME, BIN_MAX");
       Serial.println("Buzzer: BTEST, BSUCCESS, BERROR, BWARNING");
       Serial.println("Limit Switch: LTEST, LREAD, LCTEST, LCSTOP");
     }
