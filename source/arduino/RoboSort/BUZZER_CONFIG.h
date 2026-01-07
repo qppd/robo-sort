@@ -4,9 +4,6 @@
 #include <Arduino.h>
 #include "PINS.h"
 
-// Buzzer pin definition
-#define BUZZER_PIN 6  // PWM capable pin for buzzer
-
 // Buzzer patterns
 #define BEEP_SHORT 100   // Short beep duration in ms
 #define BEEP_LONG 500    // Long beep duration in ms
