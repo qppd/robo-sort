@@ -2,12 +2,12 @@
 #include <Wire.h>
 
 // Typical min/max pulse lengths for servos
-#define SERVO_MIN_PULSE  150
-#define SERVO_MAX_PULSE  600
+#define SERVO_MIN_PULSE  102
+#define SERVO_MAX_PULSE  512
 
 // Microsecond ranges matching Adafruit sample
-#define SERVO_MIN_US     600
-#define SERVO_MAX_US     2400
+#define SERVO_MIN_US     500
+#define SERVO_MAX_US     2500
 #define SERVO_NEUTRAL_US 1500
 
 // Continuous servo timing (approximate for 360° servos)
