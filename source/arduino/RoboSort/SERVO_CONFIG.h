@@ -4,41 +4,38 @@
 #include <Adafruit_PWMServoDriver.h>
 #include "PINS.h"
 
-#define NUM_SERVOS 5
+#define NUM_SERVOS 6
+#define LIFTER_SERVO_CHANNEL 0  // 360° continuous servo on channel 0
 
-enum ServoType { POSITION_SERVO, CONTINUOUS_SERVO };
+// Continuous servo control values for PCA9685
+#define LIFTER_STOP 1500      // Neutral position (stopped)
+#define LIFTER_UP_SPEED 1300  // Rotate one direction
+#define LIFTER_DOWN_SPEED 1700 // Rotate opposite direction
 
 class ServoConfig {
-public:
-    ServoConfig();
-    void begin();
-    void setServoAngle(uint8_t servo, uint16_t angle);
-    void setContinuousSpeed(uint8_t servo, int8_t speed); // -100 to +100
-    void testServos();
-    void enableServos();
-    void disableServos();
-    void startContinuousTest();
-    void stopContinuousTest();
-    void update();
-    void lifterUp();
-    void lifterDown();
-    void lifterStop(); // Emergency stop for lifter
 private:
-    Adafruit_PWMServoDriver pwm;
-    ServoType servoTypes[NUM_SERVOS];
-    uint8_t servoChannels[NUM_SERVOS];
-    uint16_t angleToPulse(uint16_t angle);
-    uint16_t speedToPulse(int8_t speed); // Convert -100/+100 to pulse width
-    bool _continuousTest;
-    unsigned long _lastMoveTime;
-    int _currentAngle;
-    int _direction;
-    // Lifter control variables
-    bool _lifterMoving;
-    bool _lifterGoingUp; // True = going up, False = going down
-    unsigned long _lifterStartTime;
-    int _lifterRotations;
-    int8_t _lifterSpeed;
+  Adafruit_PWMServoDriver pwm;
+  
+  // Lifter control variables
+  bool lifterMoving;
+  unsigned long lifterStartTime;
+  bool lifterIsUp;  // Track if lifter is moving up
+  
+public:
+  ServoConfig();
+  void begin();
+  void update();
+  
+  // Lifter control functions
+  void lifterUp();
+  void lifterDown();
+  void lifterStop();
+  
+  // Existing functions (add these if you have them)
+  void enableServos();
+  void disableServos();
+  void startContinuousTest();
+  void stopContinuousTest();
 };
 
 #endif // SERVO_CONFIG_H
