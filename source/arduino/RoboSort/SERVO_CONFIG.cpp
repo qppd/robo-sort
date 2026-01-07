@@ -135,7 +135,9 @@ void ServoConfig::startContinuousTest() {
     _direction = 1;
     _lastMoveTime = millis();
     for (uint8_t i = 0; i < NUM_SERVOS; i++) {
-        setServoAngle(i, _currentAngle);
+        if (servoTypes[i] == POSITION_SERVO) { // Only test position servos
+            setServoAngle(i, _currentAngle);
+        }
     }
 }
 
