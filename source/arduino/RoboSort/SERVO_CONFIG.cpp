@@ -59,9 +59,19 @@ uint16_t ServoConfig::angleToPulse(uint16_t angle) {
 }
 
 uint16_t ServoConfig::speedToPulse(int8_t speed) {
-    // Map -100 to +100 speed to pulse width
-    // 90 (1.5ms) = stop, <90 = CCW, >90 = CW
-    return map(speed, -100, 100, SERVO_MIN_PULSE, SERVO_MAX_PULSE);
+    // For continuous servos, neutral is at 1.5ms (~307 pulse value at 50Hz)
+    // At 50Hz: 20ms period / 4096 steps = 4.88μs per step
+    // 1500μs / 4.88 ≈ 307 pulse = STOP position
+    // speed -100 = 150 pulse (full CCW), 0 = 307 (stop), +100 = 600 (full CW)
+    const uint16_t SERVO_NEUTRAL = 307; // 1.5ms neutral/stop position
+    
+    if (speed < 0) {
+        // Map -100 to 0 → 150 to 307 (CCW rotation to stop)
+        return map(speed, -100, 0, SERVO_MIN_PULSE, SERVO_NEUTRAL);
+    } else {
+        // Map 0 to 100 → 307 to 600 (stop to CW rotation)
+        return map(speed, 0, 100, SERVO_NEUTRAL, SERVO_MAX_PULSE);
+    }
 }
 
 void ServoConfig::lifterUp() {
