@@ -22,6 +22,7 @@ public:
     void update();
     void lifterUp();
     void lifterDown();
+    void lifterStop(); // Emergency stop for lifter
 private:
     Adafruit_PWMServoDriver pwm;
     ServoType servoTypes[NUM_SERVOS];

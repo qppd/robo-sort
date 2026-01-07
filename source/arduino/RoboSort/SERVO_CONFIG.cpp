@@ -26,6 +26,9 @@ void ServoConfig::begin() {
     digitalWrite(SERVO_OE_PIN, HIGH); // Disable servos at startup
     pwm.begin();
     pwm.setPWMFreq(50); // Analog servos run at ~50 Hz
+    
+    // Ensure continuous servo is stopped at startup
+    setContinuousSpeed(0, 0);
 }
 
 void ServoConfig::setServoAngle(uint8_t servo, uint16_t angle) {
@@ -83,6 +86,12 @@ void ServoConfig::lifterDown() {
     _lifterSpeed = -80; // Medium speed down (negative = opposite direction)
     setContinuousSpeed(0, _lifterSpeed); // Servo 0
     Serial.println("Lifter moving DOWN - 3 rotations then stop");
+}
+
+void ServoConfig::lifterStop() {
+    setContinuousSpeed(0, 0); // Stop servo immediately
+    _lifterMoving = false;
+    Serial.println("Lifter emergency stop!");
 }
 
 void ServoConfig::testServos() {
