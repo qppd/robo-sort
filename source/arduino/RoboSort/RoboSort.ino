@@ -373,10 +373,10 @@ void loop() {
     // Stepper commands
     else if (input.equalsIgnoreCase("STEPTEST")) {
       stepper.setDirection(0); // CW
-      stepper.stepMany(200, 100, 800); // 200 steps
+      stepper.stepMany(200, 750, 1500); // 200 steps (slow speed)
       delay(500);
       stepper.setDirection(1); // CCW
-      stepper.stepMany(200, 100, 800);
+      stepper.stepMany(200, 750, 1500);
       Serial.println("Stepper test sequence complete.");
       buzzerConfig.successBeep();
     } else if (input.equalsIgnoreCase("STEPSTOP")) {
@@ -392,7 +392,7 @@ void loop() {
         int dir = input.substring(spaceIdx + 1).toInt();
         if (steps > 0 && (dir == 0 || dir == 1)) {
           stepper.setDirection(dir);
-          if (stepper.startSteps(steps, 100, 800)) {
+          if (stepper.startSteps(steps, 750, 1500)) {
             Serial.print("Starting stepper: ");
             Serial.print(steps);
             Serial.print(" steps ");
