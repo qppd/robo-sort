@@ -14,12 +14,11 @@
 // One full rotation takes about 1-2 seconds depending on servo
 #define ROTATION_TIME_MS 1500  // Time for one full rotation
 
-#define LIFTER_DOWN_TIME 3000  // 3 seconds for LIFTER DOWN
-
 ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   lifterRunning = false;
   lifterDirection = false;
   lifterStartTime = 0;
+  lifterTimeout = 3000;  // Default 3 seconds
 }
 
 void ServoConfig::begin() {
@@ -43,11 +42,11 @@ void ServoConfig::begin() {
 void ServoConfig::update() {
   if (!lifterRunning) return;  // Nothing to do if lifter is OFF
   
-  // LIFTER DOWN: Auto-stop after 3 seconds
+  // LIFTER DOWN: Auto-stop after variable timeout (3s or 75s)
   if (!lifterDirection) {
-    if (millis() - lifterStartTime >= LIFTER_DOWN_TIME) {
+    if (millis() - lifterStartTime >= lifterTimeout) {
       lifterStop();
-      Serial.println("LIFTER DOWN complete (3 seconds)");
+      Serial.println("LIFTER DOWN complete (" + String(lifterTimeout/1000) + "s)");
     }
   }
   
@@ -69,12 +68,23 @@ void ServoConfig::lifterUp() {
 }
 
 void ServoConfig::lifterDown() {
-  // Turn ON - rotate DOWN for 3 seconds then auto-stop
+  // Check if ARM limit switch is currently pressed
+  bool armSwitchPressed = (digitalRead(ARM_LIMIT_PIN) == LOW);
+  
+  // Set timeout based on ARM switch state
+  if (armSwitchPressed) {
+    lifterTimeout = 75000;  // 75 seconds when ARM switch is pressed
+    Serial.println("LIFTER DOWN - ON (ARM switch pressed, 75s timeout)");
+  } else {
+    lifterTimeout = 3000;   // 3 seconds normal timeout
+    Serial.println("LIFTER DOWN - ON (auto-stop after 3s)");
+  }
+  
+  // Turn ON - rotate DOWN
   pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_DOWN_SPEED);
   lifterRunning = true;
   lifterDirection = false;  // DOWN
   lifterStartTime = millis();
-  Serial.println("LIFTER DOWN - ON (auto-stop after 3s)");
 }
 
 void ServoConfig::lifterStop() {
