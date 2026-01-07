@@ -88,8 +88,8 @@ void loop() {
     } else if (!stepper.isBusy() && stepperNeedsRestart) {
       // Restart stepper in CCW direction
       stepper.setDirection(1); // CCW
-      stepper.startSteps(10000, 750, 1500); // Large number of steps (25% faster)
-      homeStepCount += 10000; // Increment step count
+      stepper.startSteps(6000, 750, 1500); // 6000 steps (approx 1 rotation)
+      homeStepCount += 6000; // Increment step count
     }
   }
   
@@ -408,7 +408,7 @@ void loop() {
     } else if (input.equalsIgnoreCase("HOME")) {
       if (!stepperLimitTestingActive) {
         stepper.setDirection(1); // CCW direction
-        stepper.startSteps(10000, 750, 1500); // Start with large number of steps (25% faster)
+        stepper.startSteps(6000, 750, 1500); // Start with 6000 steps (approx 1 rotation)
         stepperLimitTestingActive = true;
         stepperNeedsRestart = true;
         homeStepCount = 0; // Initialize step count
