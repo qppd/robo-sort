@@ -373,6 +373,7 @@ void loop() {
     } else if (input.startsWith("STEP") && !input.equalsIgnoreCase("STEPTEST") && !input.equalsIgnoreCase("STEPSTOP") && !input.equalsIgnoreCase("STEPCTEST") && !input.equalsIgnoreCase("STEPCSTOP") && !input.equalsIgnoreCase("HOME")) {
       // Parse stepper command: STEP <steps> <dir>
       input = input.substring(4); // Remove 'STEP'
+      input.trim(); // Remove leading/trailing whitespace
       int spaceIdx = input.indexOf(' ');
       if (spaceIdx > 0) {
         unsigned long steps = strtoul(input.substring(0, spaceIdx).c_str(), NULL, 10);
