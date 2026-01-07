@@ -21,6 +21,7 @@ bool lastBinState = HIGH;
 bool stepperLimitTestingActive = false;
 bool stepperNeedsRestart = false;
 unsigned long homeStepCount = 0;
+unsigned long homePositionSteps = 0; // Store the exact steps to home position
 
 void setup() {
   Serial.begin(9600);
@@ -82,14 +83,21 @@ void loop() {
       stepperLimitTestingActive = false;
       stepperNeedsRestart = false;
       Serial.println("Stepper stopped by BIN limit switch!");
-      Serial.print("Total steps taken: ");
+      Serial.print("Exact steps to home position: ");
       Serial.println(homeStepCount);
+      Serial.print("Home position calibrated: ");
+      Serial.print(homeStepCount);
+      Serial.println(" steps");
+      
+      // Store the home position for future reference
+      homePositionSteps = homeStepCount;
+      
       buzzerConfig.successBeep();
     } else if (!stepper.isBusy() && stepperNeedsRestart) {
-      // Restart stepper in CCW direction
+      // Restart stepper in CCW direction with another batch
       stepper.setDirection(1); // CCW
-      stepper.startSteps(6000, 750, 1500); // 6000 steps (approx 1 rotation)
-      homeStepCount += 6000; // Increment step count
+      stepper.startSteps(1000, 750, 1500); // Small batches for precise counting
+      homeStepCount += 1000; // Increment step count by batch size
     }
   }
   
@@ -408,11 +416,12 @@ void loop() {
     } else if (input.equalsIgnoreCase("HOME")) {
       if (!stepperLimitTestingActive) {
         stepper.setDirection(1); // CCW direction
-        stepper.startSteps(6000, 750, 1500); // Start with 6000 steps (approx 1 rotation)
+        stepper.startSteps(1000, 750, 1500); // Small batches for precise counting
         stepperLimitTestingActive = true;
         stepperNeedsRestart = true;
         homeStepCount = 0; // Initialize step count
         Serial.println("Stepper rotating CCW until BIN limit switch is triggered...");
+        Serial.println("Will count exact steps to home position.");
       } else {
         Serial.println("Stepper limit testing already active.");
       }
