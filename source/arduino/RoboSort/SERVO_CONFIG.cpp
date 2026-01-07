@@ -19,7 +19,7 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   lifterDirection = false;
   lifterStartTime = 0;
   lifterTimeout = 3000;  // Default 3 seconds
-  currentArmAngle = 90;  // Initialize arm to center position
+  currentArmAngle = 180;  // Initialize arm to 180 degrees
 }
 
 void ServoConfig::begin() {
@@ -33,6 +33,9 @@ void ServoConfig::begin() {
   
   // Stop lifter servo initially
   lifterStop();
+  
+  // Set arm servo to default position (180 degrees)
+  setServoAngle(1, 180);
   
   // Enable servos by default
   enableServos();
