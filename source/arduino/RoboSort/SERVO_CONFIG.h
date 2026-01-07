@@ -31,6 +31,10 @@ public:
   void lifterDown();
   void lifterStop();
   
+  // Servo control functions
+  void testServos();
+  void setServoAngle(int servoNum, int angle);
+  
   // Existing functions (add these if you have them)
   void enableServos();
   void disableServos();

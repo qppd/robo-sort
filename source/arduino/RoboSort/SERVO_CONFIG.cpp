@@ -23,6 +23,9 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
 }
 
 void ServoConfig::begin() {
+  // Configure servo OE pin
+  pinMode(SERVO_OE_PIN, OUTPUT);
+  
   pwm.begin();
   pwm.setOscillatorFrequency(27000000);
   pwm.setPWMFreq(50);  // Analog servos run at ~50 Hz
@@ -30,6 +33,9 @@ void ServoConfig::begin() {
   
   // Stop lifter servo initially
   lifterStop();
+  
+  // Enable servos by default
+  enableServos();
   
   Serial.println("Servo config initialized");
 }
@@ -74,6 +80,47 @@ void ServoConfig::lifterStop() {
   pwm.writeMicroseconds(LIFTER_SERVO_CHANNEL, LIFTER_STOP);
   lifterMoving = false;
   Serial.println("LIFTER STOPPED");
+}
+
+void ServoConfig::testServos() {
+  Serial.println("Testing all servos...");
+  
+  // Test each servo by moving it to 0°, 90°, and 180°
+  for (int servoNum = 0; servoNum < NUM_SERVOS; servoNum++) {
+    if (servoNum == LIFTER_SERVO_CHANNEL) {
+      // Skip lifter servo (360° continuous) for angle testing
+      continue;
+    }
+    
+    Serial.print("Testing servo ");
+    Serial.println(servoNum);
+    
+    // Move to 0°
+    setServoAngle(servoNum, 0);
+    delay(500);
+    
+    // Move to 90°
+    setServoAngle(servoNum, 90);
+    delay(500);
+    
+    // Move to 180°
+    setServoAngle(servoNum, 180);
+    delay(500);
+    
+    // Return to 90°
+    setServoAngle(servoNum, 90);
+    delay(500);
+  }
+  
+  Serial.println("Servo test complete.");
+}
+
+void ServoConfig::setServoAngle(int servoNum, int angle) {
+  // Convert angle (0-180) to pulse length (150-600)
+  int pulseLength = map(angle, 0, 180, SERVO_MIN_PULSE, SERVO_MAX_PULSE);
+  
+  // Set the PWM signal
+  pwm.setPWM(servoNum, 0, pulseLength);
 }
 
 void ServoConfig::enableServos() {
