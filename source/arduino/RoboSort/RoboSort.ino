@@ -364,7 +364,7 @@ void loop() {
     } else if (input.equalsIgnoreCase("STEPSTOP")) {
       stepper.emergencyStop();
       Serial.println("Stepper emergency stop.");
-    } else if (input.startsWith("STEP") && !input.equalsIgnoreCase("STEPTEST") && !input.equalsIgnoreCase("STEPSTOP") && !input.equalsIgnoreCase("STEPCTEST") && !input.equalsIgnoreCase("STEPCSTOP")) {
+    } else if (input.startsWith("STEP") && !input.equalsIgnoreCase("STEPTEST") && !input.equalsIgnoreCase("STEPSTOP") && !input.equalsIgnoreCase("STEPCTEST") && !input.equalsIgnoreCase("STEPCSTOP") && !input.equalsIgnoreCase("STEPBIN")) {
       // Parse stepper command: STEP <steps> <dir>
       input = input.substring(4); // Remove 'STEP'
       int spaceIdx = input.indexOf(' ');
