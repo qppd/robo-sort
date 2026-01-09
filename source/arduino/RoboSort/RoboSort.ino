@@ -43,6 +43,7 @@ void setup() {
   Serial.println("Servo Commands: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
   Serial.println("  Lifter Commands: LIFTER UP, LIFTER DOWN, LIFTER STOP");
   Serial.println("  Arm Commands: ARM-ROTATE:<angle> (0-180 degrees, channel 1 MG996R)");
+  Serial.println("  Gripper Commands: GRIP:<angle> (0-180 degrees, channel 2, default 90 degrees)");
   Serial.println("Motor Commands: FORWARD <speed>, BACKWARD <speed>, RIGHT <speed>, LEFT <speed>, MSTOP");
   Serial.println("  Individual: M<motor> <direction> <speed>, MSTOP");
   Serial.println("  Motors: A or B, Directions: F (forward), B (backward), S (stop), BR (brake)");
@@ -162,6 +163,9 @@ void loop() {
     } else if (input.startsWith("ARM-ROTATE:")) {
       int angle = input.substring(11).toInt();  // Extract angle after "ARM-ROTATE:"
       servoConfig.armRotate(angle);
+    } else if (input.startsWith("GRIP:")) {
+      int angle = input.substring(5).toInt();  // Extract angle after "GRIP:"
+      servoConfig.gripperRotate(angle);
     }
     // Motor commands
     else if (input.equalsIgnoreCase("MSTOP")) {

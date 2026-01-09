@@ -25,6 +25,9 @@ private:
   // Arm servo position tracking
   int currentArmAngle;  // Track current position of channel 1 arm servo
   
+  // Gripper servo position tracking
+  int currentGripperAngle;  // Track current position of channel 2 gripper servo
+  
 public:
   ServoConfig();
   void begin();
@@ -39,6 +42,7 @@ public:
   void testServos();
   void setServoAngle(int servoNum, int angle);
   void armRotate(int angle);  // Control MG996R on channel 1
+  void gripperRotate(int angle);  // Control gripper servo on channel 2
   
   // Existing functions (add these if you have them)
   void enableServos();

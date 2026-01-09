@@ -20,6 +20,7 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   lifterStartTime = 0;
   lifterTimeout = 3000;  // Default 3 seconds
   currentArmAngle = 180;  // Initialize arm to 180 degrees
+  currentGripperAngle = 90;  // Initialize gripper to 90 degrees (default position)
 }
 
 void ServoConfig::begin() {
@@ -36,6 +37,9 @@ void ServoConfig::begin() {
   
   // Set arm servo to default position (180 degrees)
   setServoAngle(1, 180);
+  
+  // Set gripper servo to default position (90 degrees)
+  setServoAngle(2, 90);
   
   // Enable servos by default
   enableServos();
@@ -174,6 +178,33 @@ void ServoConfig::armRotate(int angle) {
   }
   
   Serial.print("ARM rotation complete at ");
+  Serial.print(angle);
+  Serial.println(" degrees");
+}
+
+void ServoConfig::gripperRotate(int angle) {
+  // Control gripper servo on channel 2 (0-180 degrees)
+  if (angle < 0 || angle > 180) {
+    Serial.println("Invalid angle. Range: 0-180");
+    return;
+  }
+  
+  Serial.print("GRIPPER rotating from ");
+  Serial.print(currentGripperAngle);
+  Serial.print(" to ");
+  Serial.print(angle);
+  Serial.println(" degrees (smooth)");
+  
+  // Smooth movement with 1-degree steps
+  int step = (angle > currentGripperAngle) ? 1 : -1;
+  
+  while (currentGripperAngle != angle) {
+    currentGripperAngle += step;
+    setServoAngle(2, currentGripperAngle);
+    delay(15);  // 15ms per degree for smooth motion
+  }
+  
+  Serial.print("GRIPPER rotation complete at ");
   Serial.print(angle);
   Serial.println(" degrees");
 }
