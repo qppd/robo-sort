@@ -22,6 +22,7 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   currentArmAngle = 180;  // Initialize arm to 180 degrees
   currentGripperAngle = 105;  // Initialize gripper to 105 degrees (default position)
   currentGripperRotationAngle = 90;  // Initialize gripper rotation to 90 degrees (default position)
+  currentArmExtensionAngle = 90;  // Initialize arm extension to 90 degrees (default position)
 }
 
 void ServoConfig::begin() {
@@ -44,6 +45,9 @@ void ServoConfig::begin() {
   
   // Set gripper rotation servo to default position (90 degrees)
   setServoAngle(3, 90);
+  
+  // Set arm extension servo to default position (90 degrees)
+  setServoAngle(4, 90);
   
   // Enable servos by default
   enableServos();
@@ -236,6 +240,33 @@ void ServoConfig::gripperRotationRotate(int angle) {
   }
   
   Serial.print("GRIPPER-ROTATION rotation complete at ");
+  Serial.print(angle);
+  Serial.println(" degrees");
+}
+
+void ServoConfig::armExtend(int angle) {
+  // Control arm extension servo on channel 4 (0-180 degrees)
+  if (angle < 0 || angle > 180) {
+    Serial.println("Invalid angle. Range: 0-180");
+    return;
+  }
+  
+  Serial.print("ARM-EXTENSION extending from ");
+  Serial.print(currentArmExtensionAngle);
+  Serial.print(" to ");
+  Serial.print(angle);
+  Serial.println(" degrees (smooth)");
+  
+  // Smooth movement with 1-degree steps
+  int step = (angle > currentArmExtensionAngle) ? 1 : -1;
+  
+  while (currentArmExtensionAngle != angle) {
+    currentArmExtensionAngle += step;
+    setServoAngle(4, currentArmExtensionAngle);
+    delay(15);  // 15ms per degree for smooth motion
+  }
+  
+  Serial.print("ARM-EXTENSION extension complete at ");
   Serial.print(angle);
   Serial.println(" degrees");
 }
