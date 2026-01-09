@@ -35,10 +35,11 @@ def test_camera(camera_index=1):
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS)
 
-    print("✅ Camera opened successfully!"    print(f"   Resolution: {width}x{height}")
+    print("✅ Camera opened successfully!")
+    print(f"   Resolution: {width}x{height}")
     print(f"   FPS: {fps}")
-    print("   Press 'q' or ESC to exit"
-    print("   Press 's' to save a snapshot"
+    print("   Press 'q' or ESC to exit")
+    print("   Press 's' to save a snapshot")
 
     frame_count = 0
     start_time = time.time()
