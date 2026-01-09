@@ -20,7 +20,7 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   lifterStartTime = 0;
   lifterTimeout = 3000;  // Default 3 seconds
   currentArmAngle = 180;  // Initialize arm to 180 degrees
-  currentGripperAngle = 90;  // Initialize gripper to 90 degrees (default position)
+  currentGripperAngle = 105;  // Initialize gripper to 105 degrees (default position)
 }
 
 void ServoConfig::begin() {
@@ -38,8 +38,8 @@ void ServoConfig::begin() {
   // Set arm servo to default position (180 degrees)
   setServoAngle(1, 180);
   
-  // Set gripper servo to default position (90 degrees)
-  setServoAngle(2, 90);
+  // Set gripper servo to default position (105 degrees)
+  setServoAngle(2, 105);
   
   // Enable servos by default
   enableServos();
