@@ -20,8 +20,8 @@
 
 // ===== ULTRASONIC SENSORS (HC-SR04) PINS =====
 // Ultrasonic Sensor 1
-#define ULTRASONIC1_TRIG_PIN 25  // Trigger pin for ultrasonic sensor 1
-#define ULTRASONIC1_ECHO_PIN 23  // Echo pin for ultrasonic sensor 1
+#define ULTRASONIC1_TRIG_PIN 9   // Trigger pin for ultrasonic sensor 1
+#define ULTRASONIC1_ECHO_PIN 6   // Echo pin for ultrasonic sensor 1
 
 // Ultrasonic Sensor 2
 #define ULTRASONIC2_TRIG_PIN 29  // Trigger pin for ultrasonic sensor 2
