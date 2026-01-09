@@ -25,9 +25,9 @@ def test_camera(camera_index=1):
         print(f"❌ Failed to open camera at index {camera_index}")
         print("   Possible issues:")
         print(f"   - Camera not connected to /dev/video{camera_index}")
-        print("   - Camera already in use by another application"
-        print("   - Insufficient permissions (try: sudo chmod 666 /dev/video*)"
-        print("   - Wrong camera index"
+        print("   - Camera already in use by another application")
+        print("   - Insufficient permissions (try: sudo chmod 666 /dev/video*)")
+        print("   - Wrong camera index")
         return False
 
     # Get camera properties
