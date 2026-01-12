@@ -9,8 +9,8 @@
 
 // Continuous servo control values for PCA9685 (pulse length: 0-4096)
 #define LIFTER_STOP 310        // Neutral position (stopped)
-#define LIFTER_UP_SPEED 360    // Rotate up direction
-#define LIFTER_DOWN_SPEED 260  // Rotate down direction
+#define LIFTER_UP_SPEED 480    // Rotate up direction (maximum speed)
+#define LIFTER_DOWN_SPEED 140  // Rotate down direction (maximum speed)
 
 class ServoConfig {
 private:
