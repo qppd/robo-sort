@@ -452,6 +452,293 @@ MCSTOP        # Stop continuous test
 - **Brake**: IN1=HIGH, IN2=HIGH (short-circuit brake)
 - Speed controlled via PWM on ENA/ENB pins (0-255)
 
+## ROS2 Integration & LiDAR Testing
+
+### ROS2 Workspace Overview
+
+The RoboSort system includes a complete ROS2 Jazzy workspace with advanced features including YOLO vision, LiDAR integration, URDF robot modeling, and coordinated control.
+
+**Location:** `source/rpi/ros2-robosort/`
+
+**Key Packages:**
+- **robosort_interfaces** - Custom ROS2 service definitions (SetServo, MoveRobotArm, RotateBin, GetDistance, ControlMotor)
+- **robosort_vision** - YOLO detector, Arduino serial bridge, waste segregation controller
+- **robosort_sensors** - LiDAR LD06 integration with 3D object localization
+- **robosort_description** - URDF 5-DOF robot arm model for visualization and kinematics
+- **camjam_control** - DC motor control for mobile base
+- **camjam_sensors** - Additional sensor integration
+
+### ROS2 Installation & Setup
+
+#### Prerequisites
+```bash
+# Install ROS2 Jazzy (if not already installed)
+sudo apt update
+sudo apt install ros-jazzy-desktop ros-jazzy-vision-msgs ros-jazzy-cv-bridge ros-jazzy-rviz2
+
+# Install Python dependencies
+pip install ultralytics opencv-python pyserial numpy
+```
+
+#### Build Workspace
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/jazzy/setup.bash
+colcon build --symlink-install
+source install/setup.bash
+```
+
+### LiDAR LD06 Test & Visualization
+
+#### 🔵 Quick Test - LiDAR Only
+
+**Step 1: Identify LiDAR Serial Port**
+```bash
+# List available serial ports
+ls /dev/tty*
+
+# Your LiDAR may be on /dev/ttyUSB0, /dev/ttyUSB1, or /dev/ttyACM0
+```
+
+**Step 2: Launch LiDAR System**
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+# Launch with the correct serial port (adjust as needed)
+ros2 launch robosort_sensors lidar.launch.py serial_port:=/dev/ttyUSB1
+```
+
+**Expected Output:**
+```
+[ldlidar_stl_ros2_node-1] [INFO] [...] [ld06_lidar]: <port_name>: /dev/ttyUSB1
+[ldlidar_stl_ros2_node-1] [INFO] [...] [ld06_lidar]: ldlidar node start is success
+[lidar_processor-2] [INFO] [...] [lidar_processor]: 🔵 LiDAR LD06 Processor initialized
+[object_localizer-3] [INFO] [...] [object_localizer]: 📍 Object Localizer initialized
+```
+
+**Step 3: Visualize in RViz2 (New Terminal)**
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+# Launch RViz with robot model visualization
+ros2 launch robosort_description display.launch.py
+```
+
+**Step 4: Monitor LiDAR Data (Optional - New Terminal)**
+```bash
+# Watch distance measurements
+ros2 topic echo /robosort/object_distance
+
+# View raw scan data (once)
+ros2 topic echo /scan --once
+```
+
+#### 🎯 Complete System Launch
+
+For full system operation with all sensors and controllers:
+
+**Terminal 1: Main RoboSort System**
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 launch robosort_vision robosort.launch.py
+```
+
+**Terminal 2: LiDAR System**
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 launch robosort_sensors lidar.launch.py serial_port:=/dev/ttyUSB1
+```
+
+**Terminal 3: Robot Visualization**
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 launch robosort_description display.launch.py
+```
+
+#### Alternative: Use Pre-configured RViz
+
+```bash
+# Launch RViz with full RoboSort config (includes LiDAR + detections)
+rviz2 -d ~/robo-sort/source/rpi/ros2-robosort/src/robosort_vision/config/robosort.rviz
+```
+
+### ROS2 Topics & Services
+
+#### Key Topics
+```bash
+# LiDAR data
+/scan                           # Raw 360° LiDAR scan
+/robosort/object_distance       # Distance to closest object
+/robosort/object_position_3d    # 3D coordinates (x, y, z)
+/robosort/pickup_point          # Gripper target position
+
+# Vision & Control
+/robosort/detections            # YOLO detected objects
+/robosort/annotated_image       # Camera feed with overlays
+/robosort/ultrasonic_levels     # Bin fill levels
+/robosort/controller_status     # System status
+/robosort/arduino_status        # Serial connection status
+
+# Robot Model
+/joint_states                   # Arm joint positions
+/tf                             # Transform tree
+```
+
+#### Key Services
+```bash
+# Arm Control
+ros2 service call /robosort/set_servo robosort_interfaces/srv/SetServo \
+    "{servo_num: 0, angle: 90}"
+
+ros2 service call /robosort/move_arm robosort_interfaces/srv/MoveRobotArm \
+    "{joint_angles: [90.0, 45.0, 45.0, 90.0, 0.0]}"
+
+ros2 service call /robosort/home_arm std_srvs/srv/Trigger
+
+# Bin Control
+ros2 service call /robosort/rotate_bin robosort_interfaces/srv/RotateBin \
+    "{compartment_number: 1}"
+
+# DC Motors
+ros2 service call /robosort/control_motor robosort_interfaces/srv/ControlMotor \
+    "{motor_id: 0, direction: 1, speed: 200}"
+
+# LiDAR 3D Localization
+ros2 service call /robosort/get_object_position \
+    robosort_interfaces/srv/GetObjectPosition
+
+# Servo Enable/Disable
+ros2 service call /robosort/enable_servos std_srvs/srv/Trigger
+ros2 service call /robosort/disable_servos std_srvs/srv/Trigger
+```
+
+### RViz Visualization Features
+
+When RViz is launched, you'll see:
+- **360° LiDAR Point Cloud**: Rainbow-colored scan points showing environment
+- **Robot Arm Model**: 5-DOF URDF model with interactive joint sliders
+- **Fixed Frame**: `lidar_frame` or `base_link` depending on configuration
+- **Detection Markers**: YOLO detected objects (when vision node is running)
+- **Transform Tree**: Shows coordinate frame relationships
+
+### Troubleshooting ROS2 & LiDAR
+
+#### LiDAR Communication Error
+```bash
+# Error: "ldlidar communication is abnormal"
+# Solution: Check serial port assignment
+
+# Find LiDAR device
+ls /dev/ttyUSB* /dev/ttyACM*
+
+# Add user to dialout group
+sudo usermod -a -G dialout $USER
+# Logout and login again
+
+# Test with correct port
+ros2 launch robosort_sensors lidar.launch.py serial_port:=/dev/ttyUSB1
+```
+
+#### Permission Denied
+```bash
+# Fix serial port permissions
+sudo chmod 666 /dev/ttyUSB1
+
+# Permanent fix: Add user to dialout group
+sudo usermod -a -G dialout $USER
+newgrp dialout
+```
+
+#### RViz Not Showing LiDAR Data
+1. Check Fixed Frame is set to `lidar_frame`
+2. Ensure LaserScan display is enabled
+3. Verify topic is set to `/scan`
+4. Check if LiDAR node is running: `ros2 node list`
+
+#### Build Errors
+```bash
+# Clean and rebuild
+cd ~/robo-sort/source/rpi/ros2-robosort
+rm -rf build install log
+source /opt/ros/jazzy/setup.bash
+colcon build --symlink-install
+source install/setup.bash
+```
+
+### Quick Reference Commands
+
+```bash
+# List all nodes
+ros2 node list
+
+# List all topics
+ros2 topic list
+
+# List all services
+ros2 service list
+
+# Monitor topic data
+ros2 topic echo /scan
+ros2 topic echo /robosort/object_distance
+
+# Check node information
+ros2 node info /ld06_lidar
+ros2 node info /lidar_processor
+
+# Test LiDAR data rate
+ros2 topic hz /scan
+
+# Monitor system status
+ros2 topic echo /robosort/arduino_status
+ros2 topic echo /robosort/lidar_status
+```
+
+### System Architecture - ROS2
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    ROS2 RoboSort System                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────────┐    ┌─────────────┐    ┌──────────────┐  │
+│  │ YOLO Detector│───▶│ LiDAR LD06  │───▶│   Object     │  │
+│  │     Node     │    │  Processor  │    │  Localizer   │  │
+│  └──────────────┘    └─────────────┘    └──────────────┘  │
+│         │                    │                    │         │
+│         └────────────────────┴────────────────────┘         │
+│                              │                               │
+│                              ▼                               │
+│                   ┌──────────────────────┐                  │
+│                   │ Waste Segregation   │                  │
+│                   │    Controller       │                  │
+│                   └──────────────────────┘                  │
+│                              │                               │
+│                              ▼                               │
+│                   ┌──────────────────────┐                  │
+│                   │  Arduino Serial      │                  │
+│                   │    Bridge Node       │                  │
+│                   └──────────────────────┘                  │
+│                              │                               │
+│         ┌────────────────────┼────────────────────┐        │
+│         ▼                    ▼                    ▼        │
+│  ┌──────────┐       ┌──────────────┐      ┌──────────┐   │
+│  │  RViz2   │       │ Arduino Mega │      │ Hardware │   │
+│  │Visualize │       │  (Servos +   │      │ Sensors  │   │
+│  └──────────┘       │   Stepper)   │      └──────────┘   │
+│                     └──────────────┘                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Wiring Diagram
 
 ### System Wiring Schematic
