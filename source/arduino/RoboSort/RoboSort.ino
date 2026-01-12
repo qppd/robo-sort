@@ -178,6 +178,17 @@ void loop() {
     } else if (input.startsWith("LOOK:")) {
       int angle = input.substring(5).toInt();  // Extract angle after "LOOK:"
       servoConfig.lookRotate(angle);
+    } else if (input.equalsIgnoreCase("SERVO STATUS")) {
+      Serial.println("=== SERVO STATUS ===");
+      Serial.print("ARM-EXTEND Operating: ");
+      Serial.println(servoConfig.isArmExtendOperating() ? "YES" : "NO");
+      Serial.print("LOOK Operating: ");
+      Serial.println(servoConfig.isLookOperating() ? "YES" : "NO");
+      Serial.print("ARM-EXTEND Position: ");
+      Serial.println(servoConfig.getArmExtensionAngle());
+      Serial.print("LOOK Position: ");
+      Serial.println(servoConfig.getLookAngle());
+      Serial.println("===================");
     }
     // Motor commands
     else if (input.equalsIgnoreCase("MSTOP")) {

@@ -37,6 +37,10 @@ private:
   // Look servo position tracking
   int currentLookAngle;  // Track current position of channel 5 look servo
   
+  // Mutual exclusion flags for smooth operation
+  bool armExtendOperating;  // Flag to track if ARM-EXTEND servo is operating
+  bool lookOperating;       // Flag to track if LOOK servo is operating
+  
 public:
   ServoConfig();
   void begin();
@@ -55,6 +59,14 @@ public:
   void gripperRotationRotate(int angle);  // Control gripper rotation servo on channel 3
   void armExtend(int angle);  // Control arm extension servo on channel 4
   void lookRotate(int angle);  // Control look servo on channel 5
+  
+  // Mutual exclusion status functions
+  bool isArmExtendOperating() { return armExtendOperating; }
+  bool isLookOperating() { return lookOperating; }
+  
+  // Position getter functions
+  int getArmExtensionAngle() { return currentArmExtensionAngle; }
+  int getLookAngle() { return currentLookAngle; }
   
   // Existing functions (add these if you have them)
   void enableServos();

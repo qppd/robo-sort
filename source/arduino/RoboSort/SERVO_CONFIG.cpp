@@ -24,6 +24,10 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   currentGripperRotationAngle = 90;  // Initialize gripper rotation to 90 degrees (default position)
   currentArmExtensionAngle = 90;  // Initialize arm extension to 90 degrees (default position)
   currentLookAngle = 90;  // Initialize look servo to 90 degrees (default position)
+  
+  // Initialize mutual exclusion flags
+  armExtendOperating = false;
+  lookOperating = false;
 }
 
 void ServoConfig::begin() {
@@ -255,11 +259,22 @@ void ServoConfig::armExtend(int angle) {
     return;
   }
   
+  // Mutual exclusion: Disable LOOK servo when ARM-EXTEND is operating
+  if (lookOperating) {
+    Serial.println("Disabling LOOK servo for smooth ARM-EXTEND operation");
+    // LOOK servo is on channel 5, disable it by setting to current position
+    setServoAngle(5, currentLookAngle);
+    lookOperating = false;
+  }
+  
+  // Set ARM-EXTEND as operating
+  armExtendOperating = true;
+  
   Serial.print("ARM-EXTENSION extending from ");
   Serial.print(currentArmExtensionAngle);
   Serial.print(" to ");
   Serial.print(angle);
-  Serial.println(" degrees (smooth)");
+  Serial.println(" degrees (smooth, LOOK disabled)");
   
   // Smooth movement with 1-degree steps
   int step = (angle > currentArmExtensionAngle) ? 1 : -1;
@@ -273,6 +288,9 @@ void ServoConfig::armExtend(int angle) {
   Serial.print("ARM-EXTENSION extension complete at ");
   Serial.print(angle);
   Serial.println(" degrees");
+  
+  // Clear operating flag
+  armExtendOperating = false;
 }
 
 void ServoConfig::lookRotate(int angle) {
@@ -282,11 +300,22 @@ void ServoConfig::lookRotate(int angle) {
     return;
   }
   
+  // Mutual exclusion: Disable ARM-EXTEND servo when LOOK is operating
+  if (armExtendOperating) {
+    Serial.println("Disabling ARM-EXTEND servo for smooth LOOK operation");
+    // ARM-EXTEND servo is on channel 4, disable it by setting to current position
+    setServoAngle(4, currentArmExtensionAngle);
+    armExtendOperating = false;
+  }
+  
+  // Set LOOK as operating
+  lookOperating = true;
+  
   Serial.print("LOOK rotating from ");
   Serial.print(currentLookAngle);
   Serial.print(" to ");
   Serial.print(angle);
-  Serial.println(" degrees (smooth)");
+  Serial.println(" degrees (smooth, ARM-EXTEND disabled)");
   
   // Smooth movement with 1-degree steps
   int step = (angle > currentLookAngle) ? 1 : -1;
@@ -300,6 +329,9 @@ void ServoConfig::lookRotate(int angle) {
   Serial.print("LOOK rotation complete at ");
   Serial.print(angle);
   Serial.println(" degrees");
+  
+  // Clear operating flag
+  lookOperating = false;
 }
 
 void ServoConfig::enableServos() {
