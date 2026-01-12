@@ -23,6 +23,7 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   currentGripperAngle = 105;  // Initialize gripper to 105 degrees (default position)
   currentGripperRotationAngle = 90;  // Initialize gripper rotation to 90 degrees (default position)
   currentArmExtensionAngle = 90;  // Initialize arm extension to 90 degrees (default position)
+  currentLookAngle = 90;  // Initialize look servo to 90 degrees (default position)
 }
 
 void ServoConfig::begin() {
@@ -48,6 +49,9 @@ void ServoConfig::begin() {
   
   // Set arm extension servo to default position (90 degrees)
   setServoAngle(4, 90);
+  
+  // Set look servo to default position (90 degrees)
+  setServoAngle(5, 90);
   
   // Enable servos by default
   enableServos();
@@ -267,6 +271,33 @@ void ServoConfig::armExtend(int angle) {
   }
   
   Serial.print("ARM-EXTENSION extension complete at ");
+  Serial.print(angle);
+  Serial.println(" degrees");
+}
+
+void ServoConfig::lookRotate(int angle) {
+  // Control look servo on channel 5 (0-180 degrees)
+  if (angle < 0 || angle > 180) {
+    Serial.println("Invalid angle. Range: 0-180");
+    return;
+  }
+  
+  Serial.print("LOOK rotating from ");
+  Serial.print(currentLookAngle);
+  Serial.print(" to ");
+  Serial.print(angle);
+  Serial.println(" degrees (smooth)");
+  
+  // Smooth movement with 1-degree steps
+  int step = (angle > currentLookAngle) ? 1 : -1;
+  
+  while (currentLookAngle != angle) {
+    currentLookAngle += step;
+    setServoAngle(5, currentLookAngle);
+    delay(15);  // 15ms per degree for smooth motion
+  }
+  
+  Serial.print("LOOK rotation complete at ");
   Serial.print(angle);
   Serial.println(" degrees");
 }

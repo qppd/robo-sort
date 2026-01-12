@@ -46,6 +46,7 @@ void setup() {
   Serial.println("  Gripper Commands: GRIP:<angle> (0-180 degrees, channel 2, default 105 degrees)");
   Serial.println("  Gripper Rotation Commands: GRIP-ROTATE:<angle> (0-180 degrees, channel 3, default 90 degrees)");
   Serial.println("  Arm Extension Commands: ARM-EXTEND:<angle> (0-180 degrees, channel 4, default 90 degrees)");
+  Serial.println("  Look Commands: LOOK:<angle> (0-180 degrees, channel 5, default 90 degrees)");
   Serial.println("Motor Commands: FORWARD <speed>, BACKWARD <speed>, RIGHT <speed>, LEFT <speed>, MSTOP");
   Serial.println("  Individual: M<motor> <direction> <speed>, MSTOP");
   Serial.println("  Motors: A or B, Directions: F (forward), B (backward), S (stop), BR (brake)");
@@ -174,6 +175,9 @@ void loop() {
     } else if (input.startsWith("ARM-EXTEND:")) {
       int angle = input.substring(11).toInt();  // Extract angle after "ARM-EXTEND:"
       servoConfig.armExtend(angle);
+    } else if (input.startsWith("LOOK:")) {
+      int angle = input.substring(5).toInt();  // Extract angle after "LOOK:"
+      servoConfig.lookRotate(angle);
     }
     // Motor commands
     else if (input.equalsIgnoreCase("MSTOP")) {

@@ -34,6 +34,9 @@ private:
   // Arm extension servo position tracking
   int currentArmExtensionAngle;  // Track current position of channel 4 arm extension servo
   
+  // Look servo position tracking
+  int currentLookAngle;  // Track current position of channel 5 look servo
+  
 public:
   ServoConfig();
   void begin();
@@ -51,6 +54,7 @@ public:
   void gripperRotate(int angle);  // Control gripper servo on channel 2
   void gripperRotationRotate(int angle);  // Control gripper rotation servo on channel 3
   void armExtend(int angle);  // Control arm extension servo on channel 4
+  void lookRotate(int angle);  // Control look servo on channel 5
   
   // Existing functions (add these if you have them)
   void enableServos();
