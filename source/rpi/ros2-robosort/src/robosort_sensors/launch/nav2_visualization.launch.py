@@ -113,5 +113,3 @@ def generate_launch_description():
             ]
         ),
     ])
-</content>
-<parameter name="filePath">c:\Users\sajed\Desktop\PROJECTS\robo-sort\source\rpi\ros2-robosort\src\robosort_sensors\launch\nav2_visualization.launch.py
