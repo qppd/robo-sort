@@ -17,19 +17,21 @@ colcon build --packages-select robosort_sensors robosort_description
 source install/setup.bash
 
 # Launch everything
-ros2 launch robosort_sensors nav2_visualization.launch.py
-
-# If your LiDAR is on ttyUSB1:
 ros2 launch robosort_sensors nav2_visualization.launch.py lidar_serial_port:=/dev/ttyUSB1
+
+# With fake odometry for testing (no real wheels needed):
+ros2 launch robosort_sensors nav2_visualization.launch.py lidar_serial_port:=/dev/ttyUSB1 use_fake_odom:=true
 ```
 
 ## Prerequisites
 
 Make sure you have running:
-- **Odometry source** (publishing `/odom`)
 - **Velocity commands** (subscribing to `/cmd_vel`)
 
-Note: `nav2_visualization.launch.py` also launches the LiDAR driver for `/scan`.
+**Optional for testing:**
+- Use `use_fake_odom:=true` to run without real odometry/wheels
+
+Note: `nav2_visualization.launch.py` launches LiDAR for `/scan` and optionally fake odom for `/odom`.
 
 ## RViz Features
 

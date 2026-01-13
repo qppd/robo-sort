@@ -12,6 +12,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, Command, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
+from launch import conditions
 
 
 def generate_launch_description():
@@ -29,6 +30,7 @@ def generate_launch_description():
     nav2_params_file = LaunchConfiguration('nav2_params_file')
     lidar_serial_port = LaunchConfiguration('lidar_serial_port')
     lidar_frame_id = LaunchConfiguration('lidar_frame_id')
+    use_fake_odom = LaunchConfiguration('use_fake_odom')
 
     return LaunchDescription([
         # Launch arguments
@@ -60,6 +62,26 @@ def generate_launch_description():
             'lidar_frame_id',
             default_value='lidar_frame',
             description='TF frame ID for LiDAR'
+        ),
+
+        DeclareLaunchArgument(
+            'use_fake_odom',
+            default_value='false',
+            description='Use fake odometry for testing (true/false)'
+        ),
+
+        # Fake Odometry (optional, for testing without real wheels)
+        Node(
+            package='robosort_sensors',
+            executable='fake_odom',
+            name='fake_odom_publisher',
+            output='screen',
+            parameters=[{
+                'publish_rate': 20.0,
+                'odom_frame': 'odom',
+                'base_frame': 'base_link',
+            }],
+            condition=launch.conditions.IfCondition(use_fake_odom)
         ),
 
         # LiDAR (publishes /scan)
