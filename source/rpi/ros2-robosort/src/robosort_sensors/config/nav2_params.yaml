@@ -167,29 +167,13 @@ collision_monitor:
     base_frame_id: "lidar_frame"
     odom_frame_id: "lidar_frame"
     cmd_vel_in_topic: "cmd_vel"
-    cmd_vel_out_topic: "cmd_vel_smoothed"
+    cmd_vel_out_topic: "cmd_vel"  # Pass through without collision checking for now
     state_topic: "collision_monitor_state"
     transform_tolerance: 0.5
-    source_timeout: 2.0
-    stop_pub_timeout: 2.0
-    polygons: ["PolygonStop"]
-    PolygonStop:
-      type: "polygon"
-      action_type: "stop"
-      max_points: 4
-      points: [0.3, 0.3, 0.3, -0.3, -0.3, -0.3, -0.3, 0.3]
-      visualize: true
-    observation_sources: ["scan"]
-    scan:
-      type: "scan"
-      topic: "/scan"
-      min_height: 0.0
-      max_height: 1.0
-      obstacle_min_range: 0.0
-      obstacle_max_range: 3.0
-      raytrace_min_range: 0.0
-      raytrace_max_range: 3.0
-      obstacle_range_margin: 0.1
+    source_timeout: 5.0
+    stop_pub_timeout: 5.0
+    polygons: []  # Disabled for initial testing
+    observation_sources: []  # Disabled for initial testing
 
 amcl:
   ros__parameters:
