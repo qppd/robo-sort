@@ -15,6 +15,11 @@ setup(
             'launch/nav2_slam.launch.py',
             'launch/nav2_visualization.launch.py',
         ]),
+        ('share/' + package_name + '/config', [
+            'config/nav2_params.yaml',
+            'config/slam_params.yaml',
+            'config/slam_nav2.rviz',
+        ]),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
