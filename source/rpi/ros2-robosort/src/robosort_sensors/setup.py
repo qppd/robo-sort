@@ -13,7 +13,7 @@ setup(
         ('share/' + package_name + '/launch', [
             'launch/lidar.launch.py',
             'launch/nav2_slam.launch.py',
-            'launch/fake_odom_launch.py',
+            'launch/nav2_visualization.launch.py',
         ]),
     ],
     install_requires=['setuptools'],
@@ -27,7 +27,6 @@ setup(
         'console_scripts': [
             'lidar_processor = robosort_sensors.lidar_processor:main',
             'object_localizer = robosort_sensors.object_localizer:main',
-            'fake_odom = robosort_sensors.fake_odom:main',
         ],
     },
 )
