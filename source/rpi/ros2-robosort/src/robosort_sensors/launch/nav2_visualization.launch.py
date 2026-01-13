@@ -24,7 +24,7 @@ def generate_launch_description():
     nav2_rviz_config = os.path.join(sensors_pkg, 'config', 'slam_nav2.rviz')
 
     # Launch configurations
-    use_sim_time = LaunchConfiguration('use_sim_time', default='false')
+    use_sim_time = LaunchConfiguration('use_sim_time')
     slam_params_file = LaunchConfiguration('slam_params_file')
     nav2_params_file = LaunchConfiguration('nav2_params_file')
     lidar_serial_port = LaunchConfiguration('lidar_serial_port')
