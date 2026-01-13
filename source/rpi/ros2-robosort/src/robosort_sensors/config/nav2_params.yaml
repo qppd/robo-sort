@@ -178,10 +178,7 @@ collision_monitor:
       action_type: "stop"
       max_points: 4
       points: [0.3, 0.3, 0.3, -0.3, -0.3, -0.3, -0.3, 0.3]
-      polygon_sub_topic: "polygon_stop"
-      polygon_pub_topic: "polygon_stop"
       visualize: true
-      polygon_frame_id: "lidar_frame"
     observation_sources: ["scan"]
     scan:
       type: "scan"
