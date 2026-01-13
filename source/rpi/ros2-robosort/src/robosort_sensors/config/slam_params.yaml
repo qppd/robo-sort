@@ -12,7 +12,7 @@ slam_toolbox:
     # Core Parameters for SLAM
     scan_topic: /scan
     map_frame: map
-    odom_frame: odom
+    odom_frame: lidar_frame
     base_frame: lidar_frame
 
     # Map parameters
@@ -23,7 +23,7 @@ slam_toolbox:
     map_update_interval: 5.0
     transform_timeout: 0.2
     tf_buffer_duration: 30.0
-    scan_queue_size: 50
+    scan_queue_size: 100
 
     # Loop closure parameters
     loop_search_max_radius: 5.0
