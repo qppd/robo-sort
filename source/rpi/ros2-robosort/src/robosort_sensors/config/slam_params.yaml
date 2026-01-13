@@ -13,7 +13,7 @@ slam_toolbox:
     scan_topic: /scan
     map_frame: map
     odom_frame: odom
-    base_frame: base_link
+    base_frame: lidar_frame
 
     # Map parameters
     resolution: 0.05
@@ -23,6 +23,7 @@ slam_toolbox:
     map_update_interval: 5.0
     transform_timeout: 0.2
     tf_buffer_duration: 30.0
+    scan_queue_size: 50
 
     # Loop closure parameters
     loop_search_max_radius: 5.0
