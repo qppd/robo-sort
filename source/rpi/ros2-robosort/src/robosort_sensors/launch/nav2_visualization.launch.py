@@ -125,7 +125,7 @@ def generate_launch_description():
                         ])
                     ),
                     launch_arguments={
-                        'slam': 'True',
+                        'slam': 'False',  # Disable SLAM in nav2_bringup since we have our own
                         'params_file': nav2_params_file,
                         'use_sim_time': use_sim_time
                     }.items()
