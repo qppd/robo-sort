@@ -55,16 +55,7 @@ def generate_launch_description():
             executable='static_transform_publisher',
             name='lidar_static_tf_pub',
             output='screen',
-            arguments=[
-                '--x', x,
-                '--y', y,
-                '--z', z,
-                '--roll', roll,
-                '--pitch', pitch,
-                '--yaw', yaw,
-                '--frame-id', parent_frame_id,
-                '--child-frame-id', frame_id,
-            ]
+            arguments=[x, y, z, roll, pitch, yaw, parent_frame_id, frame_id]
         ),
         
         # LD06 LiDAR driver node
