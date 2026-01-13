@@ -9,7 +9,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, Command
+from launch.substitutions import LaunchConfiguration, Command, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
 
@@ -70,10 +70,13 @@ def generate_launch_description():
 
         # SLAM Toolbox (creates map and provides localization)
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([
-                FindPackageShare('slam_toolbox'),
-                '/launch/online_async_launch.py'
-            ]),
+            PythonLaunchDescriptionSource(
+                PathJoinSubstitution([
+                    FindPackageShare('slam_toolbox'),
+                    'launch',
+                    'online_async_launch.py'
+                ])
+            ),
             launch_arguments={
                 'slam_params_file': slam_params_file,
                 'use_sim_time': use_sim_time
@@ -85,10 +88,13 @@ def generate_launch_description():
             period=5.0,  # Wait for SLAM to initialize
             actions=[
                 IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource([
-                        FindPackageShare('nav2_bringup'),
-                        '/launch/bringup_launch.py'
-                    ]),
+                    PythonLaunchDescriptionSource(
+                        PathJoinSubstitution([
+                            FindPackageShare('nav2_bringup'),
+                            'launch',
+                            'bringup_launch.py'
+                        ])
+                    ),
                     launch_arguments={
                         'slam': 'True',
                         'params_file': nav2_params_file,
