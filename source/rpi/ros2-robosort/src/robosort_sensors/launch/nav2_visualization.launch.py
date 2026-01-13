@@ -81,7 +81,7 @@ def generate_launch_description():
                 'odom_frame': 'odom',
                 'base_frame': 'base_link',
             }],
-            condition=launch.conditions.IfCondition(use_fake_odom)
+            condition=conditions.IfCondition(use_fake_odom)
         ),
 
         # LiDAR (publishes /scan)
