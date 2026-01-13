@@ -18,14 +18,18 @@ source install/setup.bash
 
 # Launch everything
 ros2 launch robosort_sensors nav2_visualization.launch.py
+
+# If your LiDAR is on ttyUSB1:
+ros2 launch robosort_sensors nav2_visualization.launch.py lidar_serial_port:=/dev/ttyUSB1
 ```
 
 ## Prerequisites
 
 Make sure you have running:
 - **Odometry source** (publishing `/odom`)
-- **LiDAR** (publishing `/scan`)
 - **Velocity commands** (subscribing to `/cmd_vel`)
+
+Note: `nav2_visualization.launch.py` also launches the LiDAR driver for `/scan`.
 
 ## RViz Features
 

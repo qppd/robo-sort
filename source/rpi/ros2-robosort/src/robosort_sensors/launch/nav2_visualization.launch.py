@@ -27,6 +27,8 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     slam_params_file = LaunchConfiguration('slam_params_file')
     nav2_params_file = LaunchConfiguration('nav2_params_file')
+    lidar_serial_port = LaunchConfiguration('lidar_serial_port')
+    lidar_frame_id = LaunchConfiguration('lidar_frame_id')
 
     return LaunchDescription([
         # Launch arguments
@@ -46,6 +48,33 @@ def generate_launch_description():
             'nav2_params_file',
             default_value=os.path.join(sensors_pkg, 'config', 'nav2_params.yaml'),
             description='Nav2 parameters file'
+        ),
+
+        DeclareLaunchArgument(
+            'lidar_serial_port',
+            default_value='/dev/ttyUSB0',
+            description='LiDAR serial port (e.g. /dev/ttyUSB1)'
+        ),
+
+        DeclareLaunchArgument(
+            'lidar_frame_id',
+            default_value='lidar_frame',
+            description='TF frame ID for LiDAR'
+        ),
+
+        # LiDAR (publishes /scan)
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                PathJoinSubstitution([
+                    FindPackageShare('robosort_sensors'),
+                    'launch',
+                    'lidar.launch.py'
+                ])
+            ),
+            launch_arguments={
+                'serial_port': lidar_serial_port,
+                'frame_id': lidar_frame_id,
+            }.items()
         ),
 
         # Robot State Publisher (publish TF tree)

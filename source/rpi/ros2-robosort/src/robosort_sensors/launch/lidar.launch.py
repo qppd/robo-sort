@@ -13,6 +13,14 @@ def generate_launch_description():
     # Declare launch arguments
     serial_port = LaunchConfiguration('serial_port', default='/dev/ttyUSB0')
     frame_id = LaunchConfiguration('frame_id', default='lidar_frame')
+    parent_frame_id = LaunchConfiguration('parent_frame_id', default='base_link')
+
+    x = LaunchConfiguration('x', default='0.0')
+    y = LaunchConfiguration('y', default='0.0')
+    z = LaunchConfiguration('z', default='0.0')
+    roll = LaunchConfiguration('roll', default='0.0')
+    pitch = LaunchConfiguration('pitch', default='0.0')
+    yaw = LaunchConfiguration('yaw', default='0.0')
     
     return LaunchDescription([
         # Launch arguments
@@ -26,6 +34,37 @@ def generate_launch_description():
             'frame_id',
             default_value='lidar_frame',
             description='TF frame ID for LiDAR'
+        ),
+
+        DeclareLaunchArgument(
+            'parent_frame_id',
+            default_value='base_link',
+            description='Parent TF frame for LiDAR static transform'
+        ),
+
+        DeclareLaunchArgument('x', default_value='0.0', description='LiDAR static TF x (meters)'),
+        DeclareLaunchArgument('y', default_value='0.0', description='LiDAR static TF y (meters)'),
+        DeclareLaunchArgument('z', default_value='0.0', description='LiDAR static TF z (meters)'),
+        DeclareLaunchArgument('roll', default_value='0.0', description='LiDAR static TF roll (radians)'),
+        DeclareLaunchArgument('pitch', default_value='0.0', description='LiDAR static TF pitch (radians)'),
+        DeclareLaunchArgument('yaw', default_value='0.0', description='LiDAR static TF yaw (radians)'),
+
+        # Static TF: base_link -> lidar_frame (or whatever frame_id is set to)
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name='lidar_static_tf_pub',
+            output='screen',
+            arguments=[
+                '--x', x,
+                '--y', y,
+                '--z', z,
+                '--roll', roll,
+                '--pitch', pitch,
+                '--yaw', yaw,
+                '--frame-id', parent_frame_id,
+                '--child-frame-id', frame_id,
+            ]
         ),
         
         # LD06 LiDAR driver node
