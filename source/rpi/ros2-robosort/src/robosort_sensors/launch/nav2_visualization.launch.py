@@ -169,8 +169,12 @@ def generate_launch_description():
                     executable='rviz2',
                     name='rviz2_nav2',
                     output='screen',
-                    arguments=['-d', nav2_rviz_config],
-                    parameters=[{'use_sim_time': False}]
+                    arguments=['-d', PathJoinSubstitution([
+                        FindPackageShare('nav2_bringup'),
+                        'rviz',
+                        'nav2_default_view.rviz'
+                    ])],
+                    parameters=[{'use_sim_time': use_sim_time}]
                 )
             ]
         ),
