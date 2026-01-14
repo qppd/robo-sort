@@ -153,7 +153,8 @@ def generate_launch_description():
                     ),
                     launch_arguments={
                         'params_file': nav2_params_file,
-                        'use_sim_time': use_sim_time
+                        'use_sim_time': use_sim_time,
+                        'use_collision_monitor': 'False'  # Disable collision monitor
                     }.items()
                 )
             ]
