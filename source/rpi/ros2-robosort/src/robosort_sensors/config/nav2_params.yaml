@@ -104,6 +104,7 @@ global_costmap:
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: true
+        topic: /map  # Subscribe to SLAM Toolbox's map for real-time updates
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: true
@@ -175,8 +176,13 @@ collision_monitor:
     polygons: []  # Disabled for initial testing
     observation_sources: []  # Disabled for initial testing
 
+# AMCL is NOT used when SLAM Toolbox provides localization
+# SLAM Toolbox provides the map->base_link transform directly
+# Keeping this section for reference only - do not enable when using SLAM Toolbox
 amcl:
   ros__parameters:
+    # DISABLED when using SLAM Toolbox - uncomment only for map-only navigation
+    enabled: false
     alpha1: 0.2
     alpha2: 0.2
     alpha3: 0.2
@@ -190,7 +196,7 @@ amcl:
     global_frame_id: "map"
     lambda_short: 0.1
     laser_likelihood_max_dist: 2.0
-    laser_max_beams: 30  # Reduced from 60 to prevent queue overflow
+    laser_max_beams: 30
     laser_max_range: 12.0
     laser_min_range: 0.0
     laser_model_type: "likelihood_field"
@@ -207,7 +213,7 @@ amcl:
     save_pose_rate: 0.5
     sigma_hit: 0.2
     tf_broadcast: true
-    transform_tolerance: 2.0  # Increased to handle timestamp issues
+    transform_tolerance: 2.0
     update_min_a: 0.2
     update_min_d: 0.25
     z_hit: 0.5

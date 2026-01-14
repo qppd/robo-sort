@@ -34,10 +34,9 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 FindPackageShare('nav2_bringup'),
-                '/launch/bringup_launch.py',
+                '/launch/navigation_launch.py',  # Changed: just nav stack, no map/localization
             ]),
             launch_arguments={
-                'slam': 'True',
                 'params_file': params_file,
             }.items(),
         ),

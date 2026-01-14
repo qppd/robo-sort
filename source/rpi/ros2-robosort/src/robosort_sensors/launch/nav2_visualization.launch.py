@@ -107,8 +107,11 @@ def generate_launch_description():
             output='screen',
             parameters=[{
                 'robot_description': Command(['xacro ', urdf_file]),
-                'use_sim_time': use_sim_time
-            }]
+            }],
+            arguments=['--ros-args', '--log-level', 'info'],
+            remappings=[
+                ('/robot_description', '/robot_description')
+            ]
         ),
 
         # Joint State Publisher (for robot visualization)
@@ -116,7 +119,9 @@ def generate_launch_description():
             package='joint_state_publisher',
             executable='joint_state_publisher',
             name='joint_state_publisher',
-            parameters=[{'use_sim_time': use_sim_time}]
+            parameters=[{
+                'use_sim_time': False
+            }]
         ),
 
         # SLAM Toolbox (creates map and provides localization)
@@ -134,7 +139,7 @@ def generate_launch_description():
             }.items()
         ),
 
-        # Nav2 Bringup (navigation stack)
+        # Nav2 Navigation Stack (uses SLAM Toolbox's map via costmaps)
         TimerAction(
             period=5.0,  # Wait for SLAM to initialize
             actions=[
@@ -143,11 +148,10 @@ def generate_launch_description():
                         PathJoinSubstitution([
                             FindPackageShare('nav2_bringup'),
                             'launch',
-                            'bringup_launch.py'
+                            'navigation_launch.py'  # Changed: just nav stack, no map/localization
                         ])
                     ),
                     launch_arguments={
-                        'slam': 'False',  # Disable SLAM in nav2_bringup since we have our own
                         'params_file': nav2_params_file,
                         'use_sim_time': use_sim_time
                     }.items()
@@ -165,7 +169,7 @@ def generate_launch_description():
                     name='rviz2_nav2',
                     output='screen',
                     arguments=['-d', nav2_rviz_config],
-                    parameters=[{'use_sim_time': use_sim_time}]
+                    parameters=[{'use_sim_time': False}]
                 )
             ]
         ),
