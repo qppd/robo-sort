@@ -291,7 +291,6 @@ weights/
 
 # YOLO training runs
 runs/
-runs/detect/
 runs/train/
 runs/val/
 runs/test/
