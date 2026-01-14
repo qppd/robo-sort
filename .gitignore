@@ -38,6 +38,9 @@ log/
 # Ignore VS Code settings
 .vscode/
 
+# Ignore ML training weights
+ml/train/weights/
+
 # Ignore Python cache
 __pycache__/
 *.pyc
