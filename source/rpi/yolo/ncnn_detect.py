@@ -202,9 +202,9 @@ class YOLODetector:
         
         # Inference
         ex = self.net.create_extractor()
-        ex.input("images", mat_in)
+        ex.input("in0", mat_in)
         
-        ret, mat_out = ex.extract("output0")
+        ret, mat_out = ex.extract("out0")
         
         # Postprocess
         boxes, scores, class_ids = self.postprocess(mat_out, img_w, img_h, scale, pad_w, pad_h)
