@@ -248,7 +248,7 @@ def main():
         param_path="my_model_ncnn_model/model.ncnn.param",
         bin_path="my_model_ncnn_model/model.ncnn.bin",
         input_size=640,
-        conf_threshold=0.25,
+        conf_threshold=0.7,
         nms_threshold=0.45
     )
     
