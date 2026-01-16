@@ -1,0 +1,23 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from robosort_interfaces/srv/GetDistance.srv
+// generated code does not contain a copyright notice
+
+
+module robosort_interfaces {
+  module srv {
+    @verbatim (language="comment", text=
+      "Service to get distance from ultrasonic sensor")
+    struct GetDistance_Request {
+      @verbatim (language="comment", text=
+        "Sensor ID (1-4)")
+      int32 sensor_id;
+    };
+    struct GetDistance_Response {
+      @verbatim (language="comment", text=
+        "Distance in cm")
+      float distance;
+
+      boolean success;
+    };
+  };
+};

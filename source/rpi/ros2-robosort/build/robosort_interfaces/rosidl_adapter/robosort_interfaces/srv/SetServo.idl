@@ -1,0 +1,25 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from robosort_interfaces/srv/SetServo.srv
+// generated code does not contain a copyright notice
+
+
+module robosort_interfaces {
+  module srv {
+    @verbatim (language="comment", text=
+      "Service to set individual servo angle")
+    struct SetServo_Request {
+      @verbatim (language="comment", text=
+        "Servo number (0-5): 0-4 for arm, 5 for lifter")
+      int32 servo_num;
+
+      @verbatim (language="comment", text=
+        "Angle in degrees (0-180)")
+      int32 angle;
+    };
+    struct SetServo_Response {
+      boolean success;
+
+      string message;
+    };
+  };
+};

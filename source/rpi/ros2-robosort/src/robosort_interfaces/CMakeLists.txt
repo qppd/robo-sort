@@ -11,11 +11,6 @@ find_package(rosidl_default_generators REQUIRED)
 
 # Generate service interfaces
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "srv/SetServo.srv"
-  "srv/MoveRobotArm.srv"
-  "srv/RotateBin.srv"
-  "srv/GetDistance.srv"
-  "srv/GetObjectPosition.srv"
   "srv/ControlMotor.srv"
 )
 

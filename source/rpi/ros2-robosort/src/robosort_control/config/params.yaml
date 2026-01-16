@@ -1,0 +1,49 @@
+# RoboSort Control Parameters
+
+# Motor Controller
+motor_controller:
+  ros__parameters:
+    serial_port: "/dev/ttyACM0"
+    baudrate: 9600
+    timeout: 1.0
+    max_speed: 255
+    wheel_base: 0.2  # Distance between wheels in meters
+
+# TF Broadcaster
+tf_broadcaster:
+  ros__parameters:
+    odom_frame: "odom"
+    base_frame: "base_link"
+    lidar_frame: "lidar_frame"
+    publish_rate: 50.0
+    # LiDAR position relative to base_link
+    lidar_x: 0.0
+    lidar_y: 0.0
+    lidar_z: 0.1
+    lidar_roll: 0.0
+    lidar_pitch: 0.0
+    lidar_yaw: 0.0
+
+# Obstacle Avoidance
+obstacle_avoidance:
+  ros__parameters:
+    min_obstacle_distance: 0.3  # meters - stop distance
+    warning_distance: 0.5  # meters - start slowing
+    max_linear_speed: 0.3  # m/s
+    max_angular_speed: 1.0  # rad/s
+    front_angle: 60.0  # degrees - front detection cone
+    side_angle: 30.0  # degrees - side detection
+    enabled: true
+
+# LiDAR LD06
+ld06_lidar:
+  ros__parameters:
+    product_name: "LDLiDAR_LD06"
+    topic_name: "scan"
+    frame_id: "lidar_frame"
+    port_name: "/dev/ttyUSB0"
+    port_baudrate: 230400
+    laser_scan_dir: true
+    enable_angle_crop_func: false
+    angle_crop_min: 0.0
+    angle_crop_max: 0.0

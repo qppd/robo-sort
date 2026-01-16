@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Launch file for LiDAR LD06 sensor integration
+Launch file for LiDAR LD06 sensor - Minimal version
+Only launches LiDAR driver and TF broadcaster for visualization
 """
 
 from launch import LaunchDescription
@@ -13,14 +14,6 @@ def generate_launch_description():
     # Declare launch arguments
     serial_port = LaunchConfiguration('serial_port', default='/dev/ttyUSB0')
     frame_id = LaunchConfiguration('frame_id', default='lidar_frame')
-    parent_frame_id = LaunchConfiguration('parent_frame_id', default='base_link')
-
-    x = LaunchConfiguration('x', default='0.0')
-    y = LaunchConfiguration('y', default='0.0')
-    z = LaunchConfiguration('z', default='0.0')
-    roll = LaunchConfiguration('roll', default='0.0')
-    pitch = LaunchConfiguration('pitch', default='0.0')
-    yaw = LaunchConfiguration('yaw', default='0.0')
     
     return LaunchDescription([
         # Launch arguments
@@ -35,27 +28,22 @@ def generate_launch_description():
             default_value='lidar_frame',
             description='TF frame ID for LiDAR'
         ),
-
-        DeclareLaunchArgument(
-            'parent_frame_id',
-            default_value='base_link',
-            description='Parent TF frame for LiDAR static transform'
-        ),
-
-        DeclareLaunchArgument('x', default_value='0.0', description='LiDAR static TF x (meters)'),
-        DeclareLaunchArgument('y', default_value='0.0', description='LiDAR static TF y (meters)'),
-        DeclareLaunchArgument('z', default_value='0.0', description='LiDAR static TF z (meters)'),
-        DeclareLaunchArgument('roll', default_value='0.0', description='LiDAR static TF roll (radians)'),
-        DeclareLaunchArgument('pitch', default_value='0.0', description='LiDAR static TF pitch (radians)'),
-        DeclareLaunchArgument('yaw', default_value='0.0', description='LiDAR static TF yaw (radians)'),
-
-        # Static TF: base_link -> lidar_frame (or whatever frame_id is set to)
+        
+        # TF Broadcaster - handles odom -> base_link -> lidar_frame
         Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            name='lidar_static_tf_pub',
+            package='robosort_control',
+            executable='tf_broadcaster',
+            name='tf_broadcaster',
             output='screen',
-            arguments=[x, y, z, roll, pitch, yaw, parent_frame_id, frame_id]
+            parameters=[{
+                'odom_frame': 'odom',
+                'base_frame': 'base_link',
+                'lidar_frame': frame_id,
+                'publish_rate': 50.0,
+                'lidar_x': 0.0,
+                'lidar_y': 0.0,
+                'lidar_z': 0.1,
+            }]
         ),
         
         # LD06 LiDAR driver node
@@ -74,33 +62,6 @@ def generate_launch_description():
                 'enable_angle_crop_func': False,
                 'angle_crop_min': 0.0,
                 'angle_crop_max': 0.0,
-            }]
-        ),
-        
-        # LiDAR processor node
-        Node(
-            package='robosort_sensors',
-            executable='lidar_processor',
-            name='lidar_processor',
-            output='screen',
-            parameters=[{
-                'max_range': 12.0,
-                'min_range': 0.02,
-                'roi_angle': 60.0,
-                'object_detection_threshold': 0.1,
-            }]
-        ),
-        
-        # Object localizer node
-        Node(
-            package='robosort_sensors',
-            executable='object_localizer',
-            name='object_localizer',
-            output='screen',
-            parameters=[{
-                'camera_height': 0.3,
-                'camera_tilt_angle': 30.0,
-                'gripper_offset_x': 0.05,
             }]
         ),
     ])

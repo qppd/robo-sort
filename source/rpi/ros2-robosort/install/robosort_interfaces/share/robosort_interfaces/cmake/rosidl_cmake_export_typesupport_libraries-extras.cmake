@@ -1,0 +1,1 @@
+/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/rosidl_cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake

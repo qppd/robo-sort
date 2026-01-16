@@ -12,13 +12,6 @@ setup(
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/launch', [
             'launch/lidar.launch.py',
-            'launch/nav2_slam.launch.py',
-            'launch/nav2_visualization.launch.py',
-        ]),
-        ('share/' + package_name + '/config', [
-            'config/nav2_params.yaml',
-            'config/slam_params.yaml',
-            'config/slam_nav2.rviz',
         ]),
     ],
     install_requires=['setuptools'],
@@ -30,9 +23,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'lidar_processor = robosort_sensors.lidar_processor:main',
-            'object_localizer = robosort_sensors.object_localizer:main',
-            'fake_odom = robosort_sensors.fake_odom:main',
         ],
     },
 )

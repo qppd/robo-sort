@@ -1,0 +1,8 @@
+srv/GetDistance.idl
+srv/GetDistance.srv
+srv/MoveRobotArm.idl
+srv/MoveRobotArm.srv
+srv/RotateBin.idl
+srv/RotateBin.srv
+srv/SetServo.idl
+srv/SetServo.srv

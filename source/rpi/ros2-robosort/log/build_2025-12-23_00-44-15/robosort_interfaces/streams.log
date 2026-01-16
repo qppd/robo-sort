@@ -1,0 +1,288 @@
+[0.083s] Invoking command in '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/robosort/robo-sort/source/rpi/ros2-robosort/src/robosort_interfaces -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces
+[0.608s] -- The C compiler identification is GNU 13.3.0
+[1.100s] -- The CXX compiler identification is GNU 13.3.0
+[1.238s] -- Detecting C compiler ABI info
+[2.087s] -- Detecting C compiler ABI info - done
+[2.123s] -- Check for working C compiler: /usr/bin/cc - skipped
+[2.124s] -- Detecting C compile features
+[2.126s] -- Detecting C compile features - done
+[2.197s] -- Detecting CXX compiler ABI info
+[3.049s] -- Detecting CXX compiler ABI info - done
+[3.091s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[3.092s] -- Detecting CXX compile features
+[3.094s] -- Detecting CXX compile features - done
+[3.166s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[4.458s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[5.023s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[6.158s] -- Found rosidl_default_generators: 1.6.0 (/opt/ros/jazzy/share/rosidl_default_generators/cmake)
+[6.320s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[7.449s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[8.386s] -- Found rosidl_adapter: 4.6.6 (/opt/ros/jazzy/share/rosidl_adapter/cmake)
+[13.246s] -- Found ament_cmake_ros: 0.12.0 (/opt/ros/jazzy/share/ament_cmake_ros/cmake)
+[16.620s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[20.611s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[20.680s] -- Found python_cmake_module: 0.11.1 (/opt/ros/jazzy/share/python_cmake_module/cmake)
+[21.769s] -- Found PythonExtra: /usr/bin/python3  
+[25.160s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter Development NumPy Development.Module Development.Embed 
+[25.654s] -- Found ament_lint_auto: 0.17.3 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[26.564s] -- Added test 'lint_cmake' to check CMake code style
+[26.606s] -- Added test 'xmllint' to check XML markup files
+[26.690s] -- Configuring done (26.5s)
+[27.269s] -- Generating done (0.5s)
+[27.376s] -- Build files have been written to: /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces
+[27.441s] Invoked command in '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/robosort/robo-sort/source/rpi/ros2-robosort/src/robosort_interfaces -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces
+[27.453s] Invoking command in '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces -- -j4 -l4
+[27.992s] [  1%] [34m[1mGenerating type hashes for ROS interfaces[0m
+[28.068s] [  1%] Built target ament_cmake_python_symlink_robosort_interfaces
+[29.949s] running egg_info
+[29.953s] creating robosort_interfaces.egg-info
+[29.984s] [  1%] Built target robosort_interfaces__rosidl_generator_type_description
+[30.127s] writing robosort_interfaces.egg-info/PKG-INFO
+[30.130s] writing dependency_links to robosort_interfaces.egg-info/dependency_links.txt
+[30.135s] writing top-level names to robosort_interfaces.egg-info/top_level.txt
+[30.137s] writing manifest file 'robosort_interfaces.egg-info/SOURCES.txt'
+[30.232s] [  3%] [34m[1mGenerating C++ code for ROS interfaces[0m
+[31.147s] reading manifest file 'robosort_interfaces.egg-info/SOURCES.txt'
+[31.153s] writing manifest file 'robosort_interfaces.egg-info/SOURCES.txt'
+[31.408s] [  3%] Built target ament_cmake_python_build_robosort_interfaces_egg
+[31.516s] [  4%] [34m[1mGenerating C code for ROS interfaces[0m
+[36.754s] [  4%] Built target robosort_interfaces__cpp
+[39.333s] [  6%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/set_servo__description.c.o[0m
+[39.764s] [  7%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/move_robot_arm__description.c.o[0m
+[40.176s] [  9%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/move_robot_arm__functions.c.o[0m
+[40.947s] [ 10%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/move_robot_arm__type_support.c.o[0m
+[41.391s] [ 12%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/rotate_bin__description.c.o[0m
+[41.879s] [ 14%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/rotate_bin__functions.c.o[0m
+[42.458s] [ 15%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/rotate_bin__type_support.c.o[0m
+[42.790s] [ 17%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/get_distance__description.c.o[0m
+[43.167s] [ 18%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/get_distance__functions.c.o[0m
+[43.912s] [ 20%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/get_distance__type_support.c.o[0m
+[44.314s] [ 21%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/set_servo__type_support.c.o[0m
+[44.745s] [ 23%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_c.dir/rosidl_generator_c/robosort_interfaces/srv/detail/set_servo__functions.c.o[0m
+[45.509s] [ 25%] [32m[1mLinking C shared library librobosort_interfaces__rosidl_generator_c.so[0m
+[45.951s] [ 25%] Built target robosort_interfaces__rosidl_generator_c
+[46.069s] [ 26%] [34m[1mGenerating C++ introspection for ROS interfaces[0m
+[49.871s] [ 28%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/robosort_interfaces/srv/detail/set_servo__type_support.cpp.o[0m
+[53.376s] [ 29%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/robosort_interfaces/srv/detail/move_robot_arm__type_support.cpp.o[0m
+[56.364s] [ 31%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/robosort_interfaces/srv/detail/rotate_bin__type_support.cpp.o[0m
+[58.997s] [ 32%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/robosort_interfaces/srv/detail/get_distance__type_support.cpp.o[0m
+[61.459s] [ 34%] [32m[1mLinking CXX shared library librobosort_interfaces__rosidl_typesupport_introspection_cpp.so[0m
+[62.217s] [ 34%] Built target robosort_interfaces__rosidl_typesupport_introspection_cpp
+[62.328s] [ 35%] [34m[1mGenerating C introspection for ROS interfaces[0m
+[65.308s] [ 37%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/set_servo__type_support.c.o[0m
+[65.648s] [ 39%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/move_robot_arm__type_support.c.o[0m
+[65.999s] [ 40%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/rotate_bin__type_support.c.o[0m
+[66.341s] [ 42%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/robosort_interfaces/srv/detail/get_distance__type_support.c.o[0m
+[66.777s] [ 43%] [32m[1mLinking C shared library librobosort_interfaces__rosidl_typesupport_introspection_c.so[0m
+[67.128s] [ 43%] Built target robosort_interfaces__rosidl_typesupport_introspection_c
+[67.215s] [ 45%] [34m[1mGenerating C type support dispatch for ROS interfaces[0m
+[69.435s] [ 46%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/robosort_interfaces/srv/set_servo__type_support.cpp.o[0m
+[69.769s] [ 48%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/robosort_interfaces/srv/move_robot_arm__type_support.cpp.o[0m
+[70.098s] [ 50%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/robosort_interfaces/srv/rotate_bin__type_support.cpp.o[0m
+[70.432s] [ 51%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/robosort_interfaces/srv/get_distance__type_support.cpp.o[0m
+[70.766s] [ 53%] [32m[1mLinking CXX shared library librobosort_interfaces__rosidl_typesupport_c.so[0m
+[71.066s] [ 53%] Built target robosort_interfaces__rosidl_typesupport_c
+[71.157s] [ 54%] [34m[1mGenerating C++ type support for eProsima Fast-RTPS[0m
+[74.619s] [ 56%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/robosort_interfaces/srv/detail/dds_fastrtps/set_servo__type_support.cpp.o[0m
+[78.379s] [ 57%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/robosort_interfaces/srv/detail/dds_fastrtps/move_robot_arm__type_support.cpp.o[0m
+[82.074s] [ 59%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/robosort_interfaces/srv/detail/dds_fastrtps/rotate_bin__type_support.cpp.o[0m
+[82.079s] [ 60%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/robosort_interfaces/srv/detail/dds_fastrtps/get_distance__type_support.cpp.o[0m
+[86.480s] [ 62%] [32m[1mLinking CXX shared library librobosort_interfaces__rosidl_typesupport_fastrtps_cpp.so[0m
+[87.003s] [ 62%] Built target robosort_interfaces__rosidl_typesupport_fastrtps_cpp
+[87.099s] [ 65%] [34m[1mGenerating C type support for eProsima Fast-RTPS[0m
+[87.100s] [ 65%] [34m[1mGenerating C++ type support dispatch for ROS interfaces[0m
+[89.513s] [ 67%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/robosort_interfaces/srv/set_servo__type_support.cpp.o[0m
+[89.520s] [ 68%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/robosort_interfaces/srv/move_robot_arm__type_support.cpp.o[0m
+[90.708s] [ 70%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/robosort_interfaces/srv/rotate_bin__type_support.cpp.o[0m
+[91.972s] [ 71%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/set_servo__type_support_c.cpp.o[0m
+[93.818s] [ 73%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/robosort_interfaces/srv/get_distance__type_support.cpp.o[0m
+[94.321s] [ 75%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/move_robot_arm__type_support_c.cpp.o[0m
+[95.524s] [ 76%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/rotate_bin__type_support_c.cpp.o[0m
+[98.068s] [ 78%] [32m[1mLinking CXX shared library librobosort_interfaces__rosidl_typesupport_cpp.so[0m
+[98.751s] [ 78%] Built target robosort_interfaces__rosidl_typesupport_cpp
+[99.845s] [ 79%] [32mBuilding CXX object CMakeFiles/robosort_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/robosort_interfaces/srv/detail/get_distance__type_support_c.cpp.o[0m
+[102.985s] [ 81%] [32m[1mLinking CXX shared library librobosort_interfaces__rosidl_typesupport_fastrtps_c.so[0m
+[103.476s] [ 81%] Built target robosort_interfaces__rosidl_typesupport_fastrtps_c
+[103.654s] [ 81%] Built target robosort_interfaces
+[103.842s] [ 82%] [34m[1mGenerating Python code for ROS interfaces[0m
+[108.620s] [ 82%] Built target robosort_interfaces__py
+[108.805s] [ 84%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_py.dir/rosidl_generator_py/robosort_interfaces/srv/_move_robot_arm_s.c.o[0m
+[108.808s] [ 85%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_py.dir/rosidl_generator_py/robosort_interfaces/srv/_set_servo_s.c.o[0m
+[108.815s] [ 87%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_py.dir/rosidl_generator_py/robosort_interfaces/srv/_rotate_bin_s.c.o[0m
+[110.059s] [ 89%] [32mBuilding C object CMakeFiles/robosort_interfaces__rosidl_generator_py.dir/rosidl_generator_py/robosort_interfaces/srv/_get_distance_s.c.o[0m
+[111.027s] [ 90%] [32m[1mLinking C shared library librobosort_interfaces__rosidl_generator_py.so[0m
+[111.435s] [ 90%] Built target robosort_interfaces__rosidl_generator_py
+[111.712s] [ 92%] [32mBuilding C object CMakeFiles/robosort_interfaces_s__rosidl_typesupport_c.dir/rosidl_generator_py/robosort_interfaces/_robosort_interfaces_s.ep.rosidl_typesupport_c.c.o[0m
+[111.750s] [ 93%] [32mBuilding C object CMakeFiles/robosort_interfaces_s__rosidl_typesupport_fastrtps_c.dir/rosidl_generator_py/robosort_interfaces/_robosort_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c.o[0m
+[111.760s] [ 95%] [32mBuilding C object CMakeFiles/robosort_interfaces_s__rosidl_typesupport_introspection_c.dir/rosidl_generator_py/robosort_interfaces/_robosort_interfaces_s.ep.rosidl_typesupport_introspection_c.c.o[0m
+[112.829s] [ 96%] [32m[1mLinking C shared module rosidl_generator_py/robosort_interfaces/robosort_interfaces_s__rosidl_typesupport_fastrtps_c.so[0m
+[112.881s] [ 98%] [32m[1mLinking C shared module rosidl_generator_py/robosort_interfaces/robosort_interfaces_s__rosidl_typesupport_c.so[0m
+[112.896s] [100%] [32m[1mLinking C shared module rosidl_generator_py/robosort_interfaces/robosort_interfaces_s__rosidl_typesupport_introspection_c.so[0m
+[113.156s] [100%] Built target robosort_interfaces_s__rosidl_typesupport_c
+[113.162s] [100%] Built target robosort_interfaces_s__rosidl_typesupport_fastrtps_c
+[113.200s] [100%] Built target robosort_interfaces_s__rosidl_typesupport_introspection_c
+[113.303s] Invoked command in '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces -- -j4 -l4
+[113.385s] Invoking command in '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces
+[113.451s] -- Install configuration: ""
+[113.454s] -- Execute custom install script
+[113.456s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/ament_index/resource_index/rosidl_interfaces/robosort_interfaces
+[113.532s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/SetServo.json
+[113.601s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/MoveRobotArm.json
+[113.671s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/RotateBin.json
+[113.746s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/GetDistance.json
+[113.834s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/msg/rosidl_generator_c__visibility_control.h
+[113.918s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__functions.h
+[114.014s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__struct.h
+[114.101s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__type_support.h
+[114.186s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__functions.h
+[114.284s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__struct.h
+[114.371s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__type_support.h
+[114.464s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__functions.h
+[114.549s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__struct.h
+[114.632s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__type_support.h
+[114.741s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__functions.h
+[114.872s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__struct.h
+[114.979s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__type_support.h
+[115.091s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/get_distance.h
+[115.203s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/move_robot_arm.h
+[115.333s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/rotate_bin.h
+[115.443s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/set_servo.h
+[115.557s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/environment/library_path.sh
+[115.659s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/environment/library_path.dsv
+[115.800s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/msg/rosidl_typesupport_fastrtps_c__visibility_control.h
+[115.870s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__rosidl_typesupport_fastrtps_c.h
+[115.949s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__rosidl_typesupport_fastrtps_c.h
+[116.026s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__rosidl_typesupport_fastrtps_c.h
+[116.096s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__rosidl_typesupport_fastrtps_c.h
+[116.169s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/msg/rosidl_typesupport_introspection_c__visibility_control.h
+[116.251s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__rosidl_typesupport_introspection_c.h
+[116.336s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__rosidl_typesupport_introspection_c.h
+[116.407s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__rosidl_typesupport_introspection_c.h
+[116.478s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__rosidl_typesupport_introspection_c.h
+[116.554s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/msg/rosidl_generator_cpp__visibility_control.hpp
+[116.631s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__builder.hpp
+[116.701s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__struct.hpp
+[116.771s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__traits.hpp
+[116.845s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__type_support.hpp
+[116.917s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__builder.hpp
+[116.990s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__struct.hpp
+[117.062s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__traits.hpp
+[117.135s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__type_support.hpp
+[117.206s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__builder.hpp
+[117.284s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__struct.hpp
+[117.367s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__traits.hpp
+[117.446s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__type_support.hpp
+[117.516s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__builder.hpp
+[117.587s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__struct.hpp
+[117.658s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__traits.hpp
+[117.731s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__type_support.hpp
+[117.803s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/get_distance.hpp
+[117.879s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/move_robot_arm.hpp
+[117.949s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/rotate_bin.hpp
+[118.021s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/set_servo.hpp
+[118.098s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h
+[118.170s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__rosidl_typesupport_fastrtps_cpp.hpp
+[118.247s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__rosidl_typesupport_fastrtps_cpp.hpp
+[118.329s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__rosidl_typesupport_fastrtps_cpp.hpp
+[118.399s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__rosidl_typesupport_fastrtps_cpp.hpp
+[118.472s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/get_distance__rosidl_typesupport_introspection_cpp.hpp
+[118.549s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/move_robot_arm__rosidl_typesupport_introspection_cpp.hpp
+[118.621s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/rotate_bin__rosidl_typesupport_introspection_cpp.hpp
+[118.691s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/include/robosort_interfaces/robosort_interfaces/srv/detail/set_servo__rosidl_typesupport_introspection_cpp.hpp
+[118.763s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/environment/pythonpath.sh
+[118.837s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/environment/pythonpath.dsv
+[118.910s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces-0.0.0-py3.12.egg-info/PKG-INFO
+[118.984s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces-0.0.0-py3.12.egg-info/SOURCES.txt
+[119.055s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces-0.0.0-py3.12.egg-info/dependency_links.txt
+[119.128s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces-0.0.0-py3.12.egg-info/top_level.txt
+[119.204s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/__init__.py
+[119.279s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/_robosort_interfaces_s.ep.rosidl_typesupport_c.c
+[119.357s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/_robosort_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c
+[119.431s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/_robosort_interfaces_s.ep.rosidl_typesupport_introspection_c.c
+[119.503s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/robosort_interfaces_s__rosidl_typesupport_c.so
+[119.575s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/robosort_interfaces_s__rosidl_typesupport_fastrtps_c.so
+[119.645s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/robosort_interfaces_s__rosidl_typesupport_introspection_c.so
+[119.717s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/__init__.py
+[119.788s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_get_distance.py
+[119.859s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_get_distance_s.c
+[119.932s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_move_robot_arm.py
+[120.019s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_move_robot_arm_s.c
+[120.102s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_rotate_bin.py
+[120.173s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_rotate_bin_s.c
+[120.248s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_set_servo.py
+[120.329s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_set_servo_s.c
+[120.399s] -- Up-to-date symlink: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/robosort_interfaces_s__rosidl_typesupport_fastrtps_c.so
+[120.402s] -- Up-to-date symlink: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/robosort_interfaces_s__rosidl_typesupport_introspection_c.so
+[120.404s] -- Up-to-date symlink: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/robosort_interfaces_s__rosidl_typesupport_c.so
+[120.405s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/SetServo.idl
+[120.480s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/MoveRobotArm.idl
+[120.554s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/RotateBin.idl
+[120.626s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/GetDistance.idl
+[120.699s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/SetServo.srv
+[120.771s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/MoveRobotArm.srv
+[120.844s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/RotateBin.srv
+[120.914s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/srv/GetDistance.srv
+[120.988s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/ament_index/resource_index/package_run_dependencies/robosort_interfaces
+[121.062s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/ament_index/resource_index/parent_prefix_path/robosort_interfaces
+[121.138s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/environment/ament_prefix_path.sh
+[121.211s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/environment/ament_prefix_path.dsv
+[121.293s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/environment/path.sh
+[121.367s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/environment/path.dsv
+[121.443s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/local_setup.bash
+[121.514s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/local_setup.sh
+[121.588s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/local_setup.zsh
+[121.658s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/local_setup.dsv
+[121.732s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/package.dsv
+[121.802s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/ament_index/resource_index/packages/robosort_interfaces
+[121.879s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/rosidl_cmake-extras.cmake
+[121.950s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/ament_cmake_export_dependencies-extras.cmake
+[122.027s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/ament_cmake_export_include_directories-extras.cmake
+[122.096s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/ament_cmake_export_libraries-extras.cmake
+[122.166s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/ament_cmake_export_targets-extras.cmake
+[122.239s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
+[122.333s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+[122.411s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/robosort_interfacesConfig.cmake
+[122.494s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/robosort_interfacesConfig-version.cmake
+[122.565s] -- Symlinking: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/package.xml
+[122.639s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_generator_c.so
+[122.644s] -- Set non-toolchain portion of runtime path of "/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_generator_c.so" to ""
+[122.645s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_fastrtps_c.so
+[122.650s] -- Set non-toolchain portion of runtime path of "/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_fastrtps_c.so" to ""
+[122.651s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_introspection_c.so
+[122.656s] -- Set non-toolchain portion of runtime path of "/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_introspection_c.so" to ""
+[122.657s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_c.so
+[122.661s] -- Set non-toolchain portion of runtime path of "/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_c.so" to ""
+[122.662s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_fastrtps_cpp.so
+[122.671s] -- Set non-toolchain portion of runtime path of "/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_fastrtps_cpp.so" to ""
+[122.671s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_introspection_cpp.so
+[122.681s] -- Set non-toolchain portion of runtime path of "/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_introspection_cpp.so" to ""
+[122.682s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_cpp.so
+[122.687s] -- Set non-toolchain portion of runtime path of "/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_typesupport_cpp.so" to ""
+[122.968s] Listing '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces'...
+[122.970s] Compiling '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/__init__.py'...
+[122.972s] Listing '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv'...
+[122.973s] Compiling '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/__init__.py'...
+[122.975s] Compiling '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_get_distance.py'...
+[122.977s] Compiling '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_move_robot_arm.py'...
+[122.978s] Compiling '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_rotate_bin.py'...
+[122.983s] Compiling '/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/python3.12/site-packages/robosort_interfaces/srv/_set_servo.py'...
+[123.012s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_generator_py.so
+[123.017s] -- Set non-toolchain portion of runtime path of "/home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/lib/librobosort_interfaces__rosidl_generator_py.so" to ""
+[123.018s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/export_robosort_interfaces__rosidl_generator_cExport.cmake
+[123.020s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/export_robosort_interfaces__rosidl_generator_cExport-noconfig.cmake
+[123.023s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/export_robosort_interfaces__rosidl_typesupport_fastrtps_cExport.cmake
+[123.026s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/export_robosort_interfaces__rosidl_typesupport_fastrtps_cExport-noconfig.cmake
+[123.030s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/robosort_interfaces__rosidl_typesupport_introspection_cExport.cmake
+[123.033s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/robosort_interfaces__rosidl_typesupport_introspection_cExport-noconfig.cmake
+[123.036s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/robosort_interfaces__rosidl_typesupport_cExport.cmake
+[123.038s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/robosort_interfaces__rosidl_typesupport_cExport-noconfig.cmake
+[123.041s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/export_robosort_interfaces__rosidl_generator_cppExport.cmake
+[123.042s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/export_robosort_interfaces__rosidl_typesupport_fastrtps_cppExport.cmake
+[123.044s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/export_robosort_interfaces__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake
+[123.048s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/robosort_interfaces__rosidl_typesupport_introspection_cppExport.cmake
+[123.050s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/robosort_interfaces__rosidl_typesupport_introspection_cppExport-noconfig.cmake
+[123.053s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/robosort_interfaces__rosidl_typesupport_cppExport.cmake
+[123.054s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/robosort_interfaces__rosidl_typesupport_cppExport-noconfig.cmake
+[123.056s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/export_robosort_interfaces__rosidl_generator_pyExport.cmake
+[123.058s] -- Installing: /home/robosort/robo-sort/source/rpi/ros2-robosort/install/robosort_interfaces/share/robosort_interfaces/cmake/export_robosort_interfaces__rosidl_generator_pyExport-noconfig.cmake
+[123.071s] Invoked command in '/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_sensors:/home/robosort/robo-sort/source/rpi/ros2-robosort/install/camjam_control:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces

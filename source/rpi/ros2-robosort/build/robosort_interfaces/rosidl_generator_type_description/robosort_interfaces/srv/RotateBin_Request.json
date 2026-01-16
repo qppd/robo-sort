@@ -1,0 +1,26 @@
+{
+  "type_description_msg": {
+    "type_description": {
+      "type_name": "robosort_interfaces/srv/RotateBin_Request",
+      "fields": [
+        {
+          "name": "compartment_number",
+          "type": {
+            "type_id": 6,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": ""
+          },
+          "default_value": ""
+        }
+      ]
+    },
+    "referenced_type_descriptions": []
+  },
+  "type_hashes": [
+    {
+      "type_name": "robosort_interfaces/srv/RotateBin_Request",
+      "hash_string": "RIHS01_65f4155ace66f9c3147a599c2fbb562c95e3aaf59e3efcf007886e1f62b787e7"
+    }
+  ]
+}
