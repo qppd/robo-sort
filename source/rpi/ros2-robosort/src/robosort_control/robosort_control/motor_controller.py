@@ -33,12 +33,7 @@ class MotorController(Node):
         self.max_speed = self.get_parameter('max_speed').value
         self.wheel_base = self.get_parameter('wheel_base').value
         
-        # Initialize serial connection
-        self.serial_conn: Optional[serial.Serial] = None
-        self.is_connected = False
-        self.connect_serial(port, baudrate, timeout)
-        
-        # Publishers
+        # Publishers (create BEFORE connecting serial)
         self.status_pub = self.create_publisher(String, '/robosort/motor_status', 10)
         
         # Subscribers
@@ -55,6 +50,11 @@ class MotorController(Node):
         # Safety timer - stop motors if no command received
         self.last_cmd_time = self.get_clock().now()
         self.safety_timer = self.create_timer(0.5, self.safety_check)
+        
+        # Initialize serial connection (AFTER publishers are created)
+        self.serial_conn: Optional[serial.Serial] = None
+        self.is_connected = False
+        self.connect_serial(port, baudrate, timeout)
         
         self.get_logger().info('🤖 Motor Controller initialized')
         
