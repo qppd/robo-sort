@@ -168,13 +168,19 @@ collision_monitor:
     base_frame_id: "lidar_frame"
     odom_frame_id: "lidar_frame"
     cmd_vel_in_topic: "cmd_vel"
-    cmd_vel_out_topic: "cmd_vel"  # Pass through without collision checking for now
+    cmd_vel_out_topic: "cmd_vel"
     state_topic: "collision_monitor_state"
     transform_tolerance: 0.5
     source_timeout: 5.0
     stop_pub_timeout: 5.0
-    polygons: []  # Disabled for initial testing
-    observation_sources: []  # Disabled for initial testing
+    polygons: []  # Keep empty if no polygons
+    observation_sources: ["scan"]
+    scan:
+      topic: /scan
+      data_type: "LaserScan"
+      obstacle_range: 2.5
+      raytrace_range: 3.0
+      observation_persistence: 0.5
 
 # AMCL is NOT used when SLAM Toolbox provides localization
 # SLAM Toolbox provides the map->base_link transform directly
