@@ -156,7 +156,7 @@
     <joint name="${prefix}_wheel_joint" type="continuous">
       <parent link="base_link"/>
       <child link="${prefix}_wheel_link"/>
-      <origin xyz="-0.1762 ${reflect*wheel_separation/2} ${-body_height/2}" rpy="0 0 0"/>
+      <origin xyz="-0.2524 ${reflect*wheel_separation/2} ${-body_height/2}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
       <limit effort="10.0" velocity="10.0"/>
       <dynamics damping="0.1" friction="0.1"/>
