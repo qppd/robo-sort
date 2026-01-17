@@ -8,7 +8,7 @@ For autonomous navigation without static maps
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, Command
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.conditions import IfCondition
 from ament_index_python.packages import get_package_share_directory
@@ -18,9 +18,11 @@ import os
 def generate_launch_description():
     # Get package directories
     robosort_control_dir = get_package_share_directory('robosort_control')
+    robosort_description_dir = get_package_share_directory('robosort_description')
     ldlidar_dir = get_package_share_directory('ldlidar_stl_ros2')
     
     rviz_config = os.path.join(robosort_control_dir, 'config', 'robosort.rviz')
+    urdf_file = os.path.join(robosort_description_dir, 'urdf', 'robosort.urdf.xacro')
     
     # Declare launch arguments
     lidar_port_arg = DeclareLaunchArgument(
@@ -55,8 +57,8 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'odom_frame': 'odom',
-            'base_frame': 'base_link',
-            'lidar_frame': 'lidar_frame',
+            'base_frame': 'base_footprint',
+            'lidar_frame': 'lidar_link',
             'publish_rate': 50.0,
             'lidar_x': 0.0,
             'lidar_y': 0.0,
@@ -64,6 +66,18 @@ def generate_launch_description():
             'lidar_roll': 0.0,
             'lidar_pitch': 0.0,
             'lidar_yaw': 0.0,
+        }]
+    )
+    
+    # Robot State Publisher - publishes robot URDF transforms
+    robot_state_publisher_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{
+            'robot_description': Command(['xacro ', urdf_file]),
+            'use_sim_time': False
         }]
     )
     
@@ -76,7 +90,7 @@ def generate_launch_description():
         parameters=[{
             'product_name': 'LDLiDAR_LD06',
             'topic_name': 'scan',
-            'frame_id': 'lidar_frame',
+            'frame_id': 'lidar_link',
             'port_name': LaunchConfiguration('lidar_port'),
             'port_baudrate': 230400,
             'laser_scan_dir': True,
@@ -137,8 +151,9 @@ def generate_launch_description():
     ld.add_action(use_rviz_arg)
     ld.add_action(autonomous_arg)
     
-    # Add nodes in order (TF first, then sensors, then control)
+    # Add nodes in order (TF first, robot state, then sensors, then control)
     ld.add_action(tf_broadcaster_node)
+    ld.add_action(robot_state_publisher_node)
     ld.add_action(lidar_node)
     ld.add_action(motor_controller_node)
     ld.add_action(obstacle_avoidance_node)
