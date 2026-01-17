@@ -1,0 +1,5 @@
+source/rpi/ros2-robosort/build/
+source/rpi/ros2-robosort/install/
+source/rpi/ros2-robosort/log/
+source/rpi/yolo/venv/
+source/rpi/RoboSort/venv/
