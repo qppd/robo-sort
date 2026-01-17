@@ -13,46 +13,88 @@ source install/setup.bash
 ### 2. Install Dependencies (if not already installed)
 
 ```bash
-# Gazebo and plugins
-sudo apt install ros-jazzy-gazebo-ros-pkgs ros-jazzy-gazebo-plugins
-
 # Robot description tools
 sudo apt install ros-jazzy-xacro ros-jazzy-robot-state-publisher
 
 # Teleoperation
 sudo apt install ros-jazzy-teleop-twist-keyboard
+
+# For simulation (optional - may not be available on ARM64/Raspberry Pi)
+# sudo apt install ros-jazzy-gazebo-ros-pkgs ros-jazzy-gazebo-plugins
 ```
 
 ## Quick Launch Commands
+
+### Hardware Mode (Recommended - Real Robot)
+```bash
+ros2 launch robosort_control robosort.launch.py \
+    arduino_port:=/dev/ttyACM0 \
+    lidar_port:=/dev/ttyUSB0 \
+    use_rviz:=true \
+    use_teleop:=true
+```
+*Launches all hardware nodes (Arduino motors, LiDAR), RViz visualization, and teleop control*
 
 ### Visualization Only (RViz)
 ```bash
 ros2 launch robosort_description view_robot.launch.py
 ```
-*Opens RViz to view the robot model without simulation*
+*Opens RViz to view the robot model without hardware or simulation*
 
-### Gazebo Simulation
-```bash
-ros2 launch robosort_description gazebo.launch.py
-```
-*Launches Gazebo physics simulation*
-
-### Complete System (Gazebo + RViz + Control)
+### Gazebo Simulation (May not work on ARM64/Raspberry Pi)
 ```bash
 ros2 launch robosort_description simulation.launch.py
 ```
-*Full simulation environment with obstacle avoidance*
+*Full simulation environment with obstacle avoidance (requires gazebo_ros packages)*
+
+### SLAM Mapping (Live Map Creation)
+```bash
+# Install SLAM Toolbox first
+sudo apt install ros-jazzy-slam-toolbox
+
+# Launch SLAM with hardware (3 terminals needed)
+# Terminal 1: Hardware + RViz
+ros2 launch robosort_control robosort.launch.py \
+    arduino_port:=/dev/ttyACM0 \
+    lidar_port:=/dev/ttyUSB0 \
+    use_rviz:=true
+
+# Terminal 2: SLAM Toolbox
+ros2 launch slam_toolbox online_async_launch.py \
+    params_file:=$HOME/robo-sort/source/rpi/ros2-robosort/config/mapper_params_online_async.yaml
+
+# Terminal 3: Teleop Control
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+```
+*Creates live map as you drive the robot around*
 
 ## Control the Robot
 
-### Terminal 1: Launch Simulation
+### Option 1: Hardware with Built-in Teleop (Recommended)
 ```bash
 cd ~/robo-sort/source/rpi/ros2-robosort
 source install/setup.bash
-ros2 launch robosort_description simulation.launch.py
+ros2 launch robosort_control robosort.launch.py \
+    arduino_port:=/dev/ttyACM0 \
+    lidar_port:=/dev/ttyUSB0 \
+    use_rviz:=true \
+    use_teleop:=true
+```
+*This opens teleop in a separate xterm window automatically*
+
+### Option 2: Manual Teleop in Separate Terminal
+
+**Terminal 1: Launch Hardware**
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source install/setup.bash
+ros2 launch robosort_control robosort.launch.py \
+    arduino_port:=/dev/ttyACM0 \
+    lidar_port:=/dev/ttyUSB0 \
+    use_rviz:=true
 ```
 
-### Terminal 2: Keyboard Teleop
+**Terminal 2: Keyboard Teleop**
 ```bash
 source ~/robo-sort/source/rpi/ros2-robosort/install/setup.bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
@@ -102,6 +144,21 @@ ros2 topic echo /odom
 ### Monitor LiDAR Scans
 ```bash
 ros2 topic echo /scan
+```
+
+### Monitor Motor Controller Status
+```bash
+ros2 topic echo /robosort/motor_status
+```
+
+### Monitor SLAM Map
+```bash
+ros2 topic echo /map
+```
+
+### Save SLAM Map
+```bash
+ros2 run nav2_map_server map_saver_cli -f my_live_map
 ```
 
 ### View TF Tree
