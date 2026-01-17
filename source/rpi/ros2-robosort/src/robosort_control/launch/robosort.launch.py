@@ -49,7 +49,8 @@ def generate_launch_description():
         description='Enable autonomous wandering mode'
     )
     
-    # TF Broadcaster Node - handles all TF publishing
+    # TF Broadcaster Node - handles odometry transform only
+    # LiDAR transform now comes from robot_state_publisher via URDF
     tf_broadcaster_node = Node(
         package='robosort_control',
         executable='tf_broadcaster',
@@ -58,14 +59,7 @@ def generate_launch_description():
         parameters=[{
             'odom_frame': 'odom',
             'base_frame': 'base_footprint',
-            'lidar_frame': 'lidar_link',
             'publish_rate': 50.0,
-            'lidar_x': 0.0,
-            'lidar_y': 0.0,
-            'lidar_z': 0.1,
-            'lidar_roll': 0.0,
-            'lidar_pitch': 0.0,
-            'lidar_yaw': 0.0,
         }]
     )
     
