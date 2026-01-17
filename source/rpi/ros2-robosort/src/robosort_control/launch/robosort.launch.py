@@ -77,7 +77,7 @@ def generate_launch_description():
         name='lidar_tf_publisher',
         output='screen',
         parameters=[{
-            'publish_rate': 50.0,
+            'publish_rate': 100.0,
             'lidar_x': 0.4008,
             'lidar_y': 0.0,
             'lidar_z': 0.276,
