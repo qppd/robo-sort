@@ -22,13 +22,13 @@ class TFBroadcasterNode(Node):
         # Declare parameters
         self.declare_parameter('odom_frame', 'odom')
         self.declare_parameter('base_frame', 'base_link')
-        self.declare_parameter('lidar_frame', 'lidar_frame')
         self.declare_parameter('publish_rate', 50.0)  # Hz
         
-        # LiDAR position on robot (static transform)
+        # Optional LiDAR parameters (for backward compatibility)
+        self.declare_parameter('lidar_frame', '')
         self.declare_parameter('lidar_x', 0.0)
         self.declare_parameter('lidar_y', 0.0)
-        self.declare_parameter('lidar_z', 0.1)  # 10cm above base
+        self.declare_parameter('lidar_z', 0.1)
         self.declare_parameter('lidar_roll', 0.0)
         self.declare_parameter('lidar_pitch', 0.0)
         self.declare_parameter('lidar_yaw', 0.0)
@@ -69,15 +69,19 @@ class TFBroadcasterNode(Node):
             10
         )
         
-        # Publish static transform for lidar
-        self.publish_lidar_static_tf()
+        # Publish static transform for lidar (only if lidar_frame is specified)
+        if self.lidar_frame:
+            self.publish_lidar_static_tf()
         
         # Timer for dynamic TF (odom -> base_link)
         timer_period = 1.0 / self.publish_rate
         self.timer = self.create_timer(timer_period, self.publish_transforms)
         
         self.get_logger().info('📐 TF Broadcaster initialized')
-        self.get_logger().info(f'   Frame tree: {self.odom_frame} -> {self.base_frame} -> {self.lidar_frame}')
+        if self.lidar_frame:
+            self.get_logger().info(f'   Frame tree: {self.odom_frame} -> {self.base_frame} -> {self.lidar_frame}')
+        else:
+            self.get_logger().info(f'   Frame tree: {self.odom_frame} -> {self.base_frame}')
         self.get_logger().info(f'   Publishing at {self.publish_rate} Hz')
         
     def publish_lidar_static_tf(self):
