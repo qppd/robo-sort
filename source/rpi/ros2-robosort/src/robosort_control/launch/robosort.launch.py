@@ -74,6 +74,18 @@ def generate_launch_description():
             'use_sim_time': False
         }]
     )
+
+    # Joint State Publisher
+    # Needed so robot_state_publisher will publish transforms for non-fixed joints
+    # (e.g., continuous wheel joints). Without /joint_states, RViz can show a
+    # "broken" model with overlapping/missing wheels.
+    joint_state_publisher_node = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='joint_state_publisher',
+        output='screen',
+        parameters=[{'use_sim_time': False}]
+    )
     
     # LD06 LiDAR driver node
     lidar_node = Node(
@@ -148,6 +160,7 @@ def generate_launch_description():
     # Add nodes in order (TF first, robot state, then sensors, then control)
     ld.add_action(tf_broadcaster_node)
     ld.add_action(robot_state_publisher_node)
+    ld.add_action(joint_state_publisher_node)
     ld.add_action(lidar_node)
     ld.add_action(motor_controller_node)
     ld.add_action(obstacle_avoidance_node)
