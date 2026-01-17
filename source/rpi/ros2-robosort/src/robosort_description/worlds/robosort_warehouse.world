@@ -1,0 +1,215 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="robosort_warehouse">
+    
+    <!-- Physics Settings -->
+    <physics type="ode">
+      <real_time_update_rate>1000.0</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+    
+    <!-- Sun Light -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    
+    <!-- Ground Plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    
+    <!-- Warehouse Walls -->
+    <!-- North Wall -->
+    <model name="north_wall">
+      <static>true</static>
+      <pose>0 10 1 0 0 0</pose>
+      <link name="wall_link">
+        <collision name="wall_collision">
+          <geometry><box><size>20 0.2 2</size></box></geometry>
+        </collision>
+        <visual name="wall_visual">
+          <geometry><box><size>20 0.2 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- South Wall -->
+    <model name="south_wall">
+      <static>true</static>
+      <pose>0 -10 1 0 0 0</pose>
+      <link name="wall_link">
+        <collision name="wall_collision">
+          <geometry><box><size>20 0.2 2</size></box></geometry>
+        </collision>
+        <visual name="wall_visual">
+          <geometry><box><size>20 0.2 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- East Wall -->
+    <model name="east_wall">
+      <static>true</static>
+      <pose>10 0 1 0 0 0</pose>
+      <link name="wall_link">
+        <collision name="wall_collision">
+          <geometry><box><size>0.2 20 2</size></box></geometry>
+        </collision>
+        <visual name="wall_visual">
+          <geometry><box><size>0.2 20 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- West Wall -->
+    <model name="west_wall">
+      <static>true</static>
+      <pose>-10 0 1 0 0 0</pose>
+      <link name="wall_link">
+        <collision name="wall_collision">
+          <geometry><box><size>0.2 20 2</size></box></geometry>
+        </collision>
+        <visual name="wall_visual">
+          <geometry><box><size>0.2 20 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- Box Obstacles -->
+    <model name="box_obstacle_1">
+      <static>true</static>
+      <pose>3 3 0.5 0 0 0</pose>
+      <link name="box_link">
+        <collision name="box_collision">
+          <geometry><box><size>1 1 1</size></box></geometry>
+        </collision>
+        <visual name="box_visual">
+          <geometry><box><size>1 1 1</size></box></geometry>
+          <material><ambient>0.8 0.3 0.2 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="box_obstacle_2">
+      <static>true</static>
+      <pose>-3 -3 0.5 0 0 0.785</pose>
+      <link name="box_link">
+        <collision name="box_collision">
+          <geometry><box><size>1 1 1</size></box></geometry>
+        </collision>
+        <visual name="box_visual">
+          <geometry><box><size>1 1 1</size></box></geometry>
+          <material><ambient>0.2 0.3 0.8 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- Cylinder Obstacles (Barrels) -->
+    <model name="cylinder_obstacle_1">
+      <static>true</static>
+      <pose>5 -2 0.75 0 0 0</pose>
+      <link name="cylinder_link">
+        <collision name="cylinder_collision">
+          <geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        </collision>
+        <visual name="cylinder_visual">
+          <geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+          <material><ambient>0.3 0.8 0.3 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="cylinder_obstacle_2">
+      <static>true</static>
+      <pose>-5 3 0.75 0 0 0</pose>
+      <link name="cylinder_link">
+        <collision name="cylinder_collision">
+          <geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        </collision>
+        <visual name="cylinder_visual">
+          <geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+          <material><ambient>0.8 0.8 0.2 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- Internal Wall Divider -->
+    <model name="divider_wall">
+      <static>true</static>
+      <pose>0 5 0.5 0 0 0</pose>
+      <link name="wall_link">
+        <collision name="wall_collision">
+          <geometry><box><size>6 0.2 1</size></box></geometry>
+        </collision>
+        <visual name="wall_visual">
+          <geometry><box><size>6 0.2 1</size></box></geometry>
+          <material><ambient>0.5 0.5 0.5 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- Sorting Bins (Red, Green, Blue) -->
+    <model name="sorting_bin_red">
+      <static>true</static>
+      <pose>-7 -7 0.25 0 0 0</pose>
+      <link name="bin_link">
+        <collision name="bin_collision">
+          <geometry><box><size>0.6 0.6 0.5</size></box></geometry>
+        </collision>
+        <visual name="bin_visual">
+          <geometry><box><size>0.6 0.6 0.5</size></box></geometry>
+          <material><ambient>1 0 0 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="sorting_bin_green">
+      <static>true</static>
+      <pose>-7 -5 0.25 0 0 0</pose>
+      <link name="bin_link">
+        <collision name="bin_collision">
+          <geometry><box><size>0.6 0.6 0.5</size></box></geometry>
+        </collision>
+        <visual name="bin_visual">
+          <geometry><box><size>0.6 0.6 0.5</size></box></geometry>
+          <material><ambient>0 1 0 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="sorting_bin_blue">
+      <static>true</static>
+      <pose>-7 -3 0.25 0 0 0</pose>
+      <link name="bin_link">
+        <collision name="bin_collision">
+          <geometry><box><size>0.6 0.6 0.5</size></box></geometry>
+        </collision>
+        <visual name="bin_visual">
+          <geometry><box><size>0.6 0.6 0.5</size></box></geometry>
+          <material><ambient>0 0 1 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- Scene Configuration -->
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    
+    <!-- GUI Settings -->
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>-8 -8 8 0 0.6 0.785</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+    
+  </world>
+</sdf>

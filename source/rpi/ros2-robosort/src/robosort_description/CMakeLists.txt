@@ -8,13 +8,14 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 
-# Install URDF files
+# Install URDF files, launch files, worlds, rviz configs, etc.
 install(DIRECTORY
   urdf
   meshes
   launch
   rviz
   config
+  worlds
   DESTINATION share/${PROJECT_NAME}
 )
 

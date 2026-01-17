@@ -1,0 +1,315 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="robosort_obstacle_course">
+    
+    <!-- Physics Settings -->
+    <physics type="ode">
+      <real_time_update_rate>1000.0</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+    
+    <!-- Sun Light -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    
+    <!-- Ground Plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    
+    <!-- ============================================ -->
+    <!-- Obstacle Course Layout                      -->
+    <!-- A fun course to practice driving            -->
+    <!-- ============================================ -->
+    
+    <!-- Boundary Walls - Create an enclosed area -->
+    
+    <!-- North Boundary -->
+    <model name="wall_north">
+      <static>true</static>
+      <pose>0 8 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>16 0.15 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>16 0.15 1</size></box></geometry>
+          <material><ambient>0.7 0.7 0.7 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- South Boundary -->
+    <model name="wall_south">
+      <static>true</static>
+      <pose>0 -8 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>16 0.15 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>16 0.15 1</size></box></geometry>
+          <material><ambient>0.7 0.7 0.7 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- East Boundary -->
+    <model name="wall_east">
+      <static>true</static>
+      <pose>8 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.15 16 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.15 16 1</size></box></geometry>
+          <material><ambient>0.7 0.7 0.7 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- West Boundary -->
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-8 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.15 16 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.15 16 1</size></box></geometry>
+          <material><ambient>0.7 0.7 0.7 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- ============================================ -->
+    <!-- Slalom Course - Weave through these!       -->
+    <!-- ============================================ -->
+    
+    <model name="slalom_1">
+      <static>true</static>
+      <pose>-4 -4 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>1 0.2 0.2 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="slalom_2">
+      <static>true</static>
+      <pose>-2 -2 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>0.2 1 0.2 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="slalom_3">
+      <static>true</static>
+      <pose>0 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>0.2 0.2 1 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="slalom_4">
+      <static>true</static>
+      <pose>2 2 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>1 1 0.2 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="slalom_5">
+      <static>true</static>
+      <pose>4 4 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>1 0.2 1 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- ============================================ -->
+    <!-- Box Obstacles - Various sizes              -->
+    <!-- ============================================ -->
+    
+    <model name="box_large">
+      <static>true</static>
+      <pose>-5 3 0.5 0 0 0.3</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>1.5 1.5 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1.5 1.5 1</size></box></geometry>
+          <material><ambient>0.6 0.4 0.2 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="box_medium">
+      <static>true</static>
+      <pose>5 -3 0.4 0 0 0.5</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>1 1 0.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1 1 0.8</size></box></geometry>
+          <material><ambient>0.3 0.5 0.3 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="box_small">
+      <static>true</static>
+      <pose>-2 5 0.3 0 0 0.7</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 0.6 0.6</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 0.6 0.6</size></box></geometry>
+          <material><ambient>0.2 0.3 0.6 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- ============================================ -->
+    <!-- Narrow Passage - Skill test!               -->
+    <!-- ============================================ -->
+    
+    <model name="passage_left">
+      <static>true</static>
+      <pose>5 5 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>3 0.15 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>3 0.15 1</size></box></geometry>
+          <material><ambient>0.5 0.5 0.5 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="passage_right">
+      <static>true</static>
+      <pose>5 3.5 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>3 0.15 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>3 0.15 1</size></box></geometry>
+          <material><ambient>0.5 0.5 0.5 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- ============================================ -->
+    <!-- Barrel Obstacles                           -->
+    <!-- ============================================ -->
+    
+    <model name="barrel_1">
+      <static>true</static>
+      <pose>-6 -2 0.4 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.25</radius><length>0.8</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.25</radius><length>0.8</length></cylinder></geometry>
+          <material><ambient>0.8 0.4 0.1 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="barrel_2">
+      <static>true</static>
+      <pose>3 -5 0.4 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.25</radius><length>0.8</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.25</radius><length>0.8</length></cylinder></geometry>
+          <material><ambient>0.8 0.4 0.1 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- ============================================ -->
+    <!-- Start/Finish Zone Markers                  -->
+    <!-- ============================================ -->
+    
+    <model name="start_marker">
+      <static>true</static>
+      <pose>-6 -6 0.01 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>2 2 0.02</size></box></geometry>
+          <material><ambient>0 0.8 0 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <model name="finish_marker">
+      <static>true</static>
+      <pose>6 6 0.01 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>2 2 0.02</size></box></geometry>
+          <material><ambient>0.8 0 0 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+    
+    <!-- Scene Configuration -->
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.85 1 1</background>
+      <shadows>1</shadows>
+    </scene>
+    
+    <!-- GUI Settings -->
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>-12 -12 12 0 0.6 0.785</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+    
+  </world>
+</sdf>

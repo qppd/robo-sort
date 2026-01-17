@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- ============================================ -->
+    <!-- Gazebo Control Plugin (Differential Drive)  -->
+    <!-- Following Articulated Robotics Tutorial     -->
+    <!-- ============================================ -->
+
+    <gazebo>
+        <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'>
+
+            <!-- Wheel Information -->
+            <!-- These values must match your robot's actual wheel configuration -->
+            <left_joint>left_wheel_joint</left_joint>
+            <right_joint>right_wheel_joint</right_joint>
+            <wheel_separation>0.558</wheel_separation>    <!-- 22 inches in meters -->
+            <wheel_diameter>0.3048</wheel_diameter>        <!-- 12 inches (2 x wheel_radius) -->
+
+            <!-- Limits -->
+            <max_wheel_torque>200</max_wheel_torque>
+            <max_wheel_acceleration>10.0</max_wheel_acceleration>
+
+            <!-- Output -->
+            <!-- Odometry frame and base frame -->
+            <odometry_frame>odom</odometry_frame>
+            <robot_base_frame>base_footprint</robot_base_frame>
+
+            <!-- Topic configuration -->
+            <command_topic>cmd_vel</command_topic>
+            <odometry_topic>odom</odometry_topic>
+
+            <!-- Publishing options -->
+            <publish_odom>true</publish_odom>
+            <publish_odom_tf>true</publish_odom_tf>
+            <publish_wheel_tf>true</publish_wheel_tf>
+
+            <!-- Covariance for odometry (optional, for better navigation stack integration) -->
+            <odometry_source>world</odometry_source>
+            <pose_covariance_diagonal>[0.001, 0.001, 0.001, 0.001, 0.001, 0.01]</pose_covariance_diagonal>
+            <twist_covariance_diagonal>[0.001, 0.001, 0.001, 0.001, 0.001, 0.01]</twist_covariance_diagonal>
+
+        </plugin>
+    </gazebo>
+
+    <!-- ============================================ -->
+    <!-- Joint State Publisher Plugin               -->
+    <!-- Publishes wheel joint states to /joint_states -->
+    <!-- ============================================ -->
+
+    <gazebo>
+        <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+            <update_rate>50</update_rate>
+            <joint_name>left_wheel_joint</joint_name>
+            <joint_name>right_wheel_joint</joint_name>
+        </plugin>
+    </gazebo>
+
+    <!-- ============================================ -->
+    <!-- LiDAR Sensor Plugin (LD06 Simulation)      -->
+    <!-- ============================================ -->
+
+    <gazebo reference="lidar_link">
+        <sensor name="lidar_sensor" type="ray">
+            <always_on>true</always_on>
+            <update_rate>10</update_rate>
+            <visualize>true</visualize>
+            
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>0</min_angle>
+                        <max_angle>6.28318530718</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.12</min>
+                    <max>12.0</max>
+                    <resolution>0.015</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            
+            <plugin name="lidar_plugin" filename="libgazebo_ros_ray_sensor.so">
+                <ros>
+                    <namespace>/</namespace>
+                    <remapping>~/out:=scan</remapping>
+                </ros>
+                <output_type>sensor_msgs/LaserScan</output_type>
+                <frame_name>lidar_link</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>
