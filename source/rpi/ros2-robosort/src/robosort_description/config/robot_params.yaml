@@ -1,0 +1,80 @@
+# RoboSort Robot Configuration Parameters
+# Adjust these values to tune robot behavior in simulation
+
+# Robot Physical Parameters (meters, kg)
+robot_parameters:
+  body:
+    height: 0.1016      # 4 inches
+    length: 0.889       # 35 inches
+    width: 0.508        # 20 inches
+    mass: 15.0          # kg
+  
+  wheels:
+    radius: 0.1524      # 6 inches (12" diameter)
+    width: 0.05         # 2 inches
+    separation: 0.558   # 22 inches
+    mass: 0.5           # kg per wheel
+    
+  casters:
+    radius: 0.025       # meters
+    mass: 0.1           # kg per caster
+    
+  lidar:
+    height: 0.06        # meters
+    mass: 0.2           # kg
+
+# Differential Drive Controller Parameters
+diff_drive_controller:
+  update_rate: 50.0             # Hz
+  max_wheel_torque: 10.0        # N⋅m
+  max_wheel_acceleration: 1.0   # rad/s²
+  
+  # Linear velocity limits (m/s)
+  max_linear_velocity: 1.0
+  min_linear_velocity: -1.0
+  
+  # Angular velocity limits (rad/s)
+  max_angular_velocity: 2.0
+  min_angular_velocity: -2.0
+  
+  # Odometry covariance
+  pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+  twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+
+# LiDAR Sensor Parameters (LD06)
+lidar_sensor:
+  update_rate: 10.0      # Hz
+  samples: 360           # Number of laser points
+  min_range: 0.12        # meters
+  max_range: 12.0        # meters
+  resolution: 0.015      # meters
+  
+  # Gaussian noise
+  noise_mean: 0.0
+  noise_stddev: 0.01     # meters
+
+# Physics Parameters
+physics:
+  # Wheel contact
+  wheel_friction:
+    mu1: 1.0             # Primary friction coefficient
+    mu2: 1.0             # Secondary friction coefficient
+    kp: 1000000.0        # Contact stiffness
+    kd: 100.0            # Contact damping
+    min_depth: 0.001     # Minimum penetration depth
+    max_vel: 1.0         # Maximum contact velocity
+  
+  # Caster contact
+  caster_friction:
+    mu1: 0.01            # Low friction for free rolling
+    mu2: 0.01
+
+# Spawn Configuration
+spawn:
+  initial_pose:
+    x: 0.0
+    y: 0.0
+    z: 0.1               # Slightly above ground
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0

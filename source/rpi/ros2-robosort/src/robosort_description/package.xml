@@ -3,7 +3,7 @@
 <package format="3">
   <name>robosort_description</name>
   <version>1.0.0</version>
-  <description>URDF robot description and kinematics for RoboSort 5-DOF arm</description>
+  <description>URDF robot description for RoboSort differential drive robot and arm</description>
   <maintainer email="quezon.province.pd@gmail.com">RoboSort</maintainer>
   <license>MIT</license>
 
@@ -14,6 +14,10 @@
   <exec_depend>joint_state_publisher_gui</exec_depend>
   <exec_depend>rviz2</exec_depend>
   <exec_depend>xacro</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>gazebo_plugins</exec_depend>
+  <exec_depend>gazebo_ros_pkgs</exec_depend>
+  <exec_depend>robosort_control</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
