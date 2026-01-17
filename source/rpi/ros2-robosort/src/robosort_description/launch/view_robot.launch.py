@@ -60,6 +60,15 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}]
         ),
         
+        # Teleop keyboard control
+        Node(
+            package='teleop_twist_keyboard',
+            executable='teleop_twist_keyboard',
+            name='teleop_twist_keyboard',
+            output='screen',
+            prefix='xterm -e'
+        ),
+        
         # RViz
         Node(
             package='rviz2',

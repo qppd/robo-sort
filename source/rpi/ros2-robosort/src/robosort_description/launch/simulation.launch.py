@@ -62,9 +62,19 @@ def generate_launch_description():
         }]
     )
     
+    # Teleop keyboard control
+    teleop_node = Node(
+        package='teleop_twist_keyboard',
+        executable='teleop_twist_keyboard',
+        name='teleop_twist_keyboard',
+        output='screen',
+        prefix='xterm -e'
+    )
+    
     return LaunchDescription([
         declare_use_sim_time,
         gazebo_launch,
         start_rviz,
-        start_obstacle_avoidance
+        start_obstacle_avoidance,
+        teleop_node
     ])

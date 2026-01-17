@@ -49,6 +49,12 @@ def generate_launch_description():
         description='Enable autonomous wandering mode'
     )
     
+    use_teleop_arg = DeclareLaunchArgument(
+        'use_teleop',
+        default_value='false',
+        description='Launch teleop keyboard control'
+    )
+    
     # TF Broadcaster Node - handles odometry transform only
     # LiDAR transform now comes from robot_state_publisher via URDF
     tf_broadcaster_node = Node(
@@ -148,6 +154,16 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('use_rviz'))
     )
     
+    # Teleop keyboard control (conditional)
+    teleop_node = Node(
+        package='teleop_twist_keyboard',
+        executable='teleop_twist_keyboard',
+        name='teleop_twist_keyboard',
+        output='screen',
+        prefix='xterm -e',
+        condition=IfCondition(LaunchConfiguration('use_teleop'))
+    )
+    
     # Create launch description
     ld = LaunchDescription()
     
@@ -156,6 +172,7 @@ def generate_launch_description():
     ld.add_action(arduino_port_arg)
     ld.add_action(use_rviz_arg)
     ld.add_action(autonomous_arg)
+    ld.add_action(use_teleop_arg)
     
     # Add nodes in order (TF first, robot state, then sensors, then control)
     ld.add_action(tf_broadcaster_node)
@@ -165,5 +182,6 @@ def generate_launch_description():
     ld.add_action(motor_controller_node)
     ld.add_action(obstacle_avoidance_node)
     ld.add_action(rviz_node)
+    ld.add_action(teleop_node)
     
     return ld
