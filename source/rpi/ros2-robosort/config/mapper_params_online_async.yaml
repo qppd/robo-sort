@@ -2,8 +2,13 @@ slam_toolbox:
   ros__parameters:
     odom_frame: odom
     map_frame: map
-    base_frame: base_footprint
+    base_frame: base_link
     scan_topic: /scan
+    
+    # Transform timeout settings
+    transform_timeout: 0.5
+    tf_buffer_duration: 30.0
+    
     use_scan_matching: true
     use_scan_barycenter: true
     minimum_travel_distance: 0.5
