@@ -24,7 +24,7 @@
   
   <!-- LiDAR Properties -->
   <xacro:property name="lidar_size" value="0.05"/>
-  <xacro:property name="lidar_height" value="0.06"/>
+  <xacro:property name="lidar_height" value="0.045"/>     <!-- 45mm height -->
   <xacro:property name="lidar_offset_x" value="0.4008"/>     <!-- Top-front position (moved 2 inches forward) -->
   <xacro:property name="lidar_offset_z" value="${body_height/2 + lidar_height/2}"/>
   
