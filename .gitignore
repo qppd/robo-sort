@@ -3,3 +3,12 @@ source/rpi/ros2-robosort/install/
 source/rpi/ros2-robosort/log/
 source/rpi/yolo/venv/
 source/rpi/RoboSort/venv/
+
+**/build/
+**/install/
+**/log/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class

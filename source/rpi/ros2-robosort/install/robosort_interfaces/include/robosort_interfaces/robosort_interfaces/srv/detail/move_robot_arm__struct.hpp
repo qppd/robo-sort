@@ -1,1 +1,0 @@
-/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/rosidl_generator_cpp/robosort_interfaces/srv/detail/move_robot_arm__struct.hpp

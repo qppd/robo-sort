@@ -1,7 +1,0 @@
-Metadata-Version: 2.1
-Name: camjam-sensors
-Version: 0.0.0
-Summary: Package for CamJam EduKit #3 to publish readings from the sensors
-Maintainer: mike
-Maintainer-email: mikelikesrobots@outlook.com
-License: MIT-0

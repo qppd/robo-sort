@@ -1,4 +1,0 @@
-source;share/robosort_interfaces/local_setup.bash
-source;share/robosort_interfaces/local_setup.dsv
-source;share/robosort_interfaces/local_setup.sh
-source;share/robosort_interfaces/local_setup.zsh

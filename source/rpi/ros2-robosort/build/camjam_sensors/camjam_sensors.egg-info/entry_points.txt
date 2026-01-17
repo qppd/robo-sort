@@ -1,3 +1,0 @@
-[console_scripts]
-distance = camjam_sensors.hcsr04:main
-line = camjam_sensors.line_sensor:main

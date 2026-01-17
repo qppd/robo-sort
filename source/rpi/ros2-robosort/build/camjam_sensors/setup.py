@@ -1,1 +1,0 @@
-/home/robosort/robo-sort/source/rpi/ros2-robosort/src/camjam_sensors/setup.py

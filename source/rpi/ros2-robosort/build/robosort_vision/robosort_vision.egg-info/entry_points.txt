@@ -1,4 +1,0 @@
-[console_scripts]
-arduino_serial = robosort_vision.arduino_serial:main
-waste_segregation_controller = robosort_vision.waste_segregation_controller:main
-yolo_detector = robosort_vision.yolo_detector:main

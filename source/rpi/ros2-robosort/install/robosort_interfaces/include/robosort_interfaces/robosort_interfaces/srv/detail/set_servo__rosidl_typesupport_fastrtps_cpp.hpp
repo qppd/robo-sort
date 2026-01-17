@@ -1,1 +1,0 @@
-/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/rosidl_typesupport_fastrtps_cpp/robosort_interfaces/srv/detail/set_servo__rosidl_typesupport_fastrtps_cpp.hpp

@@ -1,1 +1,0 @@
-ament_cmake_symlink_install_targets("TARGET_FILES" "/home/robosort/robo-sort/source/rpi/ros2-robosort/build/robosort_interfaces/rosidl_generator_py/robosort_interfaces/robosort_interfaces_s__rosidl_typesupport_c.so" "TARGETS" "robosort_interfaces_s__rosidl_typesupport_c" "DESTINATION" "lib/python3.12/site-packages/robosort_interfaces")

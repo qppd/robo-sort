@@ -1,9 +1,0 @@
-{
-  "package_name": "robosort_interfaces",
-  "non_idl_tuples": [
-    "/home/robosort/robo-sort/source/rpi/ros2-robosort/src/robosort_interfaces:srv/SetServo.srv",
-    "/home/robosort/robo-sort/source/rpi/ros2-robosort/src/robosort_interfaces:srv/MoveRobotArm.srv",
-    "/home/robosort/robo-sort/source/rpi/ros2-robosort/src/robosort_interfaces:srv/RotateBin.srv",
-    "/home/robosort/robo-sort/source/rpi/ros2-robosort/src/robosort_interfaces:srv/GetDistance.srv"
-  ]
-}
