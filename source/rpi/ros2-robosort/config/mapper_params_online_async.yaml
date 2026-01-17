@@ -2,12 +2,13 @@ slam_toolbox:
   ros__parameters:
     odom_frame: odom
     map_frame: map
-    base_frame: base_link
+    base_frame: base_footprint
     scan_topic: /scan
     
-    # Transform timeout settings
-    transform_timeout: 0.5
+    # Transform timeout settings - increased for static transforms
+    transform_timeout: 2.0
     tf_buffer_duration: 30.0
+    transform_publish_period: 0.02
     
     use_scan_matching: true
     use_scan_barycenter: true
