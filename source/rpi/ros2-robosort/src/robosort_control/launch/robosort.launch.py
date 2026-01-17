@@ -69,6 +69,21 @@ def generate_launch_description():
         }]
     )
     
+    # LiDAR TF Publisher - publishes dynamic base_footprint -> lidar_link transform
+    # This is needed because SLAM Toolbox requires dynamic transforms, not static ones
+    lidar_tf_publisher_node = Node(
+        package='robosort_control',
+        executable='lidar_tf_publisher',
+        name='lidar_tf_publisher',
+        output='screen',
+        parameters=[{
+            'publish_rate': 50.0,
+            'lidar_x': 0.4008,
+            'lidar_y': 0.0,
+            'lidar_z': 0.276,
+        }]
+    )
+    
     # Robot State Publisher - publishes robot URDF transforms
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
@@ -176,6 +191,7 @@ def generate_launch_description():
     
     # Add nodes in order (TF first, robot state, then sensors, then control)
     ld.add_action(tf_broadcaster_node)
+    ld.add_action(lidar_tf_publisher_node)
     ld.add_action(robot_state_publisher_node)
     ld.add_action(joint_state_publisher_node)
     ld.add_action(lidar_node)

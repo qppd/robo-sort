@@ -28,6 +28,7 @@ setup(
             'motor_controller = robosort_control.motor_controller:main',
             'obstacle_avoidance = robosort_control.obstacle_avoidance:main',
             'tf_broadcaster = robosort_control.tf_broadcaster:main',
+            'lidar_tf_publisher = robosort_control.lidar_tf_publisher:main',
         ],
     },
 )
