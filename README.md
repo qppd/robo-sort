@@ -572,6 +572,35 @@ ros2 launch robosort_description display.launch.py
 rviz2 -d ~/robo-sort/source/rpi/ros2-robosort/src/robosort_vision/config/robosort.rviz
 ```
 
+### SLAM Mapping with Teleop Control
+
+For real-time mapping and teleoperation using SLAM Toolbox:
+
+**Terminal 1: Hardware + RViz**
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 launch robosort_control robosort.launch.py \
+    arduino_port:=/dev/ttyUSB1 \
+    lidar_port:=/dev/ttyUSB0 \
+    use_rviz:=true \
+    use_teleop:=true
+```
+
+**Terminal 2: SLAM Toolbox**
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/humble/setup.bash
+ros2 launch slam_toolbox online_async_launch.py \
+    params_file:=$HOME/robo-sort/source/rpi/ros2-robosort/config/mapper_params_online_async.yaml
+```
+
+**Terminal 3: Teleop Control (if not launched with use_teleop:=true)**
+```bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+```
+
 ### ROS2 Topics & Services
 
 #### Key Topics
