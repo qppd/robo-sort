@@ -155,7 +155,7 @@ def generate_launch_description():
             'max_angular_speed': 1.0,
             'front_angle': 60.0,
             'side_angle': 30.0,
-            'enabled': True,
+            'enabled': False,  # Disabled by default, enable via service or autonomous mode
         }]
     )
     

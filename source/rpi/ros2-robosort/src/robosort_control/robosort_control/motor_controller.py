@@ -50,6 +50,7 @@ class MotorController(Node):
         # Safety timer - stop motors if no command received
         self.last_cmd_time = self.get_clock().now()
         self.safety_timer = self.create_timer(0.5, self.safety_check)
+        self.motors_stopped = False  # Track motor state to avoid spam
         
         # Initialize serial connection (AFTER publishers are created)
         self.serial_conn: Optional[serial.Serial] = None
@@ -105,9 +106,12 @@ class MotorController(Node):
         angular.z = rotation velocity
         """
         self.last_cmd_time = self.get_clock().now()
+        self.motors_stopped = False  # Reset stopped flag when receiving commands
         
         linear = msg.linear.x
         angular = msg.angular.z
+        
+        self.get_logger().info(f'📥 Received cmd_vel: linear={linear:.3f}, angular={angular:.3f}')
         
         # Differential drive kinematics
         # v_left = linear - (angular * wheel_base / 2)
@@ -139,7 +143,7 @@ class MotorController(Node):
         self.set_motor('A', dir_left, abs_left)
         self.set_motor('B', dir_right, abs_right)
         
-        self.get_logger().debug(f'Motors: L({dir_left},{abs_left}) R({dir_right},{abs_right})')
+        self.get_logger().info(f'🔧 Motors: L({dir_left},{abs_left}) R({dir_right},{abs_right})')
     
     def set_motor(self, motor: str, direction: int, speed: int):
         """Set individual motor speed and direction"""
@@ -148,17 +152,21 @@ class MotorController(Node):
         self.send_command(cmd)
     
     def stop_motors(self):
-        """Emergency stop both motors"""
-        self.set_motor('A', 0, 0)
-        self.set_motor('B', 0, 0)
+        if not self.motors_stopped:  # Only log once
+            self.set_motor('A', 0, 0)
+            self.set_motor('B', 0, 0)
+            self.get_logger().info('⛔ Motors stopped')
+            self.motors_stopped = True
         self.get_logger().info('⛔ Motors stopped')
     
     def safety_check(self):
         """Stop motors if no command received recently (safety timeout)"""
         now = self.get_clock().now()
         elapsed = (now - self.last_cmd_time).nanoseconds / 1e9
-        
+        if not self.motors_stopped:  # Only log once per stop event
+                
         if elapsed > 1.0:  # 1 second timeout
+            self.get_logger().debug(f'⏱️  Safety timeout: {elapsed:.2f}s since last command')
             self.stop_motors()
     
     def control_motor_callback(self, request, response):
