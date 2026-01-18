@@ -44,6 +44,8 @@ class MotorController(Node):
             10
         )
         
+        self.get_logger().info('📡 Subscribed to /cmd_vel topic')
+        
         # Services
         self.create_service(ControlMotor, '/robosort/control_motor', self.control_motor_callback)
         
@@ -152,12 +154,12 @@ class MotorController(Node):
         self.send_command(cmd)
     
     def stop_motors(self):
+        """Emergency stop both motors"""
         if not self.motors_stopped:  # Only log once
             self.set_motor('A', 0, 0)
             self.set_motor('B', 0, 0)
             self.get_logger().info('⛔ Motors stopped')
             self.motors_stopped = True
-        self.get_logger().info('⛔ Motors stopped')
     
     def safety_check(self):
         """Stop motors if no command received recently (safety timeout)"""
