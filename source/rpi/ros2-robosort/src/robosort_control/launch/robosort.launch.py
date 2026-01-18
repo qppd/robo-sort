@@ -187,12 +187,14 @@ def generate_launch_description():
     )
     
     # Nav2 Navigation Stack (conditional)
-    nav2_bringup_dir = get_package_share_directory('nav2_bringup')
+    # Nav2 Jazzy bringup includes docking_server by default, which fails if no dock
+    # plugins are configured. RoboSort doesn't use docking, so we launch Nav2 without it.
     nav2_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
+            os.path.join(robosort_control_dir, 'launch', 'nav2_no_docking.launch.py')
         ),
         launch_arguments={
+            'namespace': '',
             'use_sim_time': 'false',
             'params_file': nav2_params_file,
             'autostart': 'true',
