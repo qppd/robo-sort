@@ -196,6 +196,7 @@ def generate_launch_description():
             'use_sim_time': 'false',
             'params_file': nav2_params_file,
             'autostart': 'true',
+            'use_docking': 'false',  # Disable docking server - not needed for this robot
         }.items(),
         condition=IfCondition(LaunchConfiguration('use_nav2'))
     )
