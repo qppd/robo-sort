@@ -26,8 +26,15 @@ public:
     void moveBackward(uint8_t speed);
     void rotateRight(uint8_t speed);
     void rotateLeft(uint8_t speed);
+    void update();  // Call this in main loop for software PWM
 private:
     void setMotorPins(uint8_t motor, uint8_t in1State, uint8_t in2State);
+    void setSoftwarePWMSpeed(uint8_t motor, uint8_t speed);
+    uint8_t currentSpeedA;
+    uint8_t currentSpeedB;
+    uint8_t currentDirectionA;
+    uint8_t currentDirectionB;
+    unsigned long lastPWMUpdate;
 };
 
 #endif // DC_CONFIG_H

@@ -2,6 +2,11 @@
 
 DCConfig::DCConfig() {
     // Constructor
+    currentSpeedA = 0;
+    currentSpeedB = 0;
+    currentDirectionA = STOP;
+    currentDirectionB = STOP;
+    lastPWMUpdate = 0;
 }
 
 void DCConfig::begin() {
@@ -24,6 +29,16 @@ void DCConfig::setMotorPins(uint8_t motor, uint8_t in1State, uint8_t in2State) {
     } else if (motor == MOTOR_B) {
         digitalWrite(MOTOR_B_IN1, in1State);
         digitalWrite(MOTOR_B_IN2, in2State);
+    }
+}
+
+void DCConfig::setSoftwarePWMSpeed(uint8_t motor, uint8_t speed) {
+    speed = constrain(speed, 0, 255);
+    
+    if (motor == MOTOR_A) {
+        currentSpeedA = speed;
+    } else if (motor == MOTOR_B) {
+        currentSpeedB = speed;
     }
 }
 
@@ -64,9 +79,15 @@ void DCConfig::moveMotor(uint8_t motor, uint8_t direction, uint8_t speed) {
     if (direction == FORWARD) {
         // Forward: IN1=HIGH, IN2=LOW
         setMotorPins(motor, HIGH, LOW);
+        setSoftwarePWMSpeed(motor, speed);
+        if (motor == MOTOR_A) currentDirectionA = FORWARD;
+        else currentDirectionB = FORWARD;
     } else if (direction == BACKWARD) {
         // Backward: IN1=LOW, IN2=HIGH
         setMotorPins(motor, LOW, HIGH);
+        setSoftwarePWMSpeed(motor, speed);
+        if (motor == MOTOR_A) currentDirectionA = BACKWARD;
+        else currentDirectionB = BACKWARD;
     } else if (direction == BRAKE) {
         brakeMotor(motor);
     } else {
@@ -78,11 +99,17 @@ void DCConfig::moveMotor(uint8_t motor, uint8_t direction, uint8_t speed) {
 void DCConfig::stopMotor(uint8_t motor) {
     // Stop: IN1=LOW, IN2=LOW
     setMotorPins(motor, LOW, LOW);
+    setSoftwarePWMSpeed(motor, 0);
+    if (motor == MOTOR_A) currentDirectionA = STOP;
+    else currentDirectionB = STOP;
 }
 
 void DCConfig::brakeMotor(uint8_t motor) {
-    // Brake: IN1=HIGH, IN2=HIGH
+    // Brake: IN1=HIGH, IN2=HIGH (short brake without speed control)
     setMotorPins(motor, HIGH, HIGH);
+    setSoftwarePWMSpeed(motor, 0);
+    if (motor == MOTOR_A) currentDirectionA = BRAKE;
+    else currentDirectionB = BRAKE;
 }
 
 void DCConfig::moveForward(uint8_t speed) {
@@ -112,4 +139,46 @@ void DCConfig::rotateLeft(uint8_t speed) {
 void DCConfig::stopAll() {
     stopMotor(MOTOR_A);
     stopMotor(MOTOR_B);
+}
+
+void DCConfig::update() {
+    // Software PWM implementation - call this regularly in main loop
+    unsigned long currentTime = millis();
+    static unsigned long pwmCounter = 0;
+    
+    // Update PWM every 10ms for ~100Hz PWM frequency
+    if (currentTime - lastPWMUpdate >= 10) {
+        lastPWMUpdate = currentTime;
+        pwmCounter++;
+        
+        // Motor A PWM
+        if (currentSpeedA > 0 && currentDirectionA != STOP && currentDirectionA != BRAKE) {
+            if (pwmCounter % 256 < currentSpeedA) {
+                // Motor ON period
+                if (currentDirectionA == FORWARD) {
+                    setMotorPins(MOTOR_A, HIGH, LOW);
+                } else if (currentDirectionA == BACKWARD) {
+                    setMotorPins(MOTOR_A, LOW, HIGH);
+                }
+            } else {
+                // Motor OFF period
+                setMotorPins(MOTOR_A, LOW, LOW);
+            }
+        }
+        
+        // Motor B PWM
+        if (currentSpeedB > 0 && currentDirectionB != STOP && currentDirectionB != BRAKE) {
+            if (pwmCounter % 256 < currentSpeedB) {
+                // Motor ON period
+                if (currentDirectionB == FORWARD) {
+                    setMotorPins(MOTOR_B, HIGH, LOW);
+                } else if (currentDirectionB == BACKWARD) {
+                    setMotorPins(MOTOR_B, LOW, HIGH);
+                }
+            } else {
+                // Motor OFF period
+                setMotorPins(MOTOR_B, LOW, LOW);
+            }
+        }
+    }
 }

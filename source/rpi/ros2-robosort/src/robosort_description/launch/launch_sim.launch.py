@@ -36,7 +36,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     # Get package directories
     pkg_robosort_description = get_package_share_directory('robosort_description')
-    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
+    pkg_gz_sim = get_package_share_directory('gz_sim')
     
     # Default world file path
     default_world = os.path.join(pkg_robosort_description, 'worlds', 'robosort_warehouse.world')
@@ -100,21 +100,10 @@ def generate_launch_description():
     # Start Gazebo server (physics simulation)
     gazebo_server = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
-            os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
+            os.path.join(pkg_gz_sim, 'launch', 'gz_sim.launch.py')
         ]),
         launch_arguments={
-            'world': world,
-            'verbose': 'true'
-        }.items()
-    )
-    
-    # Start Gazebo client (GUI)
-    gazebo_client = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
-        ]),
-        launch_arguments={
-            'verbose': 'true'
+            'world': world
         }.items()
     )
     
@@ -124,17 +113,16 @@ def generate_launch_description():
     # The spawn_entity node reads from /robot_description
     # and spawns the robot model in Gazebo
     spawn_entity = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
+        package='gz_sim',
+        executable='create',
         name='spawn_robosort',
         output='screen',
         arguments=[
-            '-entity', 'robosort',
+            '-name', 'robosort',
             '-topic', 'robot_description',
             '-x', x_pose,
             '-y', y_pose,
-            '-z', z_pose,
-            '-timeout', '120.0'
+            '-z', z_pose
         ]
     )
     
@@ -170,7 +158,6 @@ def generate_launch_description():
         
         # Launch Gazebo
         gazebo_server,
-        gazebo_client,
         
         # Spawn robot
         spawn_entity,

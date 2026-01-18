@@ -68,6 +68,7 @@ void loop() {
   servoConfig.update();
   ultrasonicConfig.update();
   buzzerConfig.update();
+  dcConfig.update();  // Software PWM for motor speed control
   
   // Handle continuous limit switch testing
   if (limitTestingActive) {
@@ -214,10 +215,10 @@ void loop() {
           direction = BACKWARD;
         } else if (dirStr.equalsIgnoreCase("S")) {
           direction = STOP;
-        } else if (dirStr.equalsIgnoreCase("BR")) {
+        } else if (dirStr.equalsIgnoreCase("BR") || dirStr.equalsIgnoreCase("R")) {
           direction = BRAKE;
         } else {
-          Serial.println("Invalid direction. Use: F, B, S, or BR");
+          Serial.println("Invalid direction. Use: F, B, S, R, or BR");
           return;
         }
         
