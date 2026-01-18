@@ -166,7 +166,7 @@ class MotorController(Node):
         now = self.get_clock().now()
         elapsed = (now - self.last_cmd_time).nanoseconds / 1e9
         
-        if elapsed > 2.0:  # 2 second timeout (teleop sends discrete commands)
+        if elapsed > 10.0:  # 10 second timeout (teleop sends discrete commands)
             if not self.motors_stopped:  # Only log once per stop event
                 self.get_logger().debug(f'⏱️  Safety timeout: {elapsed:.2f}s since last command')
             self.stop_motors()
