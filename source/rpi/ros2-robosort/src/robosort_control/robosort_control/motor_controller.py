@@ -128,7 +128,7 @@ class MotorController(Node):
         
         # Determine direction and absolute speed for each motor
         dir_left = 1 if speed_left >= 0 else 2  # 1=FORWARD, 2=BACKWARD
-        dir_right = 1 if speed_right >= 0 else 2
+        dir_right = 2 if speed_right >= 0 else 1  # INVERTED - motor wired backwards
         
         abs_left = abs(speed_left)
         abs_right = abs(speed_right)
