@@ -20,7 +20,7 @@ class MotorController(Node):
         super().__init__('motor_controller')
         
         # Declare parameters
-        self.declare_parameter('serial_port', '/dev/ttyACM0')
+        self.declare_parameter('serial_port', '/dev/ttyUSB1')
         self.declare_parameter('baudrate', 9600)
         self.declare_parameter('timeout', 1.0)
         self.declare_parameter('max_speed', 255)
