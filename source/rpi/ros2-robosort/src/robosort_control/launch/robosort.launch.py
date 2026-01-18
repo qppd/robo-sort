@@ -22,6 +22,7 @@ def generate_launch_description():
     ldlidar_dir = get_package_share_directory('ldlidar_stl_ros2')
     
     rviz_config = os.path.join(robosort_control_dir, 'config', 'robosort.rviz')
+    nav2_params_file = os.path.join(robosort_control_dir, 'config', 'nav2_params.yaml')
     urdf_file = os.path.join(robosort_description_dir, 'urdf', 'robosort.urdf.xacro')
     
     # Declare launch arguments
@@ -53,6 +54,12 @@ def generate_launch_description():
         'use_teleop',
         default_value='false',
         description='Launch teleop keyboard control'
+    )
+    
+    use_nav2_arg = DeclareLaunchArgument(
+        'use_nav2',
+        default_value='false',
+        description='Launch Nav2 navigation stack'
     )
     
     # TF Broadcaster Node - handles odometry transform only
@@ -179,6 +186,20 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('use_teleop'))
     )
     
+    # Nav2 Navigation Stack (conditional)
+    nav2_bringup_dir = get_package_share_directory('nav2_bringup')
+    nav2_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
+        ),
+        launch_arguments={
+            'use_sim_time': 'false',
+            'params_file': nav2_params_file,
+            'autostart': 'true',
+        }.items(),
+        condition=IfCondition(LaunchConfiguration('use_nav2'))
+    )
+    
     # Create launch description
     ld = LaunchDescription()
     
@@ -188,6 +209,7 @@ def generate_launch_description():
     ld.add_action(use_rviz_arg)
     ld.add_action(autonomous_arg)
     ld.add_action(use_teleop_arg)
+    ld.add_action(use_nav2_arg)
     
     # Add nodes in order (TF first, robot state, then sensors, then control)
     ld.add_action(tf_broadcaster_node)
@@ -199,5 +221,6 @@ def generate_launch_description():
     ld.add_action(obstacle_avoidance_node)
     ld.add_action(rviz_node)
     ld.add_action(teleop_node)
+    ld.add_action(nav2_launch)
     
     return ld
