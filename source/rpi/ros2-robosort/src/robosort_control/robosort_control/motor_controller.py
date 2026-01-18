@@ -165,10 +165,10 @@ class MotorController(Node):
         """Stop motors if no command received recently (safety timeout)"""
         now = self.get_clock().now()
         elapsed = (now - self.last_cmd_time).nanoseconds / 1e9
-        if not self.motors_stopped:  # Only log once per stop event
-                
+        
         if elapsed > 1.0:  # 1 second timeout
-            self.get_logger().debug(f'⏱️  Safety timeout: {elapsed:.2f}s since last command')
+            if not self.motors_stopped:  # Only log once per stop event
+                self.get_logger().debug(f'⏱️  Safety timeout: {elapsed:.2f}s since last command')
             self.stop_motors()
     
     def control_motor_callback(self, request, response):
