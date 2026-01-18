@@ -78,21 +78,33 @@ Raspberry Pi (Python) ← Serial USB ← Arduino Mega ← Sensor Feedback
 - **Error Handling**: Automatic reconnection on communication failure
 
 ## Features
-- **🤖 Five degrees of freedom (5-DOF) robotic arm** for precise waste material handling
-- **🧠 Advanced AI Vision**: YOLO-based object detection and classification for accurate material identification
-- **📡 LIDAR Integration**: 360° environmental awareness with LD06 LIDAR sensor support
-- **🔄 Automated paper and plastic waste identification** and segregation with real-time confidence scoring
-- **⚙️ Stepper Motor Control**: Precise bin positioning using TB6600 driver with NEMA 23 stepper motor (19kg/cm holding torque) - 4 bin positions (0, 1100, 2150, 3100 steps)
-- **🎯 16-channel PWM servo driver (PCA9685)** for coordinated multi-servo control
-- **📹 Multiple Camera Support**: USB cameras, Raspberry Pi Camera, and video file processing
-- **🎥 Real-time Video Processing**: Live object detection with overlay information and recording capabilities
-- **📊 Distance-Aware Detection**: LIDAR distance measurements integrated with visual detection results
-- **🛡️ Collision Avoidance**: 360° obstacle detection for safe robotic operation
-- **📈 Performance Monitoring**: Real-time FPS tracking and object counting
-- **🔧 Modular design** with clear separation between control (Arduino) and high-level logic (Raspberry Pi)
-- **💻 Serial command interface** for manual testing and calibration
-- **📱 Expandable architecture** for additional sensors or actuators
-- **📚 Comprehensive documentation** and model images for easy assembly and understanding
+
+### Core Capabilities
+- **Differential Drive Robot**: Arduino Mega-controlled DC motors with L298N H-bridge drivers for autonomous navigation
+- **360° LiDAR Sensing**: LD06 sensor providing 0.02-12m range scanning at 4500Hz sample rate
+- **ROS2 Integration**: Complete ROS2 Humble workspace with simulation and hardware control
+- **SLAM Mapping**: Real-time simultaneous localization and mapping with SLAM Toolbox
+- **Autonomous Navigation**: Nav2-based path planning and obstacle avoidance
+
+### Robotics & Control
+- **Five Degrees of Freedom Arm**: Articulated manipulator for precise waste material handling
+- **Stepper Motor Positioning**: TB6600 driver with NEMA 23 motor (19kg/cm holding torque) for bin rotation
+- **Servo Control**: PCA9685 16-channel PWM driver managing multiple servos via I2C
+- **Differential Drive Kinematics**: Coordinated wheel control for omnidirectional movement
+- **Software PWM**: Custom implementation for motor speed control with 10-second safety timeout
+
+### Vision & Perception
+- **YOLO Object Detection**: Real-time waste classification with confidence scoring
+- **Multi-Source Input**: USB cameras, Raspberry Pi Camera, video files, and image processing
+- **Distance-Aware Detection**: LiDAR measurements integrated with visual detection
+- **Performance Monitoring**: FPS tracking and object counting
+
+### System Architecture
+- **Modular Design**: Clear separation between Arduino control and Raspberry Pi high-level logic
+- **Serial Communication**: 9600 baud USB serial protocol for Arduino-Pi coordination
+- **Gazebo Simulation**: Full physics simulation for testing and development
+- **Expandable Platform**: Support for additional sensors and actuators
+- **Comprehensive Documentation**: Complete installation, usage, and troubleshooting guides
 
 ## Hardware Requirements
 
@@ -490,7 +502,7 @@ source install/setup.bash
 
 ### LiDAR LD06 Test & Visualization
 
-#### 🔵 Quick Test - LiDAR Only
+#### Quick Test - LiDAR Only
 
 **Step 1: Identify LiDAR Serial Port**
 ```bash
@@ -514,8 +526,8 @@ ros2 launch robosort_sensors lidar.launch.py serial_port:=/dev/ttyUSB1
 ```
 [ldlidar_stl_ros2_node-1] [INFO] [...] [ld06_lidar]: <port_name>: /dev/ttyUSB1
 [ldlidar_stl_ros2_node-1] [INFO] [...] [ld06_lidar]: ldlidar node start is success
-[lidar_processor-2] [INFO] [...] [lidar_processor]: 🔵 LiDAR LD06 Processor initialized
-[object_localizer-3] [INFO] [...] [object_localizer]: 📍 Object Localizer initialized
+[lidar_processor-2] [INFO] [...] [lidar_processor]: LiDAR LD06 Processor initialized
+[object_localizer-3] [INFO] [...] [object_localizer]: Object Localizer initialized
 ```
 
 **Step 3: Visualize in RViz2 (New Terminal)**
@@ -537,7 +549,7 @@ ros2 topic echo /robosort/object_distance
 ros2 topic echo /scan --once
 ```
 
-#### 🎯 Complete System Launch
+#### Complete System Launch
 
 For full system operation with all sensors and controllers:
 
