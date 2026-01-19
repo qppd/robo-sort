@@ -158,8 +158,8 @@
       <child link="${prefix}_wheel_link"/>
       <origin xyz="-0.2524 ${reflect*wheel_separation/2} ${-body_height/2}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="10.0" velocity="10.0"/>
-      <dynamics damping="0.1" friction="0.1"/>
+      <limit effort="3.0" velocity="1.4"/>
+      <dynamics damping="0.5" friction="0.3"/>
     </joint>
   </xacro:macro>
   
@@ -255,7 +255,7 @@
     <kp>1000000.0</kp>
     <kd>100.0</kd>
     <minDepth>0.001</minDepth>
-    <maxVel>1.0</maxVel>
+    <maxVel>1.4</maxVel>
   </gazebo>
   
   <gazebo reference="right_wheel_link">
@@ -265,7 +265,7 @@
     <kp>1000000.0</kp>
     <kd>100.0</kd>
     <minDepth>0.001</minDepth>
-    <maxVel>1.0</maxVel>
+    <maxVel>1.4</maxVel>
   </gazebo>
   
   <gazebo reference="front_left_caster_link">
@@ -302,8 +302,8 @@
       <wheel_diameter>${2*wheel_radius}</wheel_diameter>
       
       <!-- Limits -->
-      <max_wheel_torque>10.0</max_wheel_torque>
-      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+      <max_wheel_torque>3.0</max_wheel_torque>
+      <max_wheel_acceleration>0.5</max_wheel_acceleration>
       
       <!-- Topic names -->
       <command_topic>cmd_vel</command_topic>

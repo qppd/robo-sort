@@ -66,7 +66,7 @@
     <child link="shoulder_link"/>
     <origin xyz="0 0 ${base_height}" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
-    <limit lower="${-PI}" upper="${PI}" effort="10.0" velocity="1.0"/>
+    <limit lower="${-PI}" upper="${PI}" effort="2.0" velocity="0.5"/>
   </joint>
 
   <!-- Shoulder Link (Servo 1) -->
@@ -96,7 +96,7 @@
     <child link="elbow_link"/>
     <origin xyz="0 0 ${shoulder_length}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="${-PI/2}" upper="${PI/2}" effort="10.0" velocity="1.0"/>
+    <limit lower="${-PI/2}" upper="${PI/2}" effort="2.0" velocity="0.5"/>
   </joint>
 
   <!-- Elbow Link (Servo 2) -->
@@ -126,7 +126,7 @@
     <child link="wrist_link"/>
     <origin xyz="0 0 ${elbow_length}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="${-PI/2}" upper="${PI/2}" effort="5.0" velocity="1.0"/>
+    <limit lower="${-PI/2}" upper="${PI/2}" effort="2.0" velocity="0.5"/>
   </joint>
 
   <!-- Wrist Link (Servo 3) -->
@@ -156,7 +156,7 @@
     <child link="gripper_base_link"/>
     <origin xyz="0 0 ${wrist_length}" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
-    <limit lower="${-PI}" upper="${PI}" effort="5.0" velocity="1.0"/>
+    <limit lower="${-PI}" upper="${PI}" effort="1.5" velocity="0.5"/>
   </joint>
 
   <!-- Gripper Base Link -->
@@ -186,7 +186,7 @@
     <child link="gripper_left_link"/>
     <origin xyz="0 0.015 ${gripper_length/3}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="0" upper="${PI/4}" effort="2.0" velocity="0.5"/>
+    <limit lower="0" upper="${PI/4}" effort="1.0" velocity="0.3"/>
   </joint>
 
   <!-- Gripper Left Finger -->
@@ -216,7 +216,7 @@
     <child link="gripper_right_link"/>
     <origin xyz="0 -0.015 ${gripper_length/3}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="${-PI/4}" upper="0" effort="2.0" velocity="0.5"/>
+    <limit lower="${-PI/4}" upper="0" effort="1.0" velocity="0.3"/>
     <mimic joint="gripper_left_joint" multiplier="-1"/>
   </joint>
 
