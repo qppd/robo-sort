@@ -26,6 +26,9 @@ public:
     void moveBackward(uint8_t speed);
     void rotateRight(uint8_t speed);
     void rotateLeft(uint8_t speed);
+    void turnLeft(uint8_t speed);  // Differential turn left (right wheel faster)
+    void turnRight(uint8_t speed); // Differential turn right (left wheel faster)
+    void turnAbout(uint8_t direction, uint8_t speed); // Spot turn (0=left, 1=right)
     void update();  // Call this in main loop for software PWM
 private:
     void setMotorPins(uint8_t motor, uint8_t in1State, uint8_t in2State);

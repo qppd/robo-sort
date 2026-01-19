@@ -47,7 +47,9 @@ void setup() {
   Serial.println("  Gripper Rotation Commands: GRIP-ROTATE:<angle> (0-180 degrees, channel 3, default 90 degrees)");
   Serial.println("  Arm Extension Commands: ARM-EXTEND:<angle> (0-180 degrees, channel 4, default 90 degrees)");
   Serial.println("  Look Commands: LOOK:<angle> (0-180 degrees, channel 5, default 90 degrees)");
-  Serial.println("Motor Commands: FORWARD <speed>, BACKWARD <speed>, RIGHT <speed>, LEFT <speed>, MSTOP");
+  Serial.println("Motor Commands: FORWARD:<speed>, BACKWARD:<speed>, MSTOP");
+  Serial.println("  Turning: LEFT:<speed>, RIGHT:<speed> (differential turn)");
+  Serial.println("  Spot Turn: TURN_LEFT:<speed>, TURN_RIGHT:<speed> (rotate in place)");
   Serial.println("  Individual: M<motor> <direction> <speed>, MSTOP");
   Serial.println("  Motors: A or B, Directions: F (forward), B (backward), S (stop), BR (brake)");
   Serial.println("  Speed: 0-255 (default: 150)");
@@ -239,60 +241,88 @@ void loop() {
       }
     }
     // Movement commands
-    else if (input.startsWith("FORWARD")) {
+    else if (input.startsWith("FORWARD:")) {
       int speed = 150; // Default speed
-      int spaceIdx = input.indexOf(' ');
-      if (spaceIdx > 0) {
-        speed = input.substring(spaceIdx + 1).toInt();
+      int colonIdx = input.indexOf(':');
+      if (colonIdx > 0) {
+        speed = input.substring(colonIdx + 1).toInt();
         if (speed < 0 || speed > 255) {
           Serial.println("Invalid speed. Range: 0-255");
           return;
         }
       }
       dcConfig.moveForward(speed);
-      Serial.print("Moving forward at speed ");
+      Serial.print("Moving forward continuously at speed ");
       Serial.println(speed);
       buzzerConfig.successBeep();
-    } else if (input.startsWith("BACKWARD")) {
+    } else if (input.startsWith("BACKWARD:")) {
       int speed = 150; // Default speed
-      int spaceIdx = input.indexOf(' ');
-      if (spaceIdx > 0) {
-        speed = input.substring(spaceIdx + 1).toInt();
+      int colonIdx = input.indexOf(':');
+      if (colonIdx > 0) {
+        speed = input.substring(colonIdx + 1).toInt();
         if (speed < 0 || speed > 255) {
           Serial.println("Invalid speed. Range: 0-255");
           return;
         }
       }
       dcConfig.moveBackward(speed);
-      Serial.print("Moving backward at speed ");
+      Serial.print("Moving backward continuously at speed ");
       Serial.println(speed);
       buzzerConfig.successBeep();
-    } else if (input.startsWith("RIGHT")) {
+    } else if (input.startsWith("LEFT:")) {
       int speed = 150; // Default speed
-      int spaceIdx = input.indexOf(' ');
-      if (spaceIdx > 0) {
-        speed = input.substring(spaceIdx + 1).toInt();
+      int colonIdx = input.indexOf(':');
+      if (colonIdx > 0) {
+        speed = input.substring(colonIdx + 1).toInt();
         if (speed < 0 || speed > 255) {
           Serial.println("Invalid speed. Range: 0-255");
           return;
         }
       }
-      dcConfig.rotateRight(speed);
-      Serial.print("Rotating right at speed ");
+      dcConfig.turnLeft(speed);
+      Serial.print("Turning left (differential) at speed ");
       Serial.println(speed);
       buzzerConfig.successBeep();
-    } else if (input.startsWith("LEFT")) {
+    } else if (input.startsWith("RIGHT:")) {
       int speed = 150; // Default speed
-      int spaceIdx = input.indexOf(' ');
-      if (spaceIdx > 0) {
-        speed = input.substring(spaceIdx + 1).toInt();
+      int colonIdx = input.indexOf(':');
+      if (colonIdx > 0) {
+        speed = input.substring(colonIdx + 1).toInt();
         if (speed < 0 || speed > 255) {
           Serial.println("Invalid speed. Range: 0-255");
           return;
         }
       }
-      dcConfig.rotateLeft(speed);
-      Serial.print("Rotating left at speed ");
+      dcConfig.turnRight(speed);
+      Serial.print("Turning right (differential) at speed ");
+      Serial.println(speed);
+      buzzerConfig.successBeep();
+    } else if (input.startsWith("TURN_LEFT:")) {
+      int speed = 150; // Default speed
+      int colonIdx = input.indexOf(':');
+      if (colonIdx > 0) {
+        speed = input.substring(colonIdx + 1).toInt();
+        if (speed < 0 || speed > 255) {
+          Serial.println("Invalid speed. Range: 0-255");
+          return;
+        }
+      }
+      dcConfig.turnAbout(0, speed);
+      Serial.print("Spot turning left at speed ");
+      Serial.println(speed);
+      buzzerConfig.successBeep();
+    } else if (input.startsWith("TURN_RIGHT:")) {
+      int speed = 150; // Default speed
+      int colonIdx = input.indexOf(':');
+      if (colonIdx > 0) {
+        speed = input.substring(colonIdx + 1).toInt();
+        if (speed < 0 || speed > 255) {
+          Serial.println("Invalid speed. Range: 0-255");
+          return;
+        }
+      }
+      dcConfig.turnAbout(1, speed);
+      Serial.print("Spot turning right at speed ");
       Serial.println(speed);
       buzzerConfig.successBeep();
     }
