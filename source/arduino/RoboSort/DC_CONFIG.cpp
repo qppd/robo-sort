@@ -171,43 +171,8 @@ void DCConfig::turnAbout(uint8_t direction, uint8_t speed) {
 }
 
 void DCConfig::update() {
-    // Software PWM implementation - call this regularly in main loop
-    unsigned long currentTime = millis();
-    static unsigned long pwmCounter = 0;
-    
-    // Update PWM every 10ms for ~100Hz PWM frequency
-    if (currentTime - lastPWMUpdate >= 10) {
-        lastPWMUpdate = currentTime;
-        pwmCounter++;
-        
-        // Motor A PWM
-        if (currentSpeedA > 0 && currentDirectionA != STOP && currentDirectionA != BRAKE) {
-            if (pwmCounter % 256 < currentSpeedA) {
-                // Motor ON period
-                if (currentDirectionA == FORWARD) {
-                    setMotorPins(MOTOR_A, HIGH, LOW);
-                } else if (currentDirectionA == BACKWARD) {
-                    setMotorPins(MOTOR_A, LOW, HIGH);
-                }
-            } else {
-                // Motor OFF period
-                setMotorPins(MOTOR_A, LOW, LOW);
-            }
-        }
-        
-        // Motor B PWM
-        if (currentSpeedB > 0 && currentDirectionB != STOP && currentDirectionB != BRAKE) {
-            if (pwmCounter % 256 < currentSpeedB) {
-                // Motor ON period
-                if (currentDirectionB == FORWARD) {
-                    setMotorPins(MOTOR_B, HIGH, LOW);
-                } else if (currentDirectionB == BACKWARD) {
-                    setMotorPins(MOTOR_B, LOW, HIGH);
-                }
-            } else {
-                // Motor OFF period
-                setMotorPins(MOTOR_B, LOW, LOW);
-            }
-        }
-    }
+    // Continuous operation - motors stay ON once direction is set
+    // No software PWM needed for L298N driver with enable pins always HIGH
+    // Motor direction pins are already set by moveMotor(), no need to pulse them
+    // This function can be used for future enhancements if needed
 }
