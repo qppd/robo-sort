@@ -49,10 +49,9 @@ class MotorController(Node):
         # Services
         self.create_service(ControlMotor, '/robosort/control_motor', self.control_motor_callback)
         
-        # Safety timer - stop motors if no command received
+        # Track motor state
         self.last_cmd_time = self.get_clock().now()
-        self.safety_timer = self.create_timer(0.5, self.safety_check)
-        self.motors_stopped = False  # Track motor state to avoid spam
+        self.motors_stopped = False
         
         # Initialize serial connection (AFTER publishers are created)
         self.serial_conn: Optional[serial.Serial] = None
@@ -106,6 +105,7 @@ class MotorController(Node):
         Convert Twist messages to differential drive motor commands
         linear.x = forward/backward velocity
         angular.z = rotation velocity
+        Uses new continuous commands: FORWARD:, BACKWARD:, LEFT:, RIGHT:, TURN_LEFT:, TURN_RIGHT:
         """
         self.last_cmd_time = self.get_clock().now()
         self.motors_stopped = False  # Reset stopped flag when receiving commands
@@ -115,61 +115,71 @@ class MotorController(Node):
         
         self.get_logger().info(f'📥 Received cmd_vel: linear={linear:.3f}, angular={angular:.3f}')
         
-        # Differential drive kinematics
-        # v_left = linear - (angular * wheel_base / 2)
-        # v_right = linear + (angular * wheel_base / 2)
-        v_left = linear - (angular * self.wheel_base / 2)
-        v_right = linear + (angular * self.wheel_base / 2)
-        
-        # Normalize to max_speed range (-255 to 255)
+        # Normalize velocities to 0-255 range
         # Assuming linear velocity is in range [-1, 1] m/s
-        speed_left = int(max(-self.max_speed, min(self.max_speed, v_left * self.max_speed)))
-        speed_right = int(max(-self.max_speed, min(self.max_speed, v_right * self.max_speed)))
+        linear_speed = int(abs(linear) * self.max_speed)
+        angular_speed = int(abs(angular) * self.max_speed)
         
-        # Determine direction and absolute speed for each motor
-        dir_left = 1 if speed_left >= 0 else 2  # 1=FORWARD, 2=BACKWARD
-        dir_right = 2 if speed_right >= 0 else 1  # INVERTED - motor wired backwards
+        # Constrain to valid range
+        linear_speed = max(0, min(255, linear_speed))
+        angular_speed = max(0, min(255, angular_speed))
         
-        abs_left = abs(speed_left)
-        abs_right = abs(speed_right)
+        # Determine the appropriate command based on linear and angular velocities
+        command = None
         
         # Stop condition
-        if abs_left < 10 and abs_right < 10:
-            dir_left = 0  # STOP
-            dir_right = 0
-            abs_left = 0
-            abs_right = 0
+        if abs(linear) < 0.01 and abs(angular) < 0.01:
+            command = 'MSTOP'
+            self.get_logger().info('⛔ Sending MSTOP')
+        # Pure rotation (spot turn)
+        elif abs(linear) < 0.01 and abs(angular) >= 0.01:
+            if angular > 0:
+                command = f'TURN_LEFT:{angular_speed}'
+                self.get_logger().info(f'🔄 Spot turn left at speed {angular_speed}')
+            else:
+                command = f'TURN_RIGHT:{angular_speed}'
+                self.get_logger().info(f'🔄 Spot turn right at speed {angular_speed}')
+        # Forward/Backward with possible turning
+        elif abs(angular) < 0.01:
+            # Pure forward or backward
+            if linear > 0:
+                command = f'FORWARD:{linear_speed}'
+                self.get_logger().info(f'⬆️  Forward at speed {linear_speed}')
+            else:
+                command = f'BACKWARD:{linear_speed}'
+                self.get_logger().info(f'⬇️  Backward at speed {linear_speed}')
+        else:
+            # Combined movement: use differential turning
+            # Use the average speed for the turn command
+            avg_speed = max(linear_speed, angular_speed)
+            
+            if linear > 0:
+                # Moving forward with turn
+                if angular > 0:
+                    command = f'LEFT:{avg_speed}'
+                    self.get_logger().info(f'↖️  Differential turn left at speed {avg_speed}')
+                else:
+                    command = f'RIGHT:{avg_speed}'
+                    self.get_logger().info(f'↗️  Differential turn right at speed {avg_speed}')
+            else:
+                # Moving backward with turn (invert turn direction)
+                if angular > 0:
+                    command = f'RIGHT:{avg_speed}'
+                    self.get_logger().info(f'↘️  Backward right at speed {avg_speed}')
+                else:
+                    command = f'LEFT:{avg_speed}'
+                    self.get_logger().info(f'↙️  Backward left at speed {avg_speed}')
         
-        # Send motor commands
-        # Motor A = Left, Motor B = Right
-        self.set_motor('A', dir_left, abs_left)
-        self.set_motor('B', dir_right, abs_right)
-        
-        self.get_logger().info(f'🔧 Motors: L({dir_left},{abs_left}) R({dir_right},{abs_right})')
-    
-    def set_motor(self, motor: str, direction: int, speed: int):
-        """Set individual motor speed and direction"""
-        direction_map = {0: 'S', 1: 'F', 2: 'B', 3: 'R'}  # Stop, Forward, Backward, Brake
-        cmd = f'M{motor} {direction_map.get(direction, "S")} {speed}'
-        self.send_command(cmd)
+        # Send the command
+        if command:
+            self.send_command(command)
     
     def stop_motors(self):
         """Emergency stop both motors"""
         if not self.motors_stopped:  # Only log once
-            self.set_motor('A', 0, 0)
-            self.set_motor('B', 0, 0)
+            self.send_command('MSTOP')
             self.get_logger().info('⛔ Motors stopped')
             self.motors_stopped = True
-    
-    def safety_check(self):
-        """Stop motors if no command received recently (safety timeout)"""
-        now = self.get_clock().now()
-        elapsed = (now - self.last_cmd_time).nanoseconds / 1e9
-        
-        if elapsed > 10.0:  # 10 second timeout (teleop sends discrete commands)
-            if not self.motors_stopped:  # Only log once per stop event
-                self.get_logger().debug(f'⏱️  Safety timeout: {elapsed:.2f}s since last command')
-            self.stop_motors()
     
     def control_motor_callback(self, request, response):
         """Service callback for direct motor control"""
@@ -184,7 +194,11 @@ class MotorController(Node):
             response.message = 'Invalid direction. Use 0=STOP, 1=FORWARD, 2=BACKWARD, 3=BRAKE'
             return response
         
-        self.set_motor(motor_letter, direction, speed)
+        # Map direction to command string
+        direction_map = {0: 'S', 1: 'F', 2: 'B', 3: 'BR'}  # Stop, Forward, Backward, Brake
+        cmd = f'M{motor_letter} {direction_map.get(direction, "S")} {speed}'
+        self.send_command(cmd)
+        
         response.success = True
         response.message = f'Motor {motor_letter}: direction={direction}, speed={speed}'
         self.last_cmd_time = self.get_clock().now()
