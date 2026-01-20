@@ -168,14 +168,14 @@ def generate_launch_description():
     )
     
     # RViz Node (conditional)
-    # Launch in separate terminal to see any errors
+    # Note: Removed xterm prefix as it requires xterm to be installed
+    # RViz will launch in the same terminal. Use launch_rviz.sh for separate window if needed
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
         name='rviz2',
         arguments=['-d', rviz_config],
         output='screen',
-        prefix='xterm -e',  # Launch in separate terminal window
         condition=IfCondition(LaunchConfiguration('use_rviz'))
     )
     
