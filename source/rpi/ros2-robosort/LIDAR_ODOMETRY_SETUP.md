@@ -119,6 +119,42 @@ ros2 node info /rf2o_laser_odometry
 
 ## Troubleshooting
 
+### RF2O Not Receiving Laser Scans
+**Symptoms**: `[WARN] Waiting for laser_scans....` continuously
+**Solutions**:
+1. **Check lidar is publishing**: 
+   ```bash
+   ros2 topic list | grep scan
+   # Should show: /scan
+   
+   ros2 topic echo /scan --once
+   # Should show laser scan data
+   
+   ros2 topic hz /scan
+   # Should show ~10-15 Hz
+   ```
+
+2. **Verify topic remapping**: The lidar publishes to `/scan` and rf2o subscribes to `scan` (remapped in launch file)
+
+3. **Check frame IDs match**:
+   ```bash
+   ros2 topic echo /scan --field header.frame_id
+   # Should show: lidar_link
+   ```
+
+4. **Verify rf2o parameters**: Check `config/rf2o_params.yaml`:
+   ```yaml
+   laser_frame_id: lidar_link
+   base_frame_id: base_footprint
+   odom_frame_id: odom
+   ```
+
+5. **Check TF tree exists**: RF2O needs `base_footprint->lidar_link` transform:
+   ```bash
+   ros2 run tf2_ros tf2_echo base_footprint lidar_link
+   # Should show transform without errors
+   ```
+
 ### RF2O Not Publishing Odometry
 **Symptoms**: No `/odom` topic or TF warnings
 **Solutions**:

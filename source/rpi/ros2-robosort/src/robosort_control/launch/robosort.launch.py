@@ -70,7 +70,10 @@ def generate_launch_description():
         executable='rf2o_laser_odometry_node',
         name='rf2o_laser_odometry',
         output='screen',
-        parameters=[rf2o_params_file]
+        parameters=[rf2o_params_file],
+        remappings=[
+            ('scan', '/scan')  # Remap scan topic to /scan
+        ]
     )
     
     # LiDAR TF Publisher - publishes dynamic base_footprint -> lidar_link transform
@@ -120,7 +123,7 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'product_name': 'LDLiDAR_LD06',
-            'topic_name': 'scan',
+            'topic_name': '/scan',  # Changed to /scan with leading slash for consistency
             'frame_id': 'lidar_link',
             'port_name': LaunchConfiguration('lidar_port'),
             'port_baudrate': 230400,
