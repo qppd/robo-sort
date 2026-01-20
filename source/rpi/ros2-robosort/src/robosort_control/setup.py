@@ -29,6 +29,7 @@ setup(
             'obstacle_avoidance = robosort_control.obstacle_avoidance:main',
             'tf_broadcaster = robosort_control.tf_broadcaster:main',
             'lidar_tf_publisher = robosort_control.lidar_tf_publisher:main',
+            'initial_odom_publisher = robosort_control.initial_odom_publisher:main',
         ],
     },
 )

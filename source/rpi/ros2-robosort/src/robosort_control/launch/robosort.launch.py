@@ -62,8 +62,18 @@ def generate_launch_description():
         description='Launch Nav2 navigation stack'
     )
     
+    # Initial Odometry Publisher - provides immediate odom->base_footprint transform
+    # This prevents RViz from hanging while waiting for RF2O to initialize
+    # RF2O will override this once it starts publishing (takes ~2-3 seconds)
+    initial_odom_node = Node(
+        package='robosort_control',
+        executable='initial_odom_publisher',
+        name='initial_odom_publisher',
+        output='screen'
+    )
+    
     # RF2O Laser Odometry - provides odom->base_footprint transform from lidar scan matching
-    # This replaces the old dead-reckoning tf_broadcaster with accurate lidar-based odometry
+    # Starts after accumulating laser scans, overrides initial_odom once ready
     rf2o_params_file = os.path.join(robosort_control_dir, 'config', 'rf2o_params.yaml')
     rf2o_laser_odometry_node = Node(
         package='rf2o_laser_odometry',
@@ -216,13 +226,15 @@ def generate_launch_description():
     ld.add_action(use_teleop_arg)
     ld.add_action(use_nav2_arg)
     
-    # Add nodes in order (robot state first, then lidar, then rf2o odometry, then control)
-    # rf2o needs lidar data to compute odometry, so lidar must start first
+    # Add nodes in order (initial odom first for immediate TF, then robot state, lidar, rf2o)
+    # initial_odom provides immediate odom->base_footprint so RViz can start
+    # RF2O will override it once laser odometry is ready
+    ld.add_action(initial_odom_node)  # Start first - provides immediate odometry
     ld.add_action(robot_state_publisher_node)
     ld.add_action(joint_state_publisher_node)
     ld.add_action(lidar_tf_publisher_node)
     ld.add_action(lidar_node)
-    ld.add_action(rf2o_laser_odometry_node)  # Lidar odometry - must start after lidar
+    ld.add_action(rf2o_laser_odometry_node)  # Lidar odometry - overrides initial_odom when ready
     ld.add_action(motor_controller_node)
     ld.add_action(obstacle_avoidance_node)
     ld.add_action(rviz_node)
