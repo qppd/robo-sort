@@ -12,3 +12,13 @@ source/rpi/RoboSort/venv/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# 3D Model files
+*.stl
+*.STL
+*.gcode
+*.GCODE
+
+# Model archives
+*.zip
+*.tar.gz
