@@ -9,7 +9,7 @@
 ## Overview
 RoboSort is an intelligent automated waste segregation system designed to efficiently separate paper and plastic waste materials using a robotic arm, stepper motor positioning, and cutting-edge AI technology. The project addresses the growing need for automated waste management by combining computer vision, robotics, embedded systems, and LIDAR sensing to accurately identify and sort recyclable materials.
 
-Integrating both Arduino and Raspberry Pi platforms, RoboSort combines mechanical, electrical, and software components for a robust, scalable solution suitable for educational institutions, recycling facilities, and smart waste management applications. The system now features advanced YOLO-based object detection and 360° LIDAR environmental awareness for enhanced sorting accuracy and safety.
+Integrating both Arduino and Raspberry Pi platforms, RoboSort combines mechanical, electrical, and software components for a robust, scalable solution suitable for educational institutions, recycling facilities, and smart waste management applications. The system now features advanced YOLO-based object detection, 360° LIDAR environmental awareness, and ROS2-based autonomous navigation with LiDAR odometry for precise robot localization and mapping.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -27,6 +27,7 @@ Integrating both Arduino and Raspberry Pi platforms, RoboSort combines mechanica
 - [AI Vision System Configuration](#ai-vision-system-configuration)
 - [Configuration](#configuration)
 - [System Integration](#system-integration)
+- [ROS2 Integration & LiDAR Odometry](#ros2-integration--lidar-odometry)
 - [Diagrams Folder](#diagrams-folder)
 - [Development](#development)
 - [Contributing](#contributing)
@@ -82,7 +83,8 @@ Raspberry Pi (Python) ← Serial USB ← Arduino Mega ← Sensor Feedback
 ### Core Capabilities
 - **Differential Drive Robot**: Arduino Mega-controlled DC motors with L298N H-bridge drivers for autonomous navigation
 - **360° LiDAR Sensing**: LD06 sensor providing 0.02-12m range scanning at 4500Hz sample rate
-- **ROS2 Integration**: Complete ROS2 Humble workspace with simulation and hardware control
+- **ROS2 Integration**: Complete ROS2 Jazzy workspace with simulation and hardware control
+- **LiDAR Odometry**: RF2O laser odometry for accurate robot localization without wheel encoders
 - **SLAM Mapping**: Real-time simultaneous localization and mapping with SLAM Toolbox
 - **Autonomous Navigation**: Nav2-based path planning and obstacle avoidance
 
@@ -275,6 +277,27 @@ python yolo_detect.py --model model.pt --source usb0 --record --resolution 640x4
    - Baudrate: 230400
    - No additional configuration needed
 
+### ROS2 Workspace Setup (Advanced Features)
+1. **Install ROS2 Jazzy**:
+   ```bash
+   # Follow official ROS2 installation guide for Ubuntu
+   sudo apt update
+   sudo apt install ros-jazzy-desktop ros-jazzy-vision-msgs ros-jazzy-cv-bridge
+   ```
+
+2. **Build RoboSort ROS2 Workspace**:
+   ```bash
+   cd ~/robo-sort/source/rpi/ros2-robosort
+   source /opt/ros/jazzy/setup.bash
+   colcon build --symlink-install
+   source install/setup.bash
+   ```
+
+3. **Install RF2O Laser Odometry** (for LiDAR-based odometry):
+   ```bash
+   sudo apt install ros-jazzy-rf2o-laser-odometry
+   ```
+
 ## Usage
 
 ### AI Vision System (YOLO Detection)
@@ -464,320 +487,29 @@ MCSTOP        # Stop continuous test
 - **Brake**: IN1=HIGH, IN2=HIGH (short-circuit brake)
 - Speed controlled via PWM on ENA/ENB pins (0-255)
 
-## ROS2 Integration & LiDAR Testing
+## ROS2 Integration & LiDAR Odometry
 
-### ROS2 Workspace Overview
+**For complete ROS2 setup instructions, LiDAR odometry configuration, and advanced features, see the [ROS2 Integration & LiDAR Odometry](#ros2-integration--lidar-odometry) section below.**
 
-The RoboSort system includes a complete ROS2 Jazzy workspace with advanced features including YOLO vision, LiDAR integration, URDF robot modeling, and coordinated control.
-
-**Location:** `source/rpi/ros2-robosort/`
-
-**Key Packages:**
-- **robosort_interfaces** - Custom ROS2 service definitions (SetServo, MoveRobotArm, RotateBin, GetDistance, ControlMotor)
-- **robosort_vision** - YOLO detector, Arduino serial bridge, waste segregation controller
-- **robosort_sensors** - LiDAR LD06 integration with 3D object localization
-- **robosort_description** - URDF 5-DOF robot arm model for visualization and kinematics
-- **camjam_control** - DC motor control for mobile base
-- **camjam_sensors** - Additional sensor integration
-
-### ROS2 Installation & Setup
-
-#### Prerequisites
+### Quick ROS2 Launch (Basic)
 ```bash
-# Install ROS2 Jazzy (if not already installed)
-sudo apt update
-sudo apt install ros-jazzy-desktop ros-jazzy-vision-msgs ros-jazzy-cv-bridge ros-jazzy-rviz2
-
-# Install Python dependencies
-pip install ultralytics opencv-python pyserial numpy
-```
-
-#### Build Workspace
-```bash
+# Build workspace
 cd ~/robo-sort/source/rpi/ros2-robosort
 source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install
 source install/setup.bash
+
+# Launch with automated script
+./start_robosort.sh
 ```
 
-### LiDAR LD06 Test & Visualization
-
-#### Quick Test - LiDAR Only
-
-**Step 1: Identify LiDAR Serial Port**
+### Manual ROS2 Launch
 ```bash
-# List available serial ports
-ls /dev/tty*
+# Terminal 1: Main system
+ros2 launch robosort_control robosort.launch.py arduino_port:=/dev/ttyUSB0 lidar_port:=/dev/ttyUSB1 use_rviz:=true
 
-# Your LiDAR may be on /dev/ttyUSB0, /dev/ttyUSB1, or /dev/ttyACM0
-```
-
-**Step 2: Launch LiDAR System**
-```bash
-cd ~/robo-sort/source/rpi/ros2-robosort
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
-
-# Launch with the correct serial port (adjust as needed)
-ros2 launch robosort_sensors lidar.launch.py serial_port:=/dev/ttyUSB1
-```
-
-**Expected Output:**
-```
-[ldlidar_stl_ros2_node-1] [INFO] [...] [ld06_lidar]: <port_name>: /dev/ttyUSB1
-[ldlidar_stl_ros2_node-1] [INFO] [...] [ld06_lidar]: ldlidar node start is success
-[lidar_processor-2] [INFO] [...] [lidar_processor]: LiDAR LD06 Processor initialized
-[object_localizer-3] [INFO] [...] [object_localizer]: Object Localizer initialized
-```
-
-**Step 3: Visualize in RViz2 (New Terminal)**
-```bash
-cd ~/robo-sort/source/rpi/ros2-robosort
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
-
-# Launch RViz with robot model visualization
-ros2 launch robosort_description display.launch.py
-```
-
-**Step 4: Monitor LiDAR Data (Optional - New Terminal)**
-```bash
-# Watch distance measurements
-ros2 topic echo /robosort/object_distance
-
-# View raw scan data (once)
-ros2 topic echo /scan --once
-```
-
-#### Complete System Launch
-
-For full system operation with all sensors and controllers:
-
-**Terminal 1: Main RoboSort System**
-```bash
-cd ~/robo-sort/source/rpi/ros2-robosort
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
-ros2 launch robosort_vision robosort.launch.py
-```
-
-**Terminal 2: LiDAR System**
-```bash
-cd ~/robo-sort/source/rpi/ros2-robosort
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
-ros2 launch robosort_sensors lidar.launch.py serial_port:=/dev/ttyUSB1
-```
-
-**Terminal 3: Robot Visualization**
-```bash
-cd ~/robo-sort/source/rpi/ros2-robosort
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
-ros2 launch robosort_description display.launch.py
-```
-
-#### Alternative: Use Pre-configured RViz
-
-```bash
-# Launch RViz with full RoboSort config (includes LiDAR + detections)
-rviz2 -d ~/robo-sort/source/rpi/ros2-robosort/src/robosort_vision/config/robosort.rviz
-```
-
-### SLAM Mapping with Teleop Control
-
-For real-time mapping and teleoperation using SLAM Toolbox:
-
-**Terminal 1: Hardware + RViz**
-```bash
-cd ~/robo-sort/source/rpi/ros2-robosort
-source /opt/ros/humble/setup.bash
-source install/setup.bash
-ros2 launch robosort_control robosort.launch.py \
-    arduino_port:=/dev/ttyUSB1 \
-    lidar_port:=/dev/ttyUSB0 \
-    use_rviz:=true \
-    use_teleop:=true
-```
-
-**Terminal 2: SLAM Toolbox**
-```bash
-cd ~/robo-sort/source/rpi/ros2-robosort
-source /opt/ros/humble/setup.bash
-ros2 launch slam_toolbox online_async_launch.py \
-    params_file:=$HOME/robo-sort/source/rpi/ros2-robosort/config/mapper_params_online_async.yaml
-```
-
-**Terminal 3: Teleop Control (if not launched with use_teleop:=true)**
-```bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard
-```
-
-### ROS2 Topics & Services
-
-#### Key Topics
-```bash
-# LiDAR data
-/scan                           # Raw 360° LiDAR scan
-/robosort/object_distance       # Distance to closest object
-/robosort/object_position_3d    # 3D coordinates (x, y, z)
-/robosort/pickup_point          # Gripper target position
-
-# Vision & Control
-/robosort/detections            # YOLO detected objects
-/robosort/annotated_image       # Camera feed with overlays
-/robosort/ultrasonic_levels     # Bin fill levels
-/robosort/controller_status     # System status
-/robosort/arduino_status        # Serial connection status
-
-# Robot Model
-/joint_states                   # Arm joint positions
-/tf                             # Transform tree
-```
-
-#### Key Services
-```bash
-# Arm Control
-ros2 service call /robosort/set_servo robosort_interfaces/srv/SetServo \
-    "{servo_num: 0, angle: 90}"
-
-ros2 service call /robosort/move_arm robosort_interfaces/srv/MoveRobotArm \
-    "{joint_angles: [90.0, 45.0, 45.0, 90.0, 0.0]}"
-
-ros2 service call /robosort/home_arm std_srvs/srv/Trigger
-
-# Bin Control
-ros2 service call /robosort/rotate_bin robosort_interfaces/srv/RotateBin \
-    "{compartment_number: 1}"
-
-# DC Motors
-ros2 service call /robosort/control_motor robosort_interfaces/srv/ControlMotor \
-    "{motor_id: 0, direction: 1, speed: 200}"
-
-# LiDAR 3D Localization
-ros2 service call /robosort/get_object_position \
-    robosort_interfaces/srv/GetObjectPosition
-
-# Servo Enable/Disable
-ros2 service call /robosort/enable_servos std_srvs/srv/Trigger
-ros2 service call /robosort/disable_servos std_srvs/srv/Trigger
-```
-
-### RViz Visualization Features
-
-When RViz is launched, you'll see:
-- **360° LiDAR Point Cloud**: Rainbow-colored scan points showing environment
-- **Robot Arm Model**: 5-DOF URDF model with interactive joint sliders
-- **Fixed Frame**: `lidar_frame` or `base_link` depending on configuration
-- **Detection Markers**: YOLO detected objects (when vision node is running)
-- **Transform Tree**: Shows coordinate frame relationships
-
-### Troubleshooting ROS2 & LiDAR
-
-#### LiDAR Communication Error
-```bash
-# Error: "ldlidar communication is abnormal"
-# Solution: Check serial port assignment
-
-# Find LiDAR device
-ls /dev/ttyUSB* /dev/ttyACM*
-
-# Add user to dialout group
-sudo usermod -a -G dialout $USER
-# Logout and login again
-
-# Test with correct port
-ros2 launch robosort_sensors lidar.launch.py serial_port:=/dev/ttyUSB1
-```
-
-#### Permission Denied
-```bash
-# Fix serial port permissions
-sudo chmod 666 /dev/ttyUSB1
-
-# Permanent fix: Add user to dialout group
-sudo usermod -a -G dialout $USER
-newgrp dialout
-```
-
-#### RViz Not Showing LiDAR Data
-1. Check Fixed Frame is set to `lidar_frame`
-2. Ensure LaserScan display is enabled
-3. Verify topic is set to `/scan`
-4. Check if LiDAR node is running: `ros2 node list`
-
-#### Build Errors
-```bash
-# Clean and rebuild
-cd ~/robo-sort/source/rpi/ros2-robosort
-rm -rf build install log
-source /opt/ros/jazzy/setup.bash
-colcon build --symlink-install
-source install/setup.bash
-```
-
-### Quick Reference Commands
-
-```bash
-# List all nodes
-ros2 node list
-
-# List all topics
-ros2 topic list
-
-# List all services
-ros2 service list
-
-# Monitor topic data
-ros2 topic echo /scan
-ros2 topic echo /robosort/object_distance
-
-# Check node information
-ros2 node info /ld06_lidar
-ros2 node info /lidar_processor
-
-# Test LiDAR data rate
-ros2 topic hz /scan
-
-# Monitor system status
-ros2 topic echo /robosort/arduino_status
-ros2 topic echo /robosort/lidar_status
-```
-
-### System Architecture - ROS2
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    ROS2 RoboSort System                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────┐    ┌─────────────┐    ┌──────────────┐  │
-│  │ YOLO Detector│───▶│ LiDAR LD06  │───▶│   Object     │  │
-│  │     Node     │    │  Processor  │    │  Localizer   │  │
-│  └──────────────┘    └─────────────┘    └──────────────┘  │
-│         │                    │                    │         │
-│         └────────────────────┴────────────────────┘         │
-│                              │                               │
-│                              ▼                               │
-│                   ┌──────────────────────┐                  │
-│                   │ Waste Segregation   │                  │
-│                   │    Controller       │                  │
-│                   └──────────────────────┘                  │
-│                              │                               │
-│                              ▼                               │
-│                   ┌──────────────────────┐                  │
-│                   │  Arduino Serial      │                  │
-│                   │    Bridge Node       │                  │
-│                   └──────────────────────┘                  │
-│                              │                               │
-│         ┌────────────────────┼────────────────────┐        │
-│         ▼                    ▼                    ▼        │
-│  ┌──────────┐       ┌──────────────┐      ┌──────────┐   │
-│  │  RViz2   │       │ Arduino Mega │      │ Hardware │   │
-│  │Visualize │       │  (Servos +   │      │ Sensors  │   │
-│  └──────────┘       │   Stepper)   │      └──────────┘   │
-│                     └──────────────┘                       │
-└─────────────────────────────────────────────────────────────┘
+# Terminal 2: SLAM mapping
+ros2 launch slam_toolbox online_async_launch.py params_file:=config/mapper_params_online_async.yaml
 ```
 
 ## Wiring Diagram
@@ -1375,30 +1107,77 @@ The RoboSort Bin Limit Switch Trigger is a custom-designed 3D-printed mechanical
 robo-sort/
 ├── LICENSE
 ├── README.md
-├── yolo_detect.py                    # AI Vision System with YOLO & LIDAR
-├── diagram/                         # Circuit diagrams and schematics
-│   ├── Wiring.fzz                   # Fritzing wiring diagram (editable)
-│   └── Wiring.png                   # Wiring diagram image
-├── model/                           # 3D models and images
-│   ├── robosort-front.jpg
-│   ├── robosort-main.jpg
-│   └── robosort-side.jpg
+├── .gitignore                      # Git ignore patterns for build files and 3D models
+├── diagram/                        # Circuit diagrams and schematics
+│   ├── Wiring.fzz                  # Fritzing wiring diagram (editable)
+│   └── Wiring.png                  # Wiring diagram image
+├── diagrams/                       # Additional system diagrams
+├── ml/                            # Machine learning training data
+│   └── train/
+│       ├── args.yaml              # Training configuration
+│       ├── results.csv            # Training results
+│       └── weights/               # Trained model weights
+├── model/                         # 3D models and images (not in git)
+│   ├── *.gcode                    # CNC machining files
+│   ├── *.stl                      # 3D printable models
+│   └── *.jpg                      # Hardware photos
 └── source/
     ├── arduino/
     │   └── RoboSort/
     │       ├── RoboSort.ino              # Main firmware with integrated control
     │       ├── SERVO_CONFIG.h            # Servo driver header
     │       ├── SERVO_CONFIG.cpp          # Servo driver implementation
-    │       ├── TB6600.h                   # TB6600 stepper motor driver header
+    │       ├── TB6600.h                  # TB6600 stepper motor driver header
     │       ├── TB6600.cpp                # TB6600 stepper motor driver implementation
     │       ├── ULTRASONIC_CONFIG.h       # Ultrasonic sensor header
     │       └── ULTRASONIC_CONFIG.cpp     # Ultrasonic sensor implementation
     └── rpi/
-        └── RoboSort/
-            ├── RoboSort.py               # Main application with CLI interface
-            ├── serial_config.py          # Serial communication module
-            ├── yolo_detect.py            # AI Vision System (duplicate for easy access)
-            └── requirements.txt          # Python dependencies
+        ├── reference/                     # Legacy Python implementation
+        │   ├── RoboSort.py               # Original CLI application
+        │   ├── serial_config.py          # Serial communication module
+        │   ├── yolo_detect.py            # AI Vision System
+        │   └── requirements.txt          # Python dependencies
+        ├── RoboSort/                     # Current Python implementation
+        │   ├── RoboSort.py               # Main application with CLI interface
+        │   ├── serial_config.py          # Serial communication module
+        │   ├── yolo_detect.py            # AI Vision System (duplicate for easy access)
+        │   └── requirements.txt          # Python dependencies
+        ├── ros2-robosort/                # ROS2 Jazzy workspace
+        │   ├── src/
+        │   │   ├── ldlidar_stl_ros2/     # LD06 LiDAR driver
+        │   │   ├── robosort_control/     # Main control package
+        │   │   │   ├── robosort_control/
+        │   │   │   │   ├── initial_odom_publisher.py  # Initial odometry for RViz
+        │   │   │   │   ├── lidar_tf_publisher.py      # LiDAR TF broadcaster
+        │   │   │   │   ├── motor_controller.py        # DC motor control
+        │   │   │   │   ├── obstacle_avoidance.py      # Navigation safety
+        │   │   │   │   ├── tf_broadcaster.py          # Coordinate frame management
+        │   │   │   │   └── __init__.py
+        │   │   │   ├── config/
+        │   │   │   │   ├── nav2_params.yaml           # Nav2 navigation parameters
+        │   │   │   │   ├── params.yaml                # General parameters
+        │   │   │   │   ├── rf2o_params.yaml           # RF2O odometry parameters
+        │   │   │   │   └── robosort.rviz              # RViz configuration
+        │   │   │   └── launch/
+        │   │   │       ├── nav2_no_docking.launch.py  # Nav2 launch without docking
+        │   │   │       └── robosort.launch.py         # Main system launch
+        │   │   ├── robosort_description/  # URDF robot description
+        │   │   ├── robosort_interfaces/   # ROS2 service/message definitions
+        │   │   ├── robosort_sensors/      # Sensor integration
+        │   │   └── robosort_vision/       # YOLO vision processing
+        │   ├── config/
+        │   │   └── mapper_params_online_async.yaml  # SLAM parameters
+        │   ├── start_robosort.sh         # Quick start script
+        │   ├── verify_rf2o_setup.sh      # RF2O diagnostics script
+        │   ├── my_map.pgm                # SLAM-generated map
+        │   └── my_map.yaml               # Map metadata
+        ├── test/                         # Testing utilities
+        └── yolo/                         # YOLO model management
+            ├── my_model.pt              # Trained YOLO model
+            ├── my_model.torchscript     # TorchScript export
+            ├── requirements.txt         # YOLO dependencies
+            ├── yolo_detect.py           # YOLO detection script
+            └── my_model_ncnn_model/     # NCNN optimized model
 ```
 
 ## AI Vision System Configuration
@@ -1958,6 +1737,160 @@ graph LR
 - **Tolerances**: ±0.1mm general, ±0.05mm critical fits
 
 For detailed hardware assembly and system understanding, refer to the diagrams folder.
+
+## ROS2 Integration & LiDAR Odometry
+
+### ROS2 Workspace Overview
+
+The RoboSort system includes a complete ROS2 Jazzy workspace with advanced features including YOLO vision, LiDAR integration, URDF robot modeling, and coordinated control.
+
+**Location:** `source/rpi/ros2-robosort/`
+
+**Key Packages:**
+- **robosort_interfaces** - Custom ROS2 service definitions (SetServo, MoveRobotArm, RotateBin, GetDistance, ControlMotor)
+- **robosort_vision** - YOLO detector, Arduino serial bridge, waste segregation controller
+- **robosort_sensors** - LiDAR LD06 integration with 3D object localization
+- **robosort_description** - URDF 5-DOF robot arm model for visualization and kinematics
+- **robosort_control** - DC motor control, LiDAR odometry, and navigation nodes
+
+### LiDAR Odometry with RF2O
+
+RoboSort uses `rf2o_laser_odometry` for accurate odometry estimation from LiDAR scan matching instead of dead-reckoning. This significantly reduces drift during navigation.
+
+#### What Changed
+- **Before**: `tf_broadcaster` computed odometry from `cmd_vel` commands (dead-reckoning)
+- **After**: `rf2o_laser_odometry` computes odometry by matching consecutive laser scans (ICP)
+
+#### TF Tree Structure (Unchanged)
+```
+map
+ └─ odom (from slam_toolbox: provides map->odom transform for drift correction)
+     └─ base_footprint (from rf2o_laser_odometry: provides odom->base_footprint)
+         ├─ lidar_link (from lidar_tf_publisher)
+         └─ base_link (from robot_state_publisher via URDF)
+             ├─ left_wheel_link
+             ├─ right_wheel_link
+             ├─ front_left_caster_link
+             └─ right_caster_link
+```
+
+### ROS2 Installation & Setup
+
+#### Prerequisites
+```bash
+# Install ROS2 Jazzy (if not already installed)
+sudo apt update
+sudo apt install ros-jazzy-desktop ros-jazzy-vision-msgs ros-jazzy-cv-bridge
+
+# Install Python dependencies
+pip install ultralytics opencv-python pyserial numpy
+```
+
+#### Build Workspace
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/jazzy/setup.bash
+colcon build --symlink-install
+source install/setup.bash
+```
+
+### LiDAR Odometry Setup
+
+#### Install RF2O Package
+```bash
+# For ROS 2 Jazzy
+sudo apt update
+sudo apt install ros-jazzy-rf2o-laser-odometry
+```
+
+#### RF2O Parameters (`config/rf2o_params.yaml`)
+Key parameters you can tune:
+- **Frequency**: `freq: 20.0` - How often odometry is computed (Hz)
+- **Max Correspondence Distance**: `max_correspondence_dist: 0.3` - Maximum distance for point matching
+- **Covariance**: `sigma_scan_xy` and `sigma_scan_angle` - Uncertainty estimates for Nav2
+
+### Launch Commands
+
+**Terminal 1: Main RoboSort System**
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 launch robosort_control robosort.launch.py \
+    arduino_port:=/dev/ttyUSB0 \
+    lidar_port:=/dev/ttyUSB1 \
+    use_rviz:=true \
+    use_teleop:=true \
+    use_nav2:=false
+```
+
+**Terminal 2: SLAM Mapping**
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+source /opt/ros/jazzy/setup.bash
+ros2 launch slam_toolbox online_async_launch.py \
+    params_file:=$HOME/robo-sort/source/rpi/ros2-robosort/config/mapper_params_online_async.yaml
+```
+
+### Key ROS2 Topics & Services
+
+#### Topics
+```bash
+/scan                           # Raw 360° LiDAR scan
+/odom                           # Robot odometry (from RF2O)
+/tf                             # Transform tree
+/robosort/detections            # YOLO detected objects
+/robosort/object_distance       # Distance to closest object
+```
+
+#### Services
+```bash
+ros2 service call /robosort/set_servo robosort_interfaces/srv/SetServo \
+    "{servo_num: 0, angle: 90}"
+
+ros2 service call /robosort/move_arm robosort_interfaces/srv/MoveRobotArm \
+    "{joint_angles: [90.0, 45.0, 45.0, 90.0, 0.0]}"
+```
+
+### Quick Start Scripts
+
+#### Automated Launch
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+./start_robosort.sh
+```
+
+#### RF2O Diagnostics
+```bash
+cd ~/robo-sort/source/rpi/ros2-robosort
+./verify_rf2o_setup.sh
+```
+
+### Troubleshooting ROS2 & LiDAR
+
+#### LiDAR Communication Error
+```bash
+# Find LiDAR device
+ls /dev/ttyUSB* /dev/ttyACM*
+
+# Add user to dialout group
+sudo usermod -a -G dialout $USER
+newgrp dialout
+```
+
+#### RF2O Not Publishing Odometry
+**Symptoms**: No `/odom` topic or TF warnings
+**Solutions**:
+1. Check LiDAR is publishing: `ros2 topic hz /scan`
+2. Verify frame IDs match: `ros2 topic echo /scan --field header.frame_id`
+3. Check RF2O logs: `ros2 node list` and look for errors
+
+#### High Drift Still Present
+**Symptoms**: Robot position drifts during movement
+**Solutions**:
+1. Increase scan matching frequency: Edit `rf2o_params.yaml`, set `freq: 30.0`
+2. Reduce max correspondence distance: Set `max_correspondence_dist: 0.2`
+3. Ensure LiDAR is mounted rigidly (no vibration)
 
 ## Development
 
