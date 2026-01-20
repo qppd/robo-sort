@@ -9,8 +9,8 @@
       # Publishers
       publish_tf: true                # Publish odom->base_footprint transform
       
-      # Frequency and timing
-      freq: 20.0                      # Odometry computation frequency (Hz)
+      # Frequency and timing - increased for better SLAM integration
+      freq: 30.0                      # Increased from 20Hz to 30Hz for smoother odometry
       
       # Scan matching parameters
       # These control how aggressively the algorithm matches scans
