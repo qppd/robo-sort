@@ -1,0 +1,52 @@
+laser_odometry:
+  ros__parameters:
+    # Frame IDs
+    laser_frame: lidar_link         # Frame of the laser scanner
+    base_frame: base_footprint      # Robot base frame
+    odom_frame: odom                # Odometry frame
+    
+    # Publishers
+    publish_tf: true                # Publish odom->base_footprint transform
+    init_pose_from_topic: ""        # Initialize pose from a topic (empty = start at origin)
+    
+    # Frequency and timing
+    freq: 20.0                      # Odometry computation frequency (Hz)
+    
+    # Laser scan downsampling
+    # Higher values = faster but less accurate
+    # Lower values = slower but more accurate
+    laser_scan_topic: /scan         # Input laser scan topic
+    
+    # Scan matching parameters
+    # These control how aggressively the algorithm matches scans
+    max_linear_correction: 0.5      # Maximum linear correction per iteration (m)
+    max_angular_correction: 0.5     # Maximum angular correction per iteration (rad)
+    
+    # ICP (Iterative Closest Point) parameters
+    # Number of iterations for scan matching
+    max_iterations: 5               # Max ICP iterations
+    
+    # Convergence criteria
+    # Lower values = more precise but slower
+    epsilon_xy: 0.0001              # Convergence threshold for position (m)
+    epsilon_angle: 0.0001           # Convergence threshold for angle (rad)
+    
+    # Correspondence matching
+    # Maximum distance between corresponding points
+    max_correspondence_dist: 0.3    # Maximum distance for point correspondences (m)
+    
+    # Covariance parameters (uncertainty estimates)
+    # These affect how much Nav2 trusts the odometry
+    # Lower values = more trust in odometry
+    sigma_scan_xy: 0.05             # XY uncertainty from scan matching (m)
+    sigma_scan_angle: 0.05          # Angular uncertainty from scan matching (rad)
+    
+    # Additional noise parameters
+    # Increases uncertainty over time/distance
+    sigma_odometry_xy: 0.01         # Additional XY noise per meter traveled
+    sigma_odometry_angle: 0.01      # Additional angular noise per radian rotated
+    
+    # Velocity smoothing
+    use_alpha_beta: false           # Use alpha-beta filter for velocity smoothing
+    alpha: 0.9                      # Alpha parameter for smoothing
+    beta: 0.1                       # Beta parameter for smoothing

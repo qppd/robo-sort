@@ -62,18 +62,15 @@ def generate_launch_description():
         description='Launch Nav2 navigation stack'
     )
     
-    # TF Broadcaster Node - handles odometry transform only
-    # LiDAR transform now comes from robot_state_publisher via URDF
-    tf_broadcaster_node = Node(
-        package='robosort_control',
-        executable='tf_broadcaster',
-        name='tf_broadcaster',
+    # RF2O Laser Odometry - provides odom->base_footprint transform from lidar scan matching
+    # This replaces the old dead-reckoning tf_broadcaster with accurate lidar-based odometry
+    rf2o_params_file = os.path.join(robosort_control_dir, 'config', 'rf2o_params.yaml')
+    rf2o_laser_odometry_node = Node(
+        package='rf2o_laser_odometry',
+        executable='rf2o_laser_odometry_node',
+        name='rf2o_laser_odometry',
         output='screen',
-        parameters=[{
-            'odom_frame': 'odom',
-            'base_frame': 'base_footprint',
-            'publish_rate': 50.0,
-        }]
+        parameters=[rf2o_params_file]
     )
     
     # LiDAR TF Publisher - publishes dynamic base_footprint -> lidar_link transform
@@ -213,12 +210,13 @@ def generate_launch_description():
     ld.add_action(use_teleop_arg)
     ld.add_action(use_nav2_arg)
     
-    # Add nodes in order (TF first, robot state, then sensors, then control)
-    ld.add_action(tf_broadcaster_node)
-    ld.add_action(lidar_tf_publisher_node)
+    # Add nodes in order (robot state first, then lidar, then rf2o odometry, then control)
+    # rf2o needs lidar data to compute odometry, so lidar must start first
     ld.add_action(robot_state_publisher_node)
     ld.add_action(joint_state_publisher_node)
+    ld.add_action(lidar_tf_publisher_node)
     ld.add_action(lidar_node)
+    ld.add_action(rf2o_laser_odometry_node)  # Lidar odometry - must start after lidar
     ld.add_action(motor_controller_node)
     ld.add_action(obstacle_avoidance_node)
     ld.add_action(rviz_node)
