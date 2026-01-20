@@ -12,15 +12,20 @@ RoboSort now uses `rf2o_laser_odometry` for accurate odometry estimation from li
 ### 2. TF Tree Structure (Unchanged)
 ```
 map
- └─ odom (from slam_toolbox)
-     └─ base_footprint (from rf2o_laser_odometry)
+ └─ odom (from slam_toolbox: provides map->odom transform for drift correction)
+     └─ base_footprint (from rf2o_laser_odometry: provides odom->base_footprint)
          ├─ lidar_link (from lidar_tf_publisher)
-         └─ base_link (from robot_state_publisher)
+         └─ base_link (from robot_state_publisher via URDF)
              ├─ left_wheel_link
              ├─ right_wheel_link
              ├─ front_left_caster_link
              └─ right_caster_link
 ```
+
+**Important**: 
+- SLAM Toolbox publishes `map->odom` (corrects long-term drift)
+- RF2O publishes `odom->base_footprint` (accurate short-term odometry)
+- Together they form the complete chain: `map->odom->base_footprint->base_link`
 
 ### 3. Key Benefits
 - **Reduced Drift**: Lidar scan matching is much more accurate than dead-reckoning
@@ -72,16 +77,32 @@ colcon build --packages-select robosort_control
 source install/setup.bash
 ```
 
-### Launch (Same commands as before)
+### Launch Commands
 
-**Terminal 1: SLAM Toolbox**
+**IMPORTANT**: Only launch ONE of the following terminal setups. RF2O is included in robosort.launch.py.
+
+#### Option 1: Using robosort.launch.py (RECOMMENDED - includes RF2O)
 ```bash
+# Single terminal - all-in-one launch
+ros2 launch robosort_control robosort.launch.py \
+    arduino_port:=/dev/ttyUSB0 \
+    lidar_port:=/dev/ttyUSB1 \
+    use_rviz:=true \
+    use_teleop:=true \
+    use_nav2:=false
+
+# In another terminal: SLAM Toolbox
 ros2 launch slam_toolbox online_async_launch.py \
     params_file:=$HOME/robo-sort/source/rpi/ros2-robosort/config/mapper_params_online_async.yaml
 ```
 
-**Terminal 2: RoboSort with Navigation**
+#### Option 2: Separate terminals (your current setup)
 ```bash
+# Terminal 1: SLAM Toolbox (provides map->odom)
+ros2 launch slam_toolbox online_async_launch.py \
+    params_file:=$HOME/robo-sort/source/rpi/ros2-robosort/config/mapper_params_online_async.yaml
+
+# Terminal 2: RoboSort with RF2O (provides odom->base_footprint)
 ros2 launch robosort_control robosort.launch.py \
     arduino_port:=/dev/ttyUSB0 \
     lidar_port:=/dev/ttyUSB1 \
@@ -89,6 +110,8 @@ ros2 launch robosort_control robosort.launch.py \
     use_teleop:=true \
     use_nav2:=true
 ```
+
+**Note**: If you see duplicate RF2O warnings, make sure you're not launching RF2O twice from different launch files.
 
 ## Verification
 
@@ -118,6 +141,18 @@ ros2 node info /rf2o_laser_odometry
 ```
 
 ## Troubleshooting
+
+### Duplicate RF2O Nodes Warning
+**Symptoms**: `WARNING: Be aware that there are nodes in the graph that share an exact name`
+**Cause**: RF2O is being launched from multiple launch files
+**Solutions**:
+1. Check if you're running nav2_visualization.launch.py which might launch RF2O
+2. Use only robosort.launch.py which already includes RF2O
+3. Verify no other launch files are starting RF2O:
+   ```bash
+   ros2 node list | grep rf2o
+   # Should show only ONE: /rf2o_laser_odometry
+   ```
 
 ### RF2O Not Receiving Laser Scans
 **Symptoms**: `[WARN] Waiting for laser_scans....` continuously

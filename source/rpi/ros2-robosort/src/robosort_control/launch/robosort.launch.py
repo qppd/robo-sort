@@ -72,7 +72,8 @@ def generate_launch_description():
         output='screen',
         parameters=[rf2o_params_file],
         remappings=[
-            ('scan', '/scan')  # Remap scan topic to /scan
+            ('scan', '/scan'),          # Remap input scan topic
+            ('odom_rf2o', '/odom')      # Remap output odometry topic to /odom
         ]
     )
     
