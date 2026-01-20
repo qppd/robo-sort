@@ -168,12 +168,14 @@ def generate_launch_description():
     )
     
     # RViz Node (conditional)
+    # Launch in separate terminal to see any errors
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
         name='rviz2',
         arguments=['-d', rviz_config],
         output='screen',
+        prefix='xterm -e',  # Launch in separate terminal window
         condition=IfCondition(LaunchConfiguration('use_rviz'))
     )
     

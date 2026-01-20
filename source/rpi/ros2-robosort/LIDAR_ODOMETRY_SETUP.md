@@ -219,6 +219,46 @@ ros2 node info /rf2o_laser_odometry
 2. Increase max_correspondence_dist: `max_correspondence_dist: 0.5`
 3. Reduce max_iterations: `max_iterations: 3`
 
+### RViz Not Opening
+**Symptoms**: RViz doesn't launch when `use_rviz:=true`
+**Solutions**:
+1. **Check if xterm is installed** (required for separate terminal):
+   ```bash
+   sudo apt install xterm
+   ```
+
+2. **Launch RViz manually** in a separate terminal:
+   ```bash
+   # Option 1: With RoboSort config
+   rviz2 -d $(ros2 pkg prefix robosort_control)/share/robosort_control/config/robosort.rviz
+   
+   # Option 2: Use the provided script
+   chmod +x ~/robo-sort/source/rpi/ros2-robosort/launch_rviz.sh
+   ~/robo-sort/source/rpi/ros2-robosort/launch_rviz.sh
+   
+   # Option 3: Default RViz (manually add displays)
+   rviz2
+   ```
+
+3. **Check RViz errors**:
+   ```bash
+   # Look for rviz2 errors in the launch output
+   ros2 launch robosort_control robosort.launch.py ... 2>&1 | grep -i rviz
+   ```
+
+4. **Verify RViz config file exists**:
+   ```bash
+   ls $(ros2 pkg prefix robosort_control)/share/robosort_control/config/robosort.rviz
+   ```
+
+5. **If RViz crashes**, manually configure displays:
+   - Fixed Frame: `map`
+   - Add: LaserScan (`/scan` topic)
+   - Add: Map (`/map` topic)
+   - Add: RobotModel
+   - Add: TF (show all frames)
+   - Add: Odometry (`/odom` topic)
+
 ## Technical Details
 
 ### How RF2O Works
