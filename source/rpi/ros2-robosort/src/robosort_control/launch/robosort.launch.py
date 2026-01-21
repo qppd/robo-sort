@@ -128,7 +128,7 @@ def generate_launch_description():
             'serial_port': LaunchConfiguration('arduino_port'),
             'baudrate': 9600,
             'timeout': 1.0,
-            'max_speed': 255,
+            'max_speed': 50,  # Limited to 50 for Nav2 Goal Pose 2D commands
             'wheel_base': 0.2,
         }]
     )
