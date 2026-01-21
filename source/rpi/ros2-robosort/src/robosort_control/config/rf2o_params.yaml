@@ -1,10 +1,15 @@
 /**:
-  laser_odometry:
+  rf2o_laser_odometry:
     ros__parameters:
+      # Topic configuration
+      laser_scan_topic: '/scan'       # Input laser scan topic
+      odom_topic: '/odom'             # Output odometry topic
+      
       # Frame IDs - CRITICAL: Must match your robot's TF tree
-      laser_frame_id: lidar_link      # Frame of the laser scanner (from lidar node)
-      base_frame_id: base_footprint   # Robot base frame
-      odom_frame_id: odom             # Odometry frame
+      laser_frame_id: 'lidar_link'    # Frame of the laser scanner (from lidar node)
+      base_frame_id: 'base_footprint' # Robot base frame
+      odom_frame_id: 'odom'           # Odometry frame
+      init_pose_from_topic: ''        # Leave empty to start from (0,0,0)
       
       # Publishers
       publish_tf: true                # Publish odom->base_footprint transform

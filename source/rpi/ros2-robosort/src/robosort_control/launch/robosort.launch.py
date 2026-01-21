@@ -62,47 +62,20 @@ def generate_launch_description():
         description='Launch Nav2 navigation stack'
     )
     
-    # Initial Odometry Publisher - provides immediate odom->base_footprint transform
-    # This prevents RViz from hanging while waiting for RF2O to initialize
-    # RF2O will override this once it starts publishing (takes ~2-3 seconds)
-    initial_odom_node = Node(
-        package='robosort_control',
-        executable='initial_odom_publisher',
-        name='initial_odom_publisher',
-        output='screen'
-    )
-    
     # RF2O Laser Odometry - provides odom->base_footprint transform from lidar scan matching
-    # Starts after accumulating laser scans, overrides initial_odom once ready
+    # This is the PRIMARY odometry source for RoboSort (uses laser scan matching)
+    # Note: RViz may show "Waiting for transform" for 2-3 seconds until RF2O accumulates enough scans
     rf2o_params_file = os.path.join(robosort_control_dir, 'config', 'rf2o_params.yaml')
     rf2o_laser_odometry_node = Node(
         package='rf2o_laser_odometry',
         executable='rf2o_laser_odometry_node',
         name='rf2o_laser_odometry',
         output='screen',
-        parameters=[rf2o_params_file],
-        remappings=[
-            ('scan', '/scan'),          # Remap input scan topic
-            ('odom_rf2o', '/odom')      # Remap output odometry topic to /odom
-        ]
-    )
-    
-    # LiDAR TF Publisher - publishes dynamic base_footprint -> lidar_link transform
-    # This is needed because SLAM Toolbox requires dynamic transforms, not static ones
-    lidar_tf_publisher_node = Node(
-        package='robosort_control',
-        executable='lidar_tf_publisher',
-        name='lidar_tf_publisher',
-        output='screen',
-        parameters=[{
-            'publish_rate': 100.0,
-            'lidar_x': 0.4008,
-            'lidar_y': 0.0,
-            'lidar_z': 0.276,
-        }]
+        parameters=[rf2o_params_file]
     )
     
     # Robot State Publisher - publishes robot URDF transforms
+    # Publishes: base_footprint -> base_link -> lidar_link (and all other links)
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -226,15 +199,14 @@ def generate_launch_description():
     ld.add_action(use_teleop_arg)
     ld.add_action(use_nav2_arg)
     
-    # Add nodes in order (initial odom first for immediate TF, then robot state, lidar, rf2o)
-    # initial_odom provides immediate odom->base_footprint so RViz can start
-    # RF2O will override it once laser odometry is ready
-    ld.add_action(initial_odom_node)  # Start first - provides immediate odometry
+    # Add nodes in order
+    # Start robot_state_publisher first to publish static URDF transforms
+    # Then start lidar and RF2O for odometry
+    # Note: RViz may show "Waiting for transform" for 2-3 seconds until RF2O initializes
     ld.add_action(robot_state_publisher_node)
     ld.add_action(joint_state_publisher_node)
-    ld.add_action(lidar_tf_publisher_node)
     ld.add_action(lidar_node)
-    ld.add_action(rf2o_laser_odometry_node)  # Lidar odometry - overrides initial_odom when ready
+    ld.add_action(rf2o_laser_odometry_node)  # Primary odometry source
     ld.add_action(motor_controller_node)
     ld.add_action(obstacle_avoidance_node)
     ld.add_action(rviz_node)
