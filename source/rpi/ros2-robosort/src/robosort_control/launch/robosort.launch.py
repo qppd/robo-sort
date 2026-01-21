@@ -25,6 +25,10 @@ def generate_launch_description():
     nav2_params_file = os.path.join(robosort_control_dir, 'config', 'nav2_params.yaml')
     urdf_file = os.path.join(robosort_description_dir, 'urdf', 'robosort.urdf.xacro')
     
+    # Laser filter config
+    robosort_sensors_dir = get_package_share_directory('robosort_sensors')
+    laser_filter_config = os.path.join(robosort_sensors_dir, 'config', 'laser_filter.yaml')
+    
     # Declare launch arguments
     lidar_port_arg = DeclareLaunchArgument(
         'lidar_port',
@@ -107,7 +111,7 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'product_name': 'LDLiDAR_LD06',
-            'topic_name': '/scan',  # Changed to /scan with leading slash for consistency
+            'topic_name': '/scan_raw',  # Publish to raw scan topic for filtering
             'frame_id': 'lidar_link',
             'port_name': LaunchConfiguration('lidar_port'),
             'port_baudrate': 230400,
@@ -116,6 +120,19 @@ def generate_launch_description():
             'angle_crop_min': 0.0,
             'angle_crop_max': 0.0,
         }]
+    )
+    
+    # Laser Scan Filter - filters rear obstacles and invalid ranges
+    laser_filter_node = Node(
+        package='laser_filters',
+        executable='scan_to_scan_filter_chain',
+        name='laser_filter',
+        output='screen',
+        parameters=[laser_filter_config],
+        remappings=[
+            ('scan', '/scan_raw'),
+            ('scan_filtered', '/scan')
+        ]
     )
     
     # Motor Controller Node
@@ -206,6 +223,7 @@ def generate_launch_description():
     ld.add_action(robot_state_publisher_node)
     ld.add_action(joint_state_publisher_node)
     ld.add_action(lidar_node)
+    ld.add_action(laser_filter_node)  # Filter raw scan before odometry/navigation
     ld.add_action(rf2o_laser_odometry_node)  # Primary odometry source
     ld.add_action(motor_controller_node)
     ld.add_action(obstacle_avoidance_node)

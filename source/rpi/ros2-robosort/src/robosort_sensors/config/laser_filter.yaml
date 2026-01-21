@@ -1,0 +1,24 @@
+scan_to_scan_filter_chain:
+  ros__parameters:
+    use_sim_time: false
+    filter_chain:
+      - name: robot_body_filter
+        type: laser_filters/LaserScanBoxFilter
+        params:
+          box_frame: lidar_link
+          min_x: -0.841  # Robot rear from LiDAR (0.4008 + 0.44)
+          max_x: 0.049   # Robot front from LiDAR (0.45 - 0.4008)
+          min_y: -0.254  # Robot left from center
+          max_y: 0.254   # Robot right from center
+          min_z: -0.1    # Below LiDAR
+          max_z: 0.1     # Above LiDAR
+          invert: true    # Keep points outside the box (robot body)
+          
+      - name: range_filter
+        type: laser_filters/LaserScanRangeFilter
+        params:
+          use_message_range_limits: false
+          lower_replacement_value: 12.0
+          upper_replacement_value: 12.0
+          lower_threshold: 0.12  # Minimum valid range
+          upper_threshold: 10.0  # Maximum valid range
