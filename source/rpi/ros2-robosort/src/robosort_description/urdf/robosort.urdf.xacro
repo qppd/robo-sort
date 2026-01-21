@@ -133,7 +133,7 @@
   <!-- Wheel Macro -->
   <!-- ============================================ -->
   
-  <xacro:macro name="wheel" params="prefix reflect">
+  <xacro:macro name="wheel" params="prefix reflect axis">
     <link name="${prefix}_wheel_link">
       <visual>
         <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
@@ -157,15 +157,15 @@
       <parent link="base_link"/>
       <child link="${prefix}_wheel_link"/>
       <origin xyz="-0.2524 ${reflect*wheel_separation/2} ${-body_height/2}" rpy="0 0 0"/>
-      <axis xyz="0 ${reflect} 0"/>
+      <axis xyz="${axis}"/>
       <limit effort="3.0" velocity="1.4"/>
       <dynamics damping="0.5" friction="0.3"/>
     </joint>
   </xacro:macro>
   
   <!-- Left and Right Drive Wheels -->
-  <xacro:wheel prefix="left" reflect="1"/>
-  <xacro:wheel prefix="right" reflect="-1"/>
+  <xacro:wheel prefix="left" reflect="1" axis="0 1 0"/>
+  <xacro:wheel prefix="right" reflect="-1" axis="0 -1 0"/>
   
   <!-- ============================================ -->
   <!-- Caster Wheel Macro -->
