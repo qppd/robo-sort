@@ -236,7 +236,7 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="lidar_link"/>
-    <origin xyz="${lidar_offset_x} 0 ${lidar_offset_z}" rpy="0 0 ${PI}"/>
+    <origin xyz="${lidar_offset_x} 0 ${lidar_offset_z}" rpy="0 0 0"/>
   </joint>
   
   <!-- ============================================ -->
