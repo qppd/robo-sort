@@ -259,11 +259,11 @@ void ServoConfig::armExtend(int angle) {
     return;
   }
   
-  // Mutual exclusion: Disable LOOK servo when ARM-EXTEND is operating
+  // Mutual exclusion: Loosen LOOK servo when ARM-EXTEND is operating
   if (lookOperating) {
-    Serial.println("Disabling LOOK servo for smooth ARM-EXTEND operation");
-    // LOOK servo is on channel 5, disable it by setting to current position
-    setServoAngle(5, currentLookAngle);
+    Serial.println("Loosening LOOK servo for smooth ARM-EXTEND operation");
+    // LOOK servo is on channel 5, loosen it by turning off PWM
+    pwm.setPWM(5, 0, 0);
     lookOperating = false;
   }
   
@@ -274,7 +274,7 @@ void ServoConfig::armExtend(int angle) {
   Serial.print(currentArmExtensionAngle);
   Serial.print(" to ");
   Serial.print(angle);
-  Serial.println(" degrees (smooth, LOOK disabled)");
+  Serial.println(" degrees (smooth, LOOK loosened)");
   
   // Smooth movement with 1-degree steps
   int step = (angle > currentArmExtensionAngle) ? 1 : -1;
@@ -300,11 +300,11 @@ void ServoConfig::lookRotate(int angle) {
     return;
   }
   
-  // Mutual exclusion: Disable ARM-EXTEND servo when LOOK is operating
+  // Mutual exclusion: Loosen ARM-EXTEND servo when LOOK is operating
   if (armExtendOperating) {
-    Serial.println("Disabling ARM-EXTEND servo for smooth LOOK operation");
-    // ARM-EXTEND servo is on channel 4, disable it by setting to current position
-    setServoAngle(4, currentArmExtensionAngle);
+    Serial.println("Loosening ARM-EXTEND servo for smooth LOOK operation");
+    // ARM-EXTEND servo is on channel 4, loosen it by turning off PWM
+    pwm.setPWM(4, 0, 0);
     armExtendOperating = false;
   }
   
@@ -315,7 +315,7 @@ void ServoConfig::lookRotate(int angle) {
   Serial.print(currentLookAngle);
   Serial.print(" to ");
   Serial.print(angle);
-  Serial.println(" degrees (smooth, ARM-EXTEND disabled)");
+  Serial.println(" degrees (smooth, ARM-EXTEND loosened)");
   
   // Smooth movement with 1-degree steps
   int step = (angle > currentLookAngle) ? 1 : -1;
