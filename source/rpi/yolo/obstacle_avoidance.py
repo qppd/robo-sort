@@ -18,10 +18,11 @@ class ObstacleAvoidance:
         critical_distance: float = 30.0,  # cm - critical distance requiring immediate action
         danger_distance: float = 15.0,  # cm - danger zone, must stop/back up
         front_angle_range: int = 30,  # degrees - front detection zone (±30° from center)
-        left_angle_range: Tuple[int, int] = (30, 150),  # degrees - left detection zone
-        right_angle_range: Tuple[int, int] = (210, 330),  # degrees - right detection zone
+        left_angle_range: Tuple[int, int] = (30, 100),  # degrees - left detection zone
+        right_angle_range: Tuple[int, int] = (260, 330),  # degrees - right detection zone
         side_weight: float = 0.7,  # Weight for side obstacle scoring
         clear_path_threshold: float = 80.0,  # cm - distance considered clear path
+        valid_angle_ranges: list = None,  # List of (min, max) angle ranges to use
     ):
         """
         Initialize obstacle avoidance system
@@ -35,6 +36,7 @@ class ObstacleAvoidance:
             right_angle_range: Tuple (start, end) angles for right side (degrees)
             side_weight: Weight multiplier for side obstacle importance (0-1)
             clear_path_threshold: Distance considered as clear path (cm)
+            valid_angle_ranges: List of (min, max) angle ranges to use (None = use all)
         """
         self.safe_distance = safe_distance
         self.critical_distance = critical_distance
@@ -44,6 +46,8 @@ class ObstacleAvoidance:
         self.right_angle_range = right_angle_range
         self.side_weight = side_weight
         self.clear_path_threshold = clear_path_threshold
+        # Default to 0-100 and 260-360 if not specified
+        self.valid_angle_ranges = valid_angle_ranges if valid_angle_ranges is not None else [(0, 100), (260, 360)]
         
     def normalize_angle(self, angle: float) -> float:
         """
@@ -60,6 +64,22 @@ class ObstacleAvoidance:
         while angle >= 360:
             angle -= 360
         return angle
+    
+    def is_valid_angle(self, angle: float) -> bool:
+        """
+        Check if angle is in valid reading range (to filter out rear-mounted objects)
+        
+        Args:
+            angle: Angle in degrees (0-360)
+            
+        Returns:
+            True if angle is in valid range
+        """
+        angle = self.normalize_angle(angle)
+        for min_angle, max_angle in self.valid_angle_ranges:
+            if min_angle <= angle <= max_angle:
+                return True
+        return False
     
     def is_in_front(self, angle: float) -> bool:
         """
@@ -127,6 +147,10 @@ class ObstacleAvoidance:
         for angle, distance in distances.items():
             # Filter out invalid readings (0 or very large values)
             if distance <= 0 or distance > 1000:
+                continue
+            
+            # Filter out angles not in valid range (e.g., rear of robot)
+            if not self.is_valid_angle(angle):
                 continue
                 
             if self.is_in_front(angle):

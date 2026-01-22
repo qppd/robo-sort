@@ -142,7 +142,13 @@ def test_obstacle_detection(port: str = '/dev/ttyUSB0', duration: int = 30):
         oa = ObstacleAvoidance(
             safe_distance=config.SAFE_DISTANCE,
             critical_distance=config.CRITICAL_DISTANCE,
-            danger_distance=config.DANGER_DISTANCE
+            danger_distance=config.DANGER_DISTANCE,
+            front_angle_range=config.FRONT_ANGLE_RANGE,
+            left_angle_range=config.LEFT_ANGLE_RANGE,
+            right_angle_range=config.RIGHT_ANGLE_RANGE,
+            side_weight=config.SIDE_WEIGHT,
+            clear_path_threshold=config.CLEAR_PATH_THRESHOLD,
+            valid_angle_ranges=config.VALID_ANGLE_RANGES
         )
         
         print("Starting detection loop (Ctrl+C to stop early)...\n")

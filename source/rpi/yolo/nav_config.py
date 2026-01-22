@@ -22,8 +22,12 @@ CLEAR_PATH_THRESHOLD = 80.0  # Distance considered as clear path
 # Angular zones (in degrees)
 # 0° is forward, angles increase counterclockwise
 FRONT_ANGLE_RANGE = 30  # ±30° from forward is considered "front"
-LEFT_ANGLE_RANGE = (30, 150)  # Left side detection zone
-RIGHT_ANGLE_RANGE = (210, 330)  # Right side detection zone
+LEFT_ANGLE_RANGE = (30, 100)  # Left side detection zone (adjusted to avoid rear objects)
+RIGHT_ANGLE_RANGE = (260, 330)  # Right side detection zone (adjusted to avoid rear objects)
+
+# Valid LIDAR angle ranges (to filter out readings from behind the robot)
+# Only use angles: 0-100° and 260-360° to avoid detecting objects mounted on the robot
+VALID_ANGLE_RANGES = [(0, 100), (260, 360)]  # List of (min, max) angle ranges to use
 
 # Scoring weights
 SIDE_WEIGHT = 0.7  # Weight for side obstacle scoring (0-1)

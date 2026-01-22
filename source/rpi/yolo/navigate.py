@@ -15,6 +15,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ldrobo
 
 from obstacle_avoidance import ObstacleAvoidance
 from listen_to_lidar import listen_to_lidar
+import nav_config as config
 
 
 class ArduinoController:
@@ -155,7 +156,17 @@ class AutonomousNavigator:
         self.verbose = verbose
         
         # Initialize components
-        self.obstacle_avoidance = ObstacleAvoidance()
+        self.obstacle_avoidance = ObstacleAvoidance(
+            safe_distance=config.SAFE_DISTANCE,
+            critical_distance=config.CRITICAL_DISTANCE,
+            danger_distance=config.DANGER_DISTANCE,
+            front_angle_range=config.FRONT_ANGLE_RANGE,
+            left_angle_range=config.LEFT_ANGLE_RANGE,
+            right_angle_range=config.RIGHT_ANGLE_RANGE,
+            side_weight=config.SIDE_WEIGHT,
+            clear_path_threshold=config.CLEAR_PATH_THRESHOLD,
+            valid_angle_ranges=config.VALID_ANGLE_RANGES
+        )
         self.arduino = ArduinoController(arduino_port, arduino_baudrate)
         
         # LIDAR data and control
