@@ -29,7 +29,7 @@ def main(port='/dev/ttyUSB1', duration=20):
                     else:
                         if 1 <= dist <= 30:
                             zone = "BACK"
-                    if zone == "BACK":
+                    if zone == "FRONT":
                         print(f"Angle: {angle:6.1f}° | Distance: {dist:7.2f} cm | Zone: {zone}")
                         writer.writerow([angle, dist, zone])
         except KeyboardInterrupt:
