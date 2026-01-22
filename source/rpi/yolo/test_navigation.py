@@ -148,7 +148,8 @@ def test_obstacle_detection(port: str = '/dev/ttyUSB0', duration: int = 30):
             right_angle_range=config.RIGHT_ANGLE_RANGE,
             side_weight=config.SIDE_WEIGHT,
             clear_path_threshold=config.CLEAR_PATH_THRESHOLD,
-            valid_angle_ranges=config.VALID_ANGLE_RANGES
+            valid_angle_ranges=config.VALID_ANGLE_RANGES,
+            min_valid_distance=config.MIN_VALID_DISTANCE
         )
         
         print("Starting detection loop (Ctrl+C to stop early)...\n")

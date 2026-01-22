@@ -23,6 +23,7 @@ class ObstacleAvoidance:
         side_weight: float = 0.7,  # Weight for side obstacle scoring
         clear_path_threshold: float = 80.0,  # cm - distance considered clear path
         valid_angle_ranges: list = None,  # List of (min, max) angle ranges to use
+        min_valid_distance: float = 25.0,  # cm - minimum valid distance (ignore closer readings)
     ):
         """
         Initialize obstacle avoidance system
@@ -46,6 +47,7 @@ class ObstacleAvoidance:
         self.right_angle_range = right_angle_range
         self.side_weight = side_weight
         self.clear_path_threshold = clear_path_threshold
+        self.min_valid_distance = min_valid_distance
         # Default to 0-100 and 260-360 if not specified
         self.valid_angle_ranges = valid_angle_ranges if valid_angle_ranges is not None else [(0, 100), (260, 360)]
         
@@ -145,8 +147,8 @@ class ObstacleAvoidance:
         
         # Categorize distances by zone
         for angle, distance in distances.items():
-            # Filter out invalid readings (0 or very large values)
-            if distance <= 0 or distance > 1000:
+            # Filter out invalid readings (too close, 0, or very large values)
+            if distance < self.min_valid_distance or distance > 1000:
                 continue
             
             # Filter out angles not in valid range (e.g., rear of robot)
@@ -208,6 +210,12 @@ class ObstacleAvoidance:
         """
         Decide what action to take based on LIDAR data
         
+        Improved Navigation Logic:
+        - Forward when path is clear
+        - Slight right/left adjustments for side obstacles (not critical)
+        - Turn left/right when very close (~30cm range)
+        - Backward when front blocked, then reassess direction
+        
         Args:
             distances: Dictionary mapping angles (degrees) to distances (cm)
             
@@ -227,45 +235,63 @@ class ObstacleAvoidance:
         left_dist = analysis['left_min_distance']
         right_dist = analysis['right_min_distance']
         
-        # DANGER ZONE - Immediate stop or reverse
+        # DANGER ZONE - Front blocked at danger distance, back up first
         if front_dist < self.danger_distance:
-            return ('backward', 150, f'DANGER! Front obstacle at {front_dist:.1f}cm')
+            return ('backward', 150, f'DANGER! Front blocked at {front_dist:.1f}cm - backing up')
         
-        # CRITICAL ZONE - Must turn or rotate
+        # CRITICAL ZONE - Very close (~30cm), must rotate in place
         if front_dist < self.critical_distance:
-            # Calculate which direction is better
+            # Calculate which direction is better for rotating
             left_score = self.calculate_turn_score(analysis, 'left')
             right_score = self.calculate_turn_score(analysis, 'right')
             
             if left_score > right_score:
-                return ('rotate_left', 180, f'Critical! Rotating left (score: L={left_score:.1f} R={right_score:.1f})')
+                return ('rotate_left', 180, f'Critical! Front at {front_dist:.1f}cm - rotating left (L={left_score:.0f} R={right_score:.0f})')
             else:
-                return ('rotate_right', 180, f'Critical! Rotating right (score: L={left_score:.1f} R={right_score:.1f})')
+                return ('rotate_right', 180, f'Critical! Front at {front_dist:.1f}cm - rotating right (L={left_score:.0f} R={right_score:.0f})')
         
-        # WARNING ZONE - Turn while moving
+        # CAUTION ZONE - Front getting close to safe distance
         if front_dist < self.safe_distance:
-            left_score = self.calculate_turn_score(analysis, 'left')
-            right_score = self.calculate_turn_score(analysis, 'right')
-            
-            if left_score > right_score:
-                return ('turn_left', 120, f'Warning! Turning left (score: L={left_score:.1f} R={right_score:.1f})')
+            # Backward a bit to create space, then will turn on next cycle
+            return ('backward', 120, f'Caution! Front at {front_dist:.1f}cm - creating space')
+        
+        # Side obstacle handling - left side has obstacle
+        if left_dist < self.safe_distance and right_dist > self.safe_distance:
+            # Obstacle on left, adjust right
+            if left_dist < self.critical_distance:
+                # Very close on left, turn right
+                return ('turn_right', 150, f'Left obstacle at {left_dist:.1f}cm - turning right')
             else:
-                return ('turn_right', 120, f'Warning! Turning right (score: L={left_score:.1f} R={right_score:.1f})')
+                # Moderate distance, slight right adjustment
+                return ('turn_right', 120, f'Left obstacle at {left_dist:.1f}cm - adjusting right')
         
-        # Path partially clear but obstacles on sides
-        if analysis['front_obstacles'] > 0:
-            # Some obstacles in front but not critical
-            left_score = self.calculate_turn_score(analysis, 'left')
-            right_score = self.calculate_turn_score(analysis, 'right')
-            
-            # Gentle turning
-            if left_score > right_score and left_dist > self.safe_distance:
-                return ('turn_left', 150, f'Gentle left turn (scores: L={left_score:.1f} R={right_score:.1f})')
-            elif right_dist > self.safe_distance:
-                return ('turn_right', 150, f'Gentle right turn (scores: L={left_score:.1f} R={right_score:.1f})')
+        # Side obstacle handling - right side has obstacle  
+        if right_dist < self.safe_distance and left_dist > self.safe_distance:
+            # Obstacle on right, adjust left
+            if right_dist < self.critical_distance:
+                # Very close on right, turn left
+                return ('turn_left', 150, f'Right obstacle at {right_dist:.1f}cm - turning left')
+            else:
+                # Moderate distance, slight left adjustment
+                return ('turn_left', 120, f'Right obstacle at {right_dist:.1f}cm - adjusting left')
         
-        # ALL CLEAR - Move forward
-        return ('forward', 180, f'Path clear (front: {front_dist:.1f}cm, L: {left_dist:.1f}cm, R: {right_dist:.1f}cm)')
+        # Both sides have obstacles but front is clear enough
+        if left_dist < self.safe_distance and right_dist < self.safe_distance:
+            # Determine which side is better to favor
+            if left_dist > right_dist:
+                return ('turn_left', 130, f'Narrow path - favoring left (L={left_dist:.1f} R={right_dist:.1f})')
+            else:
+                return ('turn_right', 130, f'Narrow path - favoring right (L={left_dist:.1f} R={right_dist:.1f})')
+        
+        # PATH CLEAR - Move forward
+        speed = 180  # Default forward speed
+        # Adjust speed based on front distance
+        if front_dist > self.clear_path_threshold:
+            speed = 180  # Full speed when very clear
+        elif front_dist > self.safe_distance * 1.5:
+            speed = 150  # Medium speed
+        
+        return ('forward', speed, f'Path clear (F:{front_dist:.1f}cm L:{left_dist:.1f}cm R:{right_dist:.1f}cm)')
     
     def get_status_report(self, distances: Dict[float, float]) -> str:
         """
