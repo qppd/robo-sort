@@ -1,8 +1,6 @@
 import sys
 import os
 import time
-import matplotlib
-matplotlib.use('TkAgg')  # Use TkAgg backend for better real-time updating
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
@@ -12,7 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ldrobo
 from listen_to_lidar import listen_to_lidar
 
 def update_plot(frame, lidar_data, ax):
-    ax.cla()  # Clear current axes
+    ax.clear()
     ax.set_thetamin(0)
     ax.set_thetamax(360)
     ax.set_rlim(0, 200)
@@ -22,7 +20,7 @@ def update_plot(frame, lidar_data, ax):
     angles_deg = []
     distances_cm = []
     for angle, dist in distances.items():
-        if dist > 5:  # Only plot distances greater than 5cm
+        if dist > 30:  # Only plot distances greater than 5cm
             angles_deg.append(angle)
             distances_cm.append(dist)
     
