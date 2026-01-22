@@ -25,6 +25,8 @@ def main(port='/dev/ttyUSB1', duration=20):
                 else:
                     zone = "UNKNOWN"
                 print(f"Angle: {angle:6.1f}° | Distance: {dist:7.2f} cm | Zone: {zone}")
+                if 1 <= dist <= 20:
+                    print(f"  >>> CLOSE OBJECT DETECTED at {angle:.1f}° ({zone}), distance: {dist:.2f} cm <<<")
             time.sleep(1)
     except KeyboardInterrupt:
         print("\nTest interrupted by user.")
