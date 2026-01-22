@@ -5,7 +5,7 @@ Centralized configuration for LIDAR, obstacle avoidance, and motor control
 
 # ===== SERIAL PORT CONFIGURATION =====
 # LIDAR (LD06) Serial Port
-LIDAR_PORT = '/dev/ttyUSB0'  # Default USB serial port for LIDAR
+LIDAR_PORT = '/dev/ttyUSB1'  # Default USB serial port for LIDAR
 LIDAR_BAUDRATE = 230400  # LD06 LIDAR baudrate
 
 # Arduino Serial Port
