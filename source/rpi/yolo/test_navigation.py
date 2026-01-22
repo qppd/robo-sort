@@ -223,23 +223,20 @@ def test_obstacle_detection(port: str = '/dev/ttyUSB0', duration: int = 30):
 
 def test_full_system(
     lidar_port: str = '/dev/ttyUSB0',
-    arduino_port: str = '/dev/ttyACM0',
-    duration: int = 60
+    arduino_port: str = '/dev/ttyACM0'
 ):
     """
-    Test complete autonomous navigation system with real-time visualization
+    Test complete autonomous navigation system with real-time visualization (continuous)
     
     Args:
         lidar_port: LIDAR serial port
         arduino_port: Arduino serial port
-        duration: Test duration in seconds
     """
     print("\n" + "=" * 50)
-    print("FULL SYSTEM TEST WITH VISUALIZATION")
+    print("FULL SYSTEM TEST WITH VISUALIZATION (CONTINUOUS)")
     print("=" * 50)
-    print(f"Running autonomous navigation with visualization for {duration} seconds")
-    print("⚠ WARNING: Robot will move! Ensure clear area.")
-    print("Close the visualization window to stop the test\n")
+    print(f"Running autonomous navigation with visualization continuously")
+    print("⚠ WARNING: Robot will move! Close visualization window or Ctrl+C to stop\n")
     
     input("Press ENTER to start...")
     
@@ -273,9 +270,8 @@ def test_full_system(
         navigation_running = [True]  # Use list to make it mutable from thread
         
         def navigation_thread():
-            start_time = time.time()
             try:
-                while navigation_running[0] and time.time() - start_time < duration:
+                while navigation_running[0]:
                     navigator.navigate_once()
                     time.sleep(0.1)
             except KeyboardInterrupt:
@@ -297,7 +293,7 @@ def test_full_system(
             navigation_running[0] = False
             nav_thread.join(timeout=2.0)
             navigator.stop()
-            print("\n Full system test with visualization completed")
+            print("\n Full system test with visualization stopped")
             return True
             
     except Exception as e:
@@ -344,7 +340,7 @@ Test Modes:
   lidar       - Test LIDAR connection and data reception
   arduino     - Test Arduino connection and motor control
   detection   - Test obstacle detection logic (no motor movement)
-  full        - Test complete autonomous navigation with real-time visualization (robot will move!)
+  full        - Test complete autonomous navigation with real-time visualization (continuous, robot will move!)
   config      - Display current configuration
   all         - Run all tests (except full navigation)
 
@@ -386,7 +382,7 @@ Examples:
         success = test_obstacle_detection(args.lidar_port, args.duration) and success
     
     if args.mode == 'full':
-        success = test_full_system(args.lidar_port, args.arduino_port, args.duration)
+        success = test_full_system(args.lidar_port, args.arduino_port)
     
     if args.mode == 'config' or args.mode == 'all':
         success = test_configuration() and success
