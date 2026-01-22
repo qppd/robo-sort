@@ -11,49 +11,25 @@ def main(port='/dev/ttyUSB1', duration=20):
     print(f"LIDAR SOLO ANGLE TEST ({port})")
     print("="*50)
     print("Scanning for angles 0-360°...\n")
-    import csv
-    import numpy as np
-    import matplotlib.pyplot as plt
-    csv_filename = f"lidar_angle_log_{int(time.time())}.csv"
-    with open(csv_filename, mode='w', newline='') as csvfile:
-        csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(["timestamp", "angle", "distance_cm", "zone"])
-        lidar_data, stop_func = listen_to_lidar(port=port)
-        start_time = time.time()
-        all_angles = []
-        all_radii = []
-        try:
-            while time.time() - start_time < duration:
-                distances = lidar_data['distances'].copy()
-                now = time.strftime('%Y-%m-%d %H:%M:%S')
-                print(f"\n[{time.strftime('%H:%M:%S')}] {len(distances)} readings")
-                for angle, dist in sorted(distances.items()):
-                    if 0 <= angle <= 90 or 270 <= angle <= 360:
-                        zone = "FRONT"
-                    elif 91 <= angle <= 269:
-                        zone = "BACK"
-                    else:
-                        zone = "UNKNOWN"
+    lidar_data, stop_func = listen_to_lidar(port=port)
+    start_time = time.time()
+    try:
+        while time.time() - start_time < duration:
+            distances = lidar_data['distances'].copy()
+            for angle, dist in sorted(distances.items()):
+                if 0 <= angle <= 90 or 270 <= angle <= 360:
+                    zone = "FRONT"
+                elif 91 <= angle <= 269:
+                    zone = "BACK"
+                else:
+                    zone = "UNKNOWN"
+                if 1 <= dist <= 30:
                     print(f"Angle: {angle:6.1f}° | Distance: {dist:7.2f} cm | Zone: {zone}")
-                    csvwriter.writerow([now, angle, dist, zone])
-                    if 1 <= dist <= 20:
-                        print(f"  >>> CLOSE OBJECT DETECTED at {angle:.1f}° ({zone}), distance: {dist:.2f} cm <<<")
-                    # For plotting
-                    all_angles.append(np.deg2rad(angle))
-                    all_radii.append(dist)
-                time.sleep(1)
-        except KeyboardInterrupt:
-            print("\nTest interrupted by user.")
-        finally:
-            stop_func()
-            print(f"\nLIDAR test completed. Data saved to {csv_filename}")
-            # Plot the last scan
-            if all_angles and all_radii:
-                plt.figure()
-                ax = plt.subplot(projection='polar')
-                ax.plot(all_angles, all_radii, 'b.')
-                ax.set_title('LIDAR Polar Plot (last scan)')
-                plt.show()
+    except KeyboardInterrupt:
+        print("\nTest interrupted by user.")
+    finally:
+        stop_func()
+        print("\nLIDAR test completed.")
 
 if __name__ == "__main__":
     # You can change port and duration here
