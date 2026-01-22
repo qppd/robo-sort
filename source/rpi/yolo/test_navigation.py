@@ -265,23 +265,23 @@ def test_full_system(
         
         # Animation
         ani = animation.FuncAnimation(fig, update_visualization_plot, fargs=(navigator.lidar_data, ax), 
-                                     interval=100, blit=False)
+                                     interval=100, blit=False, cache_frame_data=False)
         
         # Start navigation in a separate thread
         import threading
         
-        navigation_running = True
+        navigation_running = [True]  # Use list to make it mutable from thread
         
         def navigation_thread():
             start_time = time.time()
             try:
-                while navigation_running and time.time() - start_time < duration:
+                while navigation_running[0] and time.time() - start_time < duration:
                     navigator.navigate_once()
                     time.sleep(0.1)
             except KeyboardInterrupt:
                 print("\n⚠ Emergency stop!")
             finally:
-                navigation_running = False
+                navigation_running[0] = False
         
         # Start navigation thread
         nav_thread = threading.Thread(target=navigation_thread)
@@ -294,7 +294,7 @@ def test_full_system(
             print("\n⚠ Visualization interrupted by user")
         finally:
             # Stop navigation
-            navigation_running = False
+            navigation_running[0] = False
             nav_thread.join(timeout=2.0)
             navigator.stop()
             print("\n Full system test with visualization completed")
