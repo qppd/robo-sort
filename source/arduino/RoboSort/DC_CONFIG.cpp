@@ -164,11 +164,13 @@ void DCConfig::turnAbout(uint8_t direction, uint8_t speed) {
         // TURN_LEFT: both motors backward for left rotation
         moveMotor(MOTOR_A, BACKWARD, speed);  // Right wheel backward
         moveMotor(MOTOR_B, BACKWARD, speed);  // Left wheel backward
+    
     } else {
         // TURN_RIGHT: both motors forward for right rotation
         moveMotor(MOTOR_A, FORWARD, speed);   // Right wheel forward
         moveMotor(MOTOR_B, FORWARD, speed);   // Left wheel forward
-    }
+        
+        }
 }
 
 void DCConfig::update() {
