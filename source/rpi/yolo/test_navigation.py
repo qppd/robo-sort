@@ -280,6 +280,12 @@ def test_full_system(
                 
                 while navigation_running[0]:
                     try:
+                        # Check if matplotlib window is still open
+                        if not plt.get_fignums():
+                            print("\n⚠ Matplotlib window closed, stopping navigation...")
+                            navigation_running[0] = False
+                            break
+                            
                         # Get current LIDAR data
                         if not navigator.lidar_data or not navigator.lidar_data['distances']:
                             time.sleep(0.1)
@@ -329,9 +335,18 @@ def test_full_system(
                                 time.sleep(0.1)
                                 continue
                         
-                        # Handle turn mode (3 seconds)
+                        # Handle turn mode (3 seconds or until front path is clear)
                         if turn_mode:
                             if current_time - turn_start_time < 3.0:
+                                # Check if front path is now clear - if so, switch to forward immediately
+                                if front_dist > config.SAFE_DISTANCE:
+                                    turn_mode = False
+                                    turn_direction = None
+                                    print(f"[NAV] Front path clear at {front_dist:.1f}cm - switching to forward")
+                                    navigator.arduino.forward(150)  # Start moving forward immediately
+                                    time.sleep(0.1)
+                                    continue
+                                
                                 # Continue turning
                                 if turn_direction == 'left':
                                     navigator.arduino.turn_left(120)
@@ -370,6 +385,25 @@ def test_full_system(
         nav_thread = threading.Thread(target=navigation_thread)
         nav_thread.start()
         
+        # Set up signal handler for graceful shutdown (Unix-like systems)
+        try:
+            import signal
+            def signal_handler(signum, frame):
+                print("\n⚠ Received signal, shutting down...")
+                plt.close('all')
+            
+            signal.signal(signal.SIGINT, signal_handler)
+        except (ImportError, AttributeError):
+            # Signal handling not available on this platform
+            pass
+        
+        # Set up window close event handler
+        def on_close(event):
+            print("\n⚠ Visualization window closed by user")
+            navigation_running[0] = False
+        
+        fig.canvas.mpl_connect('close_event', on_close)
+        
         try:
             # Show visualization (blocking)
             plt.show()
@@ -380,6 +414,7 @@ def test_full_system(
             navigation_running[0] = False
             nav_thread.join(timeout=2.0)
             navigator.stop()
+            plt.close('all')  # Ensure all plots are closed
             print("\n Full system test with visualization stopped")
             return True
             

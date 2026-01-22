@@ -250,11 +250,25 @@ class AutonomousNavigator:
         # Decide action
         action, speed, info = self.obstacle_avoidance.decide_action(distances)
         
-        # Check if we should continue current action or change
+        # SPECIAL CASE: If currently turning and front path becomes clear, switch to forward immediately
         current_time = time.time()
         time_since_last_action = current_time - self.last_action_time
         
-        # If same action and minimum duration not met, skip
+        if (self.last_action in ['turn_left', 'turn_right'] and 
+            action == 'forward' and 
+            time_since_last_action >= 0.2):  # Allow at least 0.2s for turn to start
+            # Check if front is actually clear
+            analysis = self.obstacle_avoidance.analyze_obstacles(distances)
+            if analysis['front_min_distance'] > config.SAFE_DISTANCE:
+                if self.verbose:
+                    print(f"[NAV] Front path clear during turn ({analysis['front_min_distance']:.1f}cm) - switching to forward")
+                action = 'forward'
+                speed = 150
+                info = f'Immediate forward switch from turn (front: {analysis["front_min_distance"]:.1f}cm)'
+                # Force execution by updating last_action_time
+                self.last_action_time = current_time - self.action_duration
+        
+        # Check if we should continue current action or change
         if action == self.last_action and time_since_last_action < self.action_duration:
             return
         
