@@ -23,7 +23,7 @@ class ObstacleAvoidance:
         side_weight: float = 0.7,  # Weight for side obstacle scoring
         clear_path_threshold: float = 80.0,  # cm - distance considered clear path
         valid_angle_ranges: list = None,  # List of (min, max) angle ranges to use
-        min_valid_distance: float = 25.0,  # cm - minimum valid distance (ignore closer readings)
+        min_valid_distance: float = 30.0,  # cm - minimum valid distance (ignore closer readings)
     ):
         """
         Initialize obstacle avoidance system
@@ -213,7 +213,7 @@ class ObstacleAvoidance:
         Improved Navigation Logic:
         - Forward when path is clear
         - Slight right/left adjustments for side obstacles (not critical)
-        - Turn left/right when very close (~30cm range)
+        - Turn left/right when very close (~35-45cm range)
         - Backward when front blocked, then reassess direction
         
         Args:

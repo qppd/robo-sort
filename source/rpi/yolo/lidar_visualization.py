@@ -20,7 +20,7 @@ def update_plot(frame, lidar_data, ax):
     angles_deg = []
     distances_cm = []
     for angle, dist in distances.items():
-        if dist > 30:  # Only plot distances greater than 5cm
+        if dist > 30:  # Only plot distances greater than 30cm
             angles_deg.append(angle)
             distances_cm.append(dist)
     
