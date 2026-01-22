@@ -13,10 +13,10 @@ ARDUINO_PORT = '/dev/ttyACM0'  # Default Arduino Mega port on Raspberry Pi
 ARDUINO_BAUDRATE = 9600  # Arduino serial communication baudrate
 
 # ===== OBSTACLE AVOIDANCE PARAMETERS =====
-# Distance thresholds (in centimeters) - adjusted for MIN_VALID_DISTANCE = 30cm
-SAFE_DISTANCE = 65.0  # Minimum safe distance from obstacles (above critical)
-CRITICAL_DISTANCE = 45.0  # Distance requiring immediate turning (above danger)
-DANGER_DISTANCE = 35.0  # Distance requiring stop/reverse (just above min valid)
+# Distance thresholds (in centimeters) - adjusted for MIN_VALID_DISTANCE = 40cm
+SAFE_DISTANCE = 75.0  # Minimum safe distance from obstacles (above critical)
+CRITICAL_DISTANCE = 55.0  # Distance requiring immediate turning (above danger)
+DANGER_DISTANCE = 45.0  # Distance requiring stop/reverse (just above min valid)
 CLEAR_PATH_THRESHOLD = 100.0  # Distance considered as clear path
 
 # Angular zones (in degrees)
@@ -66,8 +66,8 @@ STATUS_REPORT_INTERVAL = 5.0  # Interval for status reports (seconds)
 USE_COLORS = True  # Use ANSI colors in terminal output (if supported)
 
 # ===== ADVANCED PARAMETERS =====
-# Obstacle detection sensitivity - tuned for 30cm minimum detection
-MIN_VALID_DISTANCE = 30.0  # Minimum valid LIDAR reading (cm) - ignore objects closer than 30cm
+# Obstacle detection sensitivity - tuned for 40cm minimum detection
+MIN_VALID_DISTANCE = 40.0  # Minimum valid LIDAR reading (cm) - ignore objects closer than 40cm
 MAX_VALID_DISTANCE = 1000.0  # Maximum valid LIDAR reading (cm)
 
 # Path planning
