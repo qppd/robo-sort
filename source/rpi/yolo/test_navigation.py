@@ -326,11 +326,11 @@ def test_full_system(
                                 # Choose turn direction based on which side has more space
                                 if left_dist > right_dist:
                                     turn_direction = 'left'
-                                    navigator.arduino.turn_left(120)
+                                    navigator.arduino.turn_right(120)  # Inverted: turn_right to turn left
                                     print(f"[NAV] Backup complete - turning LEFT (L:{left_dist:.1f}cm > R:{right_dist:.1f}cm)")
                                 else:
                                     turn_direction = 'right'
-                                    navigator.arduino.turn_right(120)
+                                    navigator.arduino.turn_left(120)   # Inverted: turn_left to turn right
                                     print(f"[NAV] Backup complete - turning RIGHT (L:{left_dist:.1f}cm < R:{right_dist:.1f}cm)")
                                 time.sleep(0.1)
                                 continue
@@ -349,9 +349,9 @@ def test_full_system(
                                 
                                 # Continue turning
                                 if turn_direction == 'left':
-                                    navigator.arduino.turn_left(120)
+                                    navigator.arduino.turn_right(120)  # Inverted: turn_right to turn left
                                 else:
-                                    navigator.arduino.turn_right(120)
+                                    navigator.arduino.turn_left(120)   # Inverted: turn_left to turn right
                                 time.sleep(0.1)
                                 continue
                             else:

@@ -278,9 +278,9 @@ class AutonomousNavigator:
         elif action == 'backward':
             self.arduino.backward(speed)
         elif action == 'turn_left':
-            self.arduino.turn_left(speed)
+            self.arduino.turn_right(speed)  # Inverted: turn_right to turn left
         elif action == 'turn_right':
-            self.arduino.turn_right(speed)
+            self.arduino.turn_left(speed)   # Inverted: turn_left to turn right
         elif action == 'rotate_left':
             self.arduino.rotate_left(speed)
         elif action == 'rotate_right':
