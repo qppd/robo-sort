@@ -9,7 +9,13 @@ import numpy as np
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ldrobot-ld06-lidar-python-driver-master'))
 from listen_to_lidar import listen_to_lidar
 
-def update_plot(frame, lidar_data, scat, ax):
+def update_plot(frame, lidar_data, ax):
+    ax.clear()
+    ax.set_thetamin(0)
+    ax.set_thetamax(360)
+    ax.set_rlim(0, 200)
+    ax.set_title("LIDAR Real-Time Visualization", va='bottom')
+    
     distances = lidar_data['distances'].copy()
     angles_deg = []
     distances_cm = []
@@ -21,10 +27,10 @@ def update_plot(frame, lidar_data, scat, ax):
     # Convert angles to radians for polar plot
     angles_rad = np.deg2rad(angles_deg)
     
-    # Update scatter plot
-    scat.set_offsets(np.column_stack((angles_rad, distances_cm)))
+    # Plot scatter
+    ax.scatter(angles_rad, distances_cm, s=1, c='red', alpha=0.7)
     
-    return scat,
+    return ax,
 
 def main(port='/dev/ttyUSB1'):
     print("="*50)
@@ -43,12 +49,9 @@ def main(port='/dev/ttyUSB1'):
     ax.set_rlim(0, 200)  # Adjust max distance as needed
     ax.set_title("LIDAR Real-Time Visualization", va='bottom')
     
-    # Initial scatter plot
-    scat = ax.scatter([], [], s=1, c='red', alpha=0.7)
-    
     # Animation
-    ani = animation.FuncAnimation(fig, update_plot, fargs=(lidar_data, scat, ax), 
-                                 interval=100, blit=True)  # Update every 100ms
+    ani = animation.FuncAnimation(fig, update_plot, fargs=(lidar_data, ax), 
+                                 interval=100, blit=False)
     
     try:
         plt.show()
