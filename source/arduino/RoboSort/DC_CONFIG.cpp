@@ -10,11 +10,11 @@ DCConfig::DCConfig() {
 }
 
 void DCConfig::begin() {
-    // Initialize L298N Module 1 (Motor A - RIGHT wheel) pins
+    // Initialize L298N Module 1 (Motor A) pins
     pinMode(MOTOR_A_IN1, OUTPUT);
     pinMode(MOTOR_A_IN2, OUTPUT);
     
-    // Initialize L298N Module 2 (Motor B - LEFT wheel) pins
+    // Initialize L298N Module 2 (Motor B) pins
     pinMode(MOTOR_B_IN1, OUTPUT);
     pinMode(MOTOR_B_IN2, OUTPUT);
     
@@ -142,35 +142,32 @@ void DCConfig::stopAll() {
 }
 
 void DCConfig::turnLeft(uint8_t speed) {
-    // Turn left: only left wheel forward, right wheel stopped
-    // MOTOR_A = right wheel, MOTOR_B = left wheel
-    // Use BACKWARD for MOTOR_B since motors face each other
-    stopMotor(MOTOR_A);           // Right wheel stopped
-    moveMotor(MOTOR_B, BACKWARD, speed);  // Left wheel "forward" (backward direction)
+    // Differential turn left: right wheel faster, left wheel slower
+    // Right wheel (Motor B) at full speed, left wheel (Motor A) at half speed
+    uint8_t slowSpeed = speed / 2;
+    moveMotor(MOTOR_A, FORWARD, slowSpeed);  // Left wheel slower
+    moveMotor(MOTOR_B, BACKWARD, speed);     // Right wheel faster
 }
 
 void DCConfig::turnRight(uint8_t speed) {
-    // Turn right: only right wheel forward, left wheel stopped
-    // MOTOR_A = right wheel, MOTOR_B = left wheel
-    // MOTOR_A FORWARD makes robot turn right in forward direction
-    moveMotor(MOTOR_A, FORWARD, speed);  // Right wheel forward
-    stopMotor(MOTOR_B);           // Left wheel stopped
+    // Differential turn right: left wheel faster, right wheel slower
+    // Left wheel (Motor A) at full speed, right wheel (Motor B) at half speed
+    uint8_t slowSpeed = speed / 2;
+    moveMotor(MOTOR_A, FORWARD, speed);      // Left wheel faster
+    moveMotor(MOTOR_B, BACKWARD, slowSpeed); // Right wheel slower
 }
 
 void DCConfig::turnAbout(uint8_t direction, uint8_t speed) {
-    // Spot turn: both motors same direction for rotation (since motors face each other)
-    // MOTOR_A = right wheel, MOTOR_B = left wheel
+    // Spot turn: one wheel forward, one wheel backward (opposite directions)
     if (direction == 0) {
-        // TURN_LEFT: both motors backward for left rotation
-        moveMotor(MOTOR_A, BACKWARD, speed);  // Right wheel backward
-        moveMotor(MOTOR_B, BACKWARD, speed);  // Left wheel backward
-    
+        // Turn left: left wheel backward, right wheel forward
+        moveMotor(MOTOR_A, FORWARD, speed);   // Left wheel backward
+        moveMotor(MOTOR_B, BACKWARD, speed);  // Right wheel forward
     } else {
-        // TURN_RIGHT: both motors forward for right rotation
-        moveMotor(MOTOR_A, FORWARD, speed);   // Right wheel forward
-        moveMotor(MOTOR_B, FORWARD, speed);   // Left wheel forward
-        
-        }
+        // Turn right: left wheel forward, right wheel backward
+        moveMotor(MOTOR_A, BACKWARD, speed);  // Left wheel forward
+        moveMotor(MOTOR_B, FORWARD, speed);   // Right wheel backward
+    }
 }
 
 void DCConfig::update() {
