@@ -127,7 +127,7 @@ Added autonomous mode support with safety features.
 **Existing Motor Commands:**
 - `FORWARD:<speed>` - Move forward (speed: 0-255)
 - `BACKWARD:<speed>` - Move backward
-- `LEFT:<speed>` - Turn left: only left wheel forward (right wheel stopped)
+- `LEFT:<speed>` - Turn left: only left wheel moves forward (right wheel stopped)
 - `RIGHT:<speed>` - Turn right: only right wheel forward (left wheel stopped)
 - `TURN_LEFT:<speed>` - Spot rotate left (rotate in place)
 - `TURN_RIGHT:<speed>` - Spot rotate right
@@ -305,7 +305,7 @@ Higher score = better direction to turn
 Commands sent via serial to Arduino:
 ```
 FORWARD:180   → Both motors forward at speed 180
-LEFT:120      → Only left wheel forward (right wheel stopped)
+LEFT:120      → Only left wheel moves forward (right wheel stopped)
 TURN_LEFT:180 → Both motors backward (left rotation)
 MSTOP         → Stop all motors
 ```

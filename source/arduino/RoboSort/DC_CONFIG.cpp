@@ -144,13 +144,15 @@ void DCConfig::stopAll() {
 void DCConfig::turnLeft(uint8_t speed) {
     // Turn left: only left wheel forward, right wheel stopped
     // MOTOR_A = right wheel, MOTOR_B = left wheel
+    // Use BACKWARD for MOTOR_B since motors face each other
     stopMotor(MOTOR_A);           // Right wheel stopped
-    moveMotor(MOTOR_B, FORWARD, speed);  // Left wheel forward
+    moveMotor(MOTOR_B, BACKWARD, speed);  // Left wheel "forward" (backward direction)
 }
 
 void DCConfig::turnRight(uint8_t speed) {
     // Turn right: only right wheel forward, left wheel stopped
     // MOTOR_A = right wheel, MOTOR_B = left wheel
+    // MOTOR_A FORWARD makes robot turn right in forward direction
     moveMotor(MOTOR_A, FORWARD, speed);  // Right wheel forward
     stopMotor(MOTOR_B);           // Left wheel stopped
 }
