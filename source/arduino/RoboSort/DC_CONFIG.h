@@ -28,7 +28,7 @@ public:
     void rotateLeft(uint8_t speed);
     void turnLeft(uint8_t speed);  // Turn left: only left wheel "forward" (right wheel stopped) - uses BACKWARD direction due to motor facing
     void turnRight(uint8_t speed); // Turn right: only right wheel forward (left wheel stopped)
-    void turnAbout(uint8_t direction, uint8_t speed); // Spot turn (0=left, 1=right) - single motor like LEFT/RIGHT
+    void turnAbout(uint8_t direction, uint8_t speed); // Spot turn (0=left, 1=right) - both motors same direction
     void update();  // Call this in main loop for software PWM
 private:
     void setMotorPins(uint8_t motor, uint8_t in1State, uint8_t in2State);
