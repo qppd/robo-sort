@@ -26,6 +26,11 @@ unsigned long homePositionSteps = 0; // Store the exact steps to home position
 // Current bin position tracking
 long currentBinPosition = 0; // Track current position in steps (0 = home)
 
+// Autonomous navigation mode
+bool autonomousMode = false;
+unsigned long lastAutonomousHeartbeat = 0;
+const unsigned long AUTONOMOUS_TIMEOUT = 5000; // 5 seconds timeout for autonomous mode
+
 void setup() {
   Serial.begin(9600);
   
@@ -63,6 +68,7 @@ void setup() {
   Serial.println("  BIN_4: Move to bin 4 position (3100 steps)");
   Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING");
   Serial.println("Limit Switch Commands: LTEST, LREAD, LCTEST, LCSTOP");
+  Serial.println("Autonomous Commands: AUTO_START, AUTO_STOP, AUTO_STATUS, AUTO_HEARTBEAT");
 }
 
 void loop() {
@@ -71,6 +77,18 @@ void loop() {
   ultrasonicConfig.update();
   buzzerConfig.update();
   dcConfig.update();  // Software PWM for motor speed control
+  
+  // Check autonomous mode timeout
+  if (autonomousMode) {
+    unsigned long currentTime = millis();
+    if (currentTime - lastAutonomousHeartbeat > AUTONOMOUS_TIMEOUT) {
+      // Timeout - stop motors for safety
+      dcConfig.stopAll();
+      autonomousMode = false;
+      Serial.println("AUTONOMOUS MODE TIMEOUT - SAFETY STOP!");
+      buzzerConfig.errorBeep();
+    }
+  }
   
   // Handle continuous limit switch testing
   if (limitTestingActive) {
@@ -591,7 +609,44 @@ void loop() {
     } else if (input.equalsIgnoreCase("LCSTOP")) {
       limitTestingActive = false;
       Serial.println("Continuous limit switch testing stopped.");
-    } else {
+    }
+    // Autonomous navigation commands
+    else if (input.equalsIgnoreCase("AUTO_START")) {
+      autonomousMode = true;
+      lastAutonomousHeartbeat = millis();
+      Serial.println("AUTONOMOUS MODE ENABLED");
+      Serial.println("Send AUTO_HEARTBEAT commands regularly to maintain control");
+      buzzerConfig.successBeep();
+    } else if (input.equalsIgnoreCase("AUTO_STOP")) {
+      autonomousMode = false;
+      dcConfig.stopAll();
+      Serial.println("AUTONOMOUS MODE DISABLED");
+      Serial.println("Motors stopped.");
+      buzzerConfig.warningBeep();
+    } else if (input.equalsIgnoreCase("AUTO_STATUS")) {
+      Serial.println("=== AUTONOMOUS STATUS ===");
+      Serial.print("Mode: ");
+      Serial.println(autonomousMode ? "ENABLED" : "DISABLED");
+      if (autonomousMode) {
+        unsigned long timeSinceHeartbeat = millis() - lastAutonomousHeartbeat;
+        Serial.print("Last heartbeat: ");
+        Serial.print(timeSinceHeartbeat);
+        Serial.println("ms ago");
+        Serial.print("Timeout in: ");
+        Serial.print(AUTONOMOUS_TIMEOUT - timeSinceHeartbeat);
+        Serial.println("ms");
+      }
+      Serial.println("========================");
+    } else if (input.equalsIgnoreCase("AUTO_HEARTBEAT")) {
+      if (autonomousMode) {
+        lastAutonomousHeartbeat = millis();
+        // Send minimal response to confirm
+        Serial.println("OK");
+      } else {
+        Serial.println("ERROR: Autonomous mode not active");
+      }
+    }
+    else {
       buzzerConfig.errorBeep();
       Serial.println("Unknown command.");
       Serial.println("Servo: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
@@ -602,6 +657,7 @@ void loop() {
       Serial.println("Stepper: BIN_HOME, BIN_1, BIN_2, BIN_3, BIN_4");
       Serial.println("Buzzer: BTEST, BSUCCESS, BERROR, BWARNING");
       Serial.println("Limit Switch: LTEST, LREAD, LCTEST, LCSTOP");
+      Serial.println("Autonomous: AUTO_START, AUTO_STOP, AUTO_STATUS, AUTO_HEARTBEAT");
     }
   }
 }
