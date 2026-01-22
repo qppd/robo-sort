@@ -142,15 +142,15 @@ void DCConfig::stopAll() {
 }
 
 void DCConfig::turnLeft(uint8_t speed) {
-    // Turn left: only right motor forward, left motor stopped
-    stopMotor(MOTOR_A);           // Left motor stopped
-    moveMotor(MOTOR_B, FORWARD, speed);  // Right motor forward
+    // Turn left: only left motor forward, right motor stopped
+    moveMotor(MOTOR_A, FORWARD, speed);  // Left motor forward
+    stopMotor(MOTOR_B);           // Right motor stopped
 }
 
 void DCConfig::turnRight(uint8_t speed) {
-    // Turn right: only left motor forward, right motor stopped
-    moveMotor(MOTOR_A, FORWARD, speed);  // Left motor forward
-    stopMotor(MOTOR_B);           // Right motor stopped
+    // Turn right: only right motor forward, left motor stopped
+    stopMotor(MOTOR_A);           // Left motor stopped
+    moveMotor(MOTOR_B, FORWARD, speed);  // Right motor forward
 }
 
 void DCConfig::turnAbout(uint8_t direction, uint8_t speed) {
