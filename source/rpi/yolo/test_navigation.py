@@ -125,6 +125,31 @@ def test_arduino_connection(port: str = '/dev/ttyACM0', baudrate: int = 9600):
         return False
 
 
+def update_visualization_plot(frame, lidar_data, ax):
+    """Update function for matplotlib animation"""
+    ax.clear()
+    ax.set_thetamin(0)
+    ax.set_thetamax(360)
+    ax.set_rlim(0, 200)
+    ax.set_title("LIDAR Real-Time Visualization (Full Navigation Test)", va='bottom')
+    
+    distances = lidar_data['distances'].copy()
+    angles_deg = []
+    distances_cm = []
+    for angle, dist in distances.items():
+        if dist > 30:  # Only plot distances greater than 30cm
+            angles_deg.append(angle)
+            distances_cm.append(dist)
+    
+    # Convert angles to radians for polar plot
+    angles_rad = np.deg2rad(angles_deg)
+    
+    # Plot scatter
+    ax.scatter(angles_rad, distances_cm, s=1, c='red', alpha=0.7)
+    
+    return ax,
+
+
 def test_obstacle_detection(port: str = '/dev/ttyUSB0', duration: int = 30):
     """
     Test obstacle detection and avoidance logic without motors
