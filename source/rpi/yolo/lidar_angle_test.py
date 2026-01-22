@@ -18,13 +18,8 @@ def main(port='/dev/ttyUSB1', duration=20):
             distances = lidar_data['distances'].copy()
             for angle, dist in sorted(distances.items()):
                 if 0 <= angle <= 90 or 270 <= angle <= 360:
-                    zone = "FRONT"
-                elif 91 <= angle <= 269:
-                    zone = "BACK"
-                else:
-                    zone = "UNKNOWN"
-                if 1 <= dist <= 30:
-                    print(f"Angle: {angle:6.1f}° | Distance: {dist:7.2f} cm | Zone: {zone}")
+                    if 1 <= dist <= 30:
+                        print(f"Angle: {angle:6.1f}° | Distance: {dist:7.2f} cm | Zone: FRONT")
     except KeyboardInterrupt:
         print("\nTest interrupted by user.")
     finally:
