@@ -304,13 +304,20 @@ def test_full_system(
                         
                         # Check if we're in obstacle avoidance cooldown (just go forward)
                         if current_time < obstacle_cooldown_until:
-                            navigator.navigate_once()  # Use default navigation (should go forward)
+                            # Force forward movement during cooldown - don't check obstacles
+                            navigator.arduino.forward(150)
                             navigation_count += 1
                             if navigation_count % 50 == 0:
                                 remaining_cooldown = obstacle_cooldown_until - current_time
-                                print(f"[NAV] Obstacle cooldown active ({remaining_cooldown:.1f}s) - moving forward")
+                                print(f"[NAV] Obstacle cooldown active ({remaining_cooldown:.1f}s) - forcing forward")
                             time.sleep(0.1)
                             continue
+                        else:
+                            # Cooldown just ended
+                            if obstacle_cooldown_until > 0:  # Only log once when cooldown ends
+                                print(f"[NAV] Obstacle cooldown ended - resuming normal navigation")
+                                print(f"[NAV] Current distances: Front={front_dist:.1f}cm, Left={left_dist:.1f}cm, Right={right_dist:.1f}cm")
+                                obstacle_cooldown_until = 0
                         
                         # Check if we need to enter backup mode
                         if not backup_mode and not turn_mode and front_dist < config.CRITICAL_DISTANCE:
@@ -366,11 +373,11 @@ def test_full_system(
                                 time.sleep(0.1)
                                 continue
                             else:
-                                # Turn complete, resume forward movement
+                                # Backup complete, resume forward movement
                                 turn_mode = False
                                 turn_direction = None
-                                obstacle_cooldown_until = current_time + 8.0  # 8 second cooldown to prevent re-triggering
-                                print("[NAV] Turn complete - resuming forward movement (8s obstacle cooldown)")
+                                obstacle_cooldown_until = current_time + 15.0  # 15 second cooldown to prevent re-triggering
+                                print("[NAV] Turn complete - resuming forward movement (15s obstacle cooldown)")
                         
                         # Normal navigation - use default logic
                         navigator.navigate_once()
