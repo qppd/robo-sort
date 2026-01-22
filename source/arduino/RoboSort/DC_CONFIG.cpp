@@ -147,6 +147,8 @@ void DCConfig::turnLeft(uint8_t speed) {
     // Turn left: only left wheel forward (right wheel stopped)
     moveMotor(MOTOR_A, FORWARD, speed);  // Left wheel forward
     // Right wheel (MOTOR_B) remains stopped
+}
+
 void DCConfig::turnRight(uint8_t speed) {
     // Stop both motors first to prevent one motor staying active
     stopAll();
