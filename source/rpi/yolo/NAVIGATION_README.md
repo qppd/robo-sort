@@ -283,10 +283,10 @@ if front_distance < DANGER_DISTANCE (15cm):
     → BACKWARD (emergency reverse)
 
 elif front_distance < CRITICAL_DISTANCE (30cm):
-    → ROTATE_LEFT or ROTATE_RIGHT (spot turn based on scores)
+    → ROTATE_LEFT or ROTATE_RIGHT (spot rotation based on scores)
 
 elif front_distance < SAFE_DISTANCE (50cm):
-    → TURN_LEFT or TURN_RIGHT (single motor turn)
+    → LEFT or RIGHT (single motor turn)
 
 else:
     → FORWARD (path clear)
@@ -306,7 +306,7 @@ Commands sent via serial to Arduino:
 ```
 FORWARD:180   → Both motors forward at speed 180
 LEFT:120      → Only left wheel forward (right wheel stopped)
-TURN_LEFT:180 → Right forward, left backward (spot rotate)
+TURN_LEFT:180 → Both motors backward (left rotation)
 MSTOP         → Stop all motors
 ```
 

@@ -156,16 +156,16 @@ void DCConfig::turnRight(uint8_t speed) {
 }
 
 void DCConfig::turnAbout(uint8_t direction, uint8_t speed) {
-    // Spot turn: one wheel forward, one wheel backward (opposite directions)
+    // Spot turn: both motors same direction for rotation (since motors face each other)
     // MOTOR_A = right wheel, MOTOR_B = left wheel
     if (direction == 0) {
-        // Turn left: left wheel forward, right wheel backward
+        // Turn left: both motors backward for left rotation
         moveMotor(MOTOR_A, BACKWARD, speed);  // Right wheel backward
-        moveMotor(MOTOR_B, FORWARD, speed);   // Left wheel forward
-    } else {
-        // Turn right: left wheel backward, right wheel forward
-        moveMotor(MOTOR_A, FORWARD, speed);   // Right wheel forward
         moveMotor(MOTOR_B, BACKWARD, speed);  // Left wheel backward
+    } else {
+        // Turn right: both motors forward for right rotation
+        moveMotor(MOTOR_A, FORWARD, speed);   // Right wheel forward
+        moveMotor(MOTOR_B, FORWARD, speed);   // Left wheel forward
     }
 }
 
