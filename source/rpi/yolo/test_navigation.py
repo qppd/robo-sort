@@ -271,13 +271,100 @@ def test_full_system(
         
         def navigation_thread():
             try:
+                navigation_count = 0
+                backup_mode = False
+                backup_start_time = 0
+                turn_mode = False
+                turn_start_time = 0
+                turn_direction = None
+                
                 while navigation_running[0]:
-                    navigator.navigate_once()
+                    try:
+                        # Get current LIDAR data
+                        if not navigator.lidar_data or not navigator.lidar_data['distances']:
+                            time.sleep(0.1)
+                            continue
+                            
+                        distances = navigator.lidar_data['distances'].copy()
+                        
+                        # Analyze obstacles
+                        analysis = navigator.obstacle_avoidance.analyze_obstacles(distances)
+                        front_dist = analysis['front_min_distance']
+                        left_dist = analysis['left_min_distance'] 
+                        right_dist = analysis['right_min_distance']
+                        
+                        current_time = time.time()
+                        
+                        # Check if we need to enter backup mode
+                        if not backup_mode and not turn_mode and front_dist < config.CRITICAL_DISTANCE:
+                            print(f"[NAV] Front obstacle at {front_dist:.1f}cm - entering backup mode")
+                            backup_mode = True
+                            backup_start_time = current_time
+                            navigator.arduino.backward(150)
+                            time.sleep(0.1)
+                            continue
+                        
+                        # Handle backup mode (2 seconds)
+                        if backup_mode:
+                            if current_time - backup_start_time < 2.0:
+                                # Continue backing up
+                                navigator.arduino.backward(150)
+                                time.sleep(0.1)
+                                continue
+                            else:
+                                # Backup complete, decide turn direction
+                                backup_mode = False
+                                turn_mode = True
+                                turn_start_time = current_time
+                                
+                                # Choose turn direction based on which side has more space
+                                if left_dist > right_dist:
+                                    turn_direction = 'left'
+                                    navigator.arduino.turn_left(120)
+                                    print(f"[NAV] Backup complete - turning LEFT (L:{left_dist:.1f}cm > R:{right_dist:.1f}cm)")
+                                else:
+                                    turn_direction = 'right'
+                                    navigator.arduino.turn_right(120)
+                                    print(f"[NAV] Backup complete - turning RIGHT (L:{left_dist:.1f}cm < R:{right_dist:.1f}cm)")
+                                time.sleep(0.1)
+                                continue
+                        
+                        # Handle turn mode (3 seconds)
+                        if turn_mode:
+                            if current_time - turn_start_time < 3.0:
+                                # Continue turning
+                                if turn_direction == 'left':
+                                    navigator.arduino.turn_left(120)
+                                else:
+                                    navigator.arduino.turn_right(120)
+                                time.sleep(0.1)
+                                continue
+                            else:
+                                # Turn complete, resume forward movement
+                                turn_mode = False
+                                turn_direction = None
+                                print("[NAV] Turn complete - resuming forward movement")
+                        
+                        # Normal navigation - use default logic
+                        navigator.navigate_once()
+                        navigation_count += 1
+                        
+                        if navigation_count % 50 == 0:  # Log every 50 cycles
+                            print(f"[NAV] Completed {navigation_count} navigation cycles")
+                            
+                    except Exception as nav_error:
+                        print(f"[NAV] Navigation error (continuing): {nav_error}")
+                        time.sleep(0.5)
+                        
                     time.sleep(0.1)
+                    
             except KeyboardInterrupt:
                 print("\n⚠ Emergency stop!")
+            except Exception as thread_error:
+                print(f"[NAV] Thread error: {thread_error}")
             finally:
                 navigation_running[0] = False
+                print(f"[NAV] Navigation thread stopped after {navigation_count} cycles")
         
         # Start navigation thread
         nav_thread = threading.Thread(target=navigation_thread)
