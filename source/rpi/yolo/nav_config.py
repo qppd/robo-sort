@@ -155,6 +155,8 @@ def detect_platform():
     """
     Detect platform and adjust configuration accordingly
     """
+    global LIDAR_PORT, ARDUINO_PORT
+    
     import platform
     import os
     
@@ -162,7 +164,6 @@ def detect_platform():
     
     if system == 'Windows':
         # Windows platform - adjust serial ports
-        global LIDAR_PORT, ARDUINO_PORT
         LIDAR_PORT = 'COM3'  # Adjust as needed
         ARDUINO_PORT = 'COM4'  # Adjust as needed
         print("Detected Windows platform")
@@ -180,7 +181,6 @@ def detect_platform():
     
     elif system == 'Darwin':
         # macOS
-        global LIDAR_PORT, ARDUINO_PORT
         LIDAR_PORT = '/dev/tty.usbserial-0001'
         ARDUINO_PORT = '/dev/tty.usbmodem14201'
         print("Detected macOS platform")
