@@ -127,8 +127,8 @@ Added autonomous mode support with safety features.
 **Existing Motor Commands:**
 - `FORWARD:<speed>` - Move forward (speed: 0-255)
 - `BACKWARD:<speed>` - Move backward
-- `LEFT:<speed>` - Differential turn left (right wheel faster)
-- `RIGHT:<speed>` - Differential turn right (left wheel faster)
+- `LEFT:<speed>` - Turn left: only right motor forward (left motor stopped)
+- `RIGHT:<speed>` - Turn right: only left motor forward (right motor stopped)
 - `TURN_LEFT:<speed>` - Spot rotate left (rotate in place)
 - `TURN_RIGHT:<speed>` - Spot rotate right
 - `MSTOP` - Stop all motors
@@ -282,7 +282,7 @@ elif front_distance < CRITICAL_DISTANCE (30cm):
     → ROTATE_LEFT or ROTATE_RIGHT (spot turn based on scores)
 
 elif front_distance < SAFE_DISTANCE (50cm):
-    → TURN_LEFT or TURN_RIGHT (differential turn)
+    → TURN_LEFT or TURN_RIGHT (single motor turn)
 
 else:
     → FORWARD (path clear)
@@ -301,7 +301,7 @@ Higher score = better direction to turn
 Commands sent via serial to Arduino:
 ```
 FORWARD:180   → Both motors forward at speed 180
-LEFT:120      → Right motor faster (differential turn)
+LEFT:120      → Only right motor forward (left motor stopped)
 TURN_LEFT:180 → Right forward, left backward (spot rotate)
 MSTOP         → Stop all motors
 ```
@@ -333,7 +333,7 @@ RIGHT_ANGLE_RANGE = (210, 330)  # Right side zone
 ```python
 FORWARD_SPEED = 180    # Normal forward speed
 BACKWARD_SPEED = 150   # Reverse speed
-TURN_SPEED = 120       # Differential turn speed
+TURN_SPEED = 120       # Single motor turn speed
 ROTATE_SPEED = 180     # Spot rotation speed
 ```
 

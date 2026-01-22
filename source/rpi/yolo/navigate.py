@@ -104,11 +104,11 @@ class ArduinoController:
         self.send_command(f"BACKWARD:{speed}")
     
     def turn_left(self, speed: int = 150):
-        """Turn left (differential)"""
+        """Turn left: only right motor forward (left motor stopped)"""
         self.send_command(f"LEFT:{speed}")
     
     def turn_right(self, speed: int = 150):
-        """Turn right (differential)"""
+        """Turn right: only left motor forward (right motor stopped)"""
         self.send_command(f"RIGHT:{speed}")
     
     def rotate_left(self, speed: int = 180):

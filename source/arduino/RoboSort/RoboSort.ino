@@ -53,7 +53,7 @@ void setup() {
   Serial.println("  Arm Extension Commands: ARM-EXTEND:<angle> (0-180 degrees, channel 4, default 90 degrees)");
   Serial.println("  Look Commands: LOOK:<angle> (0-180 degrees, channel 5, default 90 degrees)");
   Serial.println("Motor Commands: FORWARD:<speed>, BACKWARD:<speed>, MSTOP");
-  Serial.println("  Turning: LEFT:<speed>, RIGHT:<speed> (differential turn)");
+  Serial.println("  Turning: LEFT:<speed>, RIGHT:<speed> (single motor turn)");
   Serial.println("  Spot Turn: TURN_LEFT:<speed>, TURN_RIGHT:<speed> (rotate in place)");
   Serial.println("  Individual: M<motor> <direction> <speed>, MSTOP");
   Serial.println("  Motors: A or B, Directions: F (forward), B (backward), S (stop), BR (brake)");
@@ -298,7 +298,7 @@ void loop() {
         }
       }
       dcConfig.turnLeft(speed);
-      Serial.print("Turning left (differential) at speed ");
+      Serial.print("Turning left (single motor) at speed ");
       Serial.println(speed);
       buzzerConfig.successBeep();
     } else if (input.startsWith("RIGHT:")) {
@@ -312,7 +312,7 @@ void loop() {
         }
       }
       dcConfig.turnRight(speed);
-      Serial.print("Turning right (differential) at speed ");
+      Serial.print("Turning right (single motor) at speed ");
       Serial.println(speed);
       buzzerConfig.successBeep();
     } else if (input.startsWith("TURN_LEFT:")) {

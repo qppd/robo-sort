@@ -142,19 +142,15 @@ void DCConfig::stopAll() {
 }
 
 void DCConfig::turnLeft(uint8_t speed) {
-    // Differential turn left: right wheel faster, left wheel slower
-    // Right wheel (Motor B) at full speed, left wheel (Motor A) at half speed
-    uint8_t slowSpeed = speed / 2;
-    moveMotor(MOTOR_A, FORWARD, slowSpeed);  // Left wheel slower
-    moveMotor(MOTOR_B, BACKWARD, speed);     // Right wheel faster
+    // Turn left: only right motor forward, left motor stopped
+    stopMotor(MOTOR_A);           // Left motor stopped
+    moveMotor(MOTOR_B, FORWARD, speed);  // Right motor forward
 }
 
 void DCConfig::turnRight(uint8_t speed) {
-    // Differential turn right: left wheel faster, right wheel slower
-    // Left wheel (Motor A) at full speed, right wheel (Motor B) at half speed
-    uint8_t slowSpeed = speed / 2;
-    moveMotor(MOTOR_A, FORWARD, speed);      // Left wheel faster
-    moveMotor(MOTOR_B, BACKWARD, slowSpeed); // Right wheel slower
+    // Turn right: only left motor forward, right motor stopped
+    moveMotor(MOTOR_A, FORWARD, speed);  // Left motor forward
+    stopMotor(MOTOR_B);           // Right motor stopped
 }
 
 void DCConfig::turnAbout(uint8_t direction, uint8_t speed) {

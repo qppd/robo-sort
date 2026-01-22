@@ -32,13 +32,13 @@ def test_lidar_connection(port: str = '/dev/ttyUSB0'):
     
     try:
         lidar_data, stop_func = listen_to_lidar(port=port)
-        print("✓ LIDAR connected successfully")
+        print("LIDAR connected successfully")
         print("\nWaiting for data (5 seconds)...")
         time.sleep(5)
         
         distances = lidar_data['distances']
         if distances:
-            print(f"✓ Receiving data: {len(distances)} distance readings")
+            print(f" Receiving data: {len(distances)} distance readings")
             print("\nSample readings (first 10):")
             for i, (angle, dist) in enumerate(list(distances.items())[:10]):
                 print(f"  Angle {angle:6.2f}° → Distance: {dist:6.2f} cm")
@@ -46,7 +46,7 @@ def test_lidar_connection(port: str = '/dev/ttyUSB0'):
             print("✗ No data received")
         
         stop_func()
-        print("\n✓ LIDAR test completed")
+        print("\n LIDAR test completed")
         return True
         
     except Exception as e:
@@ -73,7 +73,7 @@ def test_arduino_connection(port: str = '/dev/ttyACM0', baudrate: int = 9600):
             print("✗ Failed to connect to Arduino")
             return False
         
-        print("✓ Arduino connected successfully")
+        print(" Arduino connected successfully")
         
         # Test commands
         print("\nTesting motor commands (2 seconds each)...")
@@ -110,7 +110,7 @@ def test_arduino_connection(port: str = '/dev/ttyACM0', baudrate: int = 9600):
         arduino.stop()
         
         arduino.disconnect()
-        print("\n✓ Arduino test completed")
+        print("\n Arduino test completed")
         return True
         
     except Exception as e:
@@ -135,7 +135,7 @@ def test_obstacle_detection(port: str = '/dev/ttyUSB0', duration: int = 30):
     try:
         # Connect to LIDAR
         lidar_data, stop_func = listen_to_lidar(port=port)
-        print("✓ LIDAR connected")
+        print(" LIDAR connected")
         time.sleep(2)
         
         # Create obstacle avoidance system
@@ -174,7 +174,7 @@ def test_obstacle_detection(port: str = '/dev/ttyUSB0', duration: int = 30):
             print("\n⚠ Test interrupted by user")
         
         stop_func()
-        print("\n✓ Obstacle detection test completed")
+        print("\n Obstacle detection test completed")
         return True
         
     except Exception as e:
@@ -226,7 +226,7 @@ def test_full_system(
             print("\n⚠ Emergency stop!")
         
         navigator.stop()
-        print("\n✓ Full system test completed")
+        print("\n Full system test completed")
         return True
         
     except Exception as e:
@@ -257,7 +257,7 @@ def test_configuration():
         for key, value in mode_config.items():
             print(f"    {key}: {value}")
     
-    print("\n✓ Configuration test completed")
+    print("\n Configuration test completed")
     return True
 
 
@@ -322,7 +322,7 @@ Examples:
     
     print("\n" + "=" * 50)
     if success:
-        print("✓ ALL TESTS PASSED")
+        print(" ALL TESTS PASSED")
     else:
         print("✗ SOME TESTS FAILED")
     print("=" * 50)

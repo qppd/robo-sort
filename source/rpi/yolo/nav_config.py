@@ -32,7 +32,7 @@ SIDE_WEIGHT = 0.7  # Weight for side obstacle scoring (0-1)
 # Speed values (0-255)
 FORWARD_SPEED = 180  # Default forward movement speed
 BACKWARD_SPEED = 150  # Default backward movement speed
-TURN_SPEED = 120  # Speed for differential turns
+TURN_SPEED = 120  # Speed for single motor turns
 ROTATE_SPEED = 180  # Speed for spot rotations
 
 # Speed adjustments based on distance
