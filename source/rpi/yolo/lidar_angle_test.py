@@ -18,9 +18,9 @@ def main(port='/dev/ttyUSB1', duration=20):
             distances = lidar_data['distances'].copy()
             print(f"\n[{time.strftime('%H:%M:%S')}] {len(distances)} readings")
             for angle, dist in sorted(distances.items()):
-                if 0 <= angle <= 100 or 260 <= angle <= 360:
+                if 0 <= angle <= 90 or 270 <= angle <= 360:
                     zone = "FRONT"
-                elif 101 <= angle <= 259:
+                elif 91 <= angle <= 269:
                     zone = "BACK"
                 else:
                     zone = "UNKNOWN"
