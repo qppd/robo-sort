@@ -129,8 +129,8 @@ Added autonomous mode support with safety features.
 - `BACKWARD:<speed>` - Move backward
 - `LEFT:<speed>` - Turn left: only left wheel moves forward (right wheel stopped)
 - `RIGHT:<speed>` - Turn right: only right wheel forward (left wheel stopped)
-- `TURN_LEFT:<speed>` - Spot rotate left (rotate in place)
-- `TURN_RIGHT:<speed>` - Spot rotate right
+- `TURN_LEFT:<speed>` - Spot rotate left: only left wheel moves (right wheel stopped)
+- `TURN_RIGHT:<speed>` - Spot rotate right: only right wheel moves (left wheel stopped)
 - `MSTOP` - Stop all motors
 
 **Motor-to-Wheel Mapping:**
@@ -306,7 +306,7 @@ Commands sent via serial to Arduino:
 ```
 FORWARD:180   → Both motors forward at speed 180
 LEFT:120      → Only left wheel moves forward (right wheel stopped)
-TURN_LEFT:180 → Both motors backward (left rotation)
+TURN_LEFT:180 → Only left wheel moves (right wheel stopped, same as LEFT)
 MSTOP         → Stop all motors
 ```
 
