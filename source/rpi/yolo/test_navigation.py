@@ -8,6 +8,13 @@ import os
 import time
 import argparse
 
+# Add matplotlib imports for visualization
+import matplotlib
+matplotlib.use('TkAgg')  # Use TkAgg backend for better real-time updating
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import numpy as np
+
 # Add paths for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ldrobot-ld06-lidar-python-driver-master'))
@@ -195,7 +202,7 @@ def test_full_system(
     duration: int = 60
 ):
     """
-    Test complete autonomous navigation system
+    Test complete autonomous navigation system with real-time visualization
     
     Args:
         lidar_port: LIDAR serial port
@@ -203,11 +210,11 @@ def test_full_system(
         duration: Test duration in seconds
     """
     print("\n" + "=" * 50)
-    print("FULL SYSTEM TEST")
+    print("FULL SYSTEM TEST WITH VISUALIZATION")
     print("=" * 50)
-    print(f"Running autonomous navigation for {duration} seconds")
+    print(f"Running autonomous navigation with visualization for {duration} seconds")
     print("⚠ WARNING: Robot will move! Ensure clear area.")
-    print("Press Ctrl+C to emergency stop\n")
+    print("Close the visualization window to stop the test\n")
     
     input("Press ENTER to start...")
     
@@ -223,19 +230,51 @@ def test_full_system(
             print("✗ Failed to start navigation system")
             return False
         
-        start_time = time.time()
+        # Set up the polar plot for visualization
+        fig = plt.figure(figsize=(8, 8))
+        ax = fig.add_subplot(111, polar=True)
+        ax.set_thetamin(0)
+        ax.set_thetamax(360)
+        ax.set_rlim(0, 200)
+        ax.set_title("LIDAR Real-Time Visualization (Full Navigation Test)", va='bottom')
+        
+        # Animation
+        ani = animation.FuncAnimation(fig, update_visualization_plot, fargs=(navigator.lidar_data, ax), 
+                                     interval=100, blit=False)
+        
+        # Start navigation in a separate thread
+        import threading
+        
+        navigation_running = True
+        
+        def navigation_thread():
+            start_time = time.time()
+            try:
+                while navigation_running and time.time() - start_time < duration:
+                    navigator.navigate_once()
+                    time.sleep(0.1)
+            except KeyboardInterrupt:
+                print("\n⚠ Emergency stop!")
+            finally:
+                navigation_running = False
+        
+        # Start navigation thread
+        nav_thread = threading.Thread(target=navigation_thread)
+        nav_thread.start()
+        
         try:
-            while time.time() - start_time < duration:
-                navigator.navigate_once()
-                time.sleep(0.1)
-        
+            # Show visualization (blocking)
+            plt.show()
         except KeyboardInterrupt:
-            print("\n⚠ Emergency stop!")
-        
-        navigator.stop()
-        print("\n Full system test completed")
-        return True
-        
+            print("\n⚠ Visualization interrupted by user")
+        finally:
+            # Stop navigation
+            navigation_running = False
+            nav_thread.join(timeout=2.0)
+            navigator.stop()
+            print("\n Full system test with visualization completed")
+            return True
+            
     except Exception as e:
         print(f"✗ Test failed: {e}")
         return False
@@ -280,7 +319,7 @@ Test Modes:
   lidar       - Test LIDAR connection and data reception
   arduino     - Test Arduino connection and motor control
   detection   - Test obstacle detection logic (no motor movement)
-  full        - Test complete autonomous navigation (robot will move!)
+  full        - Test complete autonomous navigation with real-time visualization (robot will move!)
   config      - Display current configuration
   all         - Run all tests (except full navigation)
 
