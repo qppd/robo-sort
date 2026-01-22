@@ -277,6 +277,7 @@ def test_full_system(
                 turn_mode = False
                 turn_start_time = 0
                 turn_direction = None
+                obstacle_cooldown_until = 0  # Prevent immediate re-triggering of backup-turn sequence
                 
                 while navigation_running[0]:
                     try:
@@ -300,6 +301,16 @@ def test_full_system(
                         right_dist = analysis['right_min_distance']
                         
                         current_time = time.time()
+                        
+                        # Check if we're in obstacle avoidance cooldown (just go forward)
+                        if current_time < obstacle_cooldown_until:
+                            navigator.navigate_once()  # Use default navigation (should go forward)
+                            navigation_count += 1
+                            if navigation_count % 50 == 0:
+                                remaining_cooldown = obstacle_cooldown_until - current_time
+                                print(f"[NAV] Obstacle cooldown active ({remaining_cooldown:.1f}s) - moving forward")
+                            time.sleep(0.1)
+                            continue
                         
                         # Check if we need to enter backup mode
                         if not backup_mode and not turn_mode and front_dist < config.CRITICAL_DISTANCE:
@@ -358,7 +369,8 @@ def test_full_system(
                                 # Turn complete, resume forward movement
                                 turn_mode = False
                                 turn_direction = None
-                                print("[NAV] Turn complete - resuming forward movement")
+                                obstacle_cooldown_until = current_time + 8.0  # 8 second cooldown to prevent re-triggering
+                                print("[NAV] Turn complete - resuming forward movement (8s obstacle cooldown)")
                         
                         # Normal navigation - use default logic
                         navigator.navigate_once()
