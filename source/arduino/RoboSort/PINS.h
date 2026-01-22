@@ -9,11 +9,11 @@
 #define SERVO_OE_PIN 2   // Output Enable pin connected to GPIO2
 
 // ===== DC MOTOR DRIVER (L298N) PINS =====
-// L298N Module 1 - Motor A Pins
+// L298N Module 1 - Motor A Pins (RIGHT wheel)
 #define MOTOR_A_IN1 7    // IN1 pin for Motor A
 #define MOTOR_A_IN2 8    // IN2 pin for Motor A
 
-// L298N Module 2 - Motor B Pins
+// L298N Module 2 - Motor B Pins (LEFT wheel)
 #define MOTOR_B_IN1 10   // IN1 pin for Motor B
 #define MOTOR_B_IN2 11   // IN2 pin for Motor B
 

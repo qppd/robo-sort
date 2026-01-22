@@ -10,11 +10,11 @@ DCConfig::DCConfig() {
 }
 
 void DCConfig::begin() {
-    // Initialize L298N Module 1 (Motor A) pins
+    // Initialize L298N Module 1 (Motor A - RIGHT wheel) pins
     pinMode(MOTOR_A_IN1, OUTPUT);
     pinMode(MOTOR_A_IN2, OUTPUT);
     
-    // Initialize L298N Module 2 (Motor B) pins
+    // Initialize L298N Module 2 (Motor B - LEFT wheel) pins
     pinMode(MOTOR_B_IN1, OUTPUT);
     pinMode(MOTOR_B_IN2, OUTPUT);
     
@@ -142,27 +142,30 @@ void DCConfig::stopAll() {
 }
 
 void DCConfig::turnLeft(uint8_t speed) {
-    // Turn left: only left motor forward, right motor stopped
-    moveMotor(MOTOR_A, FORWARD, speed);  // Left motor forward
-    stopMotor(MOTOR_B);           // Right motor stopped
+    // Turn left: only left wheel forward, right wheel stopped
+    // MOTOR_A = right wheel, MOTOR_B = left wheel
+    stopMotor(MOTOR_A);           // Right wheel stopped
+    moveMotor(MOTOR_B, FORWARD, speed);  // Left wheel forward
 }
 
 void DCConfig::turnRight(uint8_t speed) {
-    // Turn right: only right motor forward, left motor stopped
-    stopMotor(MOTOR_A);           // Left motor stopped
-    moveMotor(MOTOR_B, FORWARD, speed);  // Right motor forward
+    // Turn right: only right wheel forward, left wheel stopped
+    // MOTOR_A = right wheel, MOTOR_B = left wheel
+    moveMotor(MOTOR_A, FORWARD, speed);  // Right wheel forward
+    stopMotor(MOTOR_B);           // Left wheel stopped
 }
 
 void DCConfig::turnAbout(uint8_t direction, uint8_t speed) {
     // Spot turn: one wheel forward, one wheel backward (opposite directions)
+    // MOTOR_A = right wheel, MOTOR_B = left wheel
     if (direction == 0) {
-        // Turn left: left wheel backward, right wheel forward
-        moveMotor(MOTOR_A, BACKWARD, speed);
-        moveMotor(MOTOR_B, FORWARD, speed);
+        // Turn left: left wheel forward, right wheel backward
+        moveMotor(MOTOR_A, BACKWARD, speed);  // Right wheel backward
+        moveMotor(MOTOR_B, FORWARD, speed);   // Left wheel forward
     } else {
-        // Turn right: left wheel forward, right wheel backward
-        moveMotor(MOTOR_A, FORWARD, speed);
-        moveMotor(MOTOR_B, BACKWARD, speed);
+        // Turn right: left wheel backward, right wheel forward
+        moveMotor(MOTOR_A, FORWARD, speed);   // Right wheel forward
+        moveMotor(MOTOR_B, BACKWARD, speed);  // Left wheel backward
     }
 }
 

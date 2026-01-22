@@ -5,8 +5,8 @@
 #include "PINS.h"
 
 // Motor constants
-#define MOTOR_A 0
-#define MOTOR_B 1
+#define MOTOR_A 0  // Right wheel motor
+#define MOTOR_B 1  // Left wheel motor
 #define FORWARD 1
 #define BACKWARD 2
 #define BRAKE 3
@@ -26,8 +26,8 @@ public:
     void moveBackward(uint8_t speed);
     void rotateRight(uint8_t speed);
     void rotateLeft(uint8_t speed);
-    void turnLeft(uint8_t speed);  // Turn left: only left motor forward (right motor stopped)
-    void turnRight(uint8_t speed); // Turn right: only right motor forward (left motor stopped)
+    void turnLeft(uint8_t speed);  // Turn left: only left wheel forward (right wheel stopped)
+    void turnRight(uint8_t speed); // Turn right: only right wheel forward (left wheel stopped)
     void turnAbout(uint8_t direction, uint8_t speed); // Spot turn (0=left, 1=right)
     void update();  // Call this in main loop for software PWM
 private:
