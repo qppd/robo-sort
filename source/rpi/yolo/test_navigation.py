@@ -278,20 +278,20 @@ Test Modes:
   all         - Run all tests (except full navigation)
 
 Examples:
-  python test_navigation.py lidar
-  python test_navigation.py arduino --arduino-port /dev/ttyACM0
-  python test_navigation.py detection --duration 60
-  python test_navigation.py full --lidar-port /dev/ttyUSB0
+  python test_navigation.py lidar /dev/ttyUSB0
+  python test_navigation.py arduino /dev/ttyUSB0 /dev/ttyACM0
+  python test_navigation.py detection /dev/ttyUSB0 --duration 60
+  python test_navigation.py full /dev/ttyUSB0 /dev/ttyACM0
         """
     )
     
     parser.add_argument('mode', 
                        choices=['lidar', 'arduino', 'detection', 'full', 'config', 'all'],
                        help='Test mode to run')
-    parser.add_argument('--lidar-port', type=str, default=config.LIDAR_PORT,
-                       help=f'LIDAR serial port (default: {config.LIDAR_PORT})')
-    parser.add_argument('--arduino-port', type=str, default=config.ARDUINO_PORT,
-                       help=f'Arduino serial port (default: {config.ARDUINO_PORT})')
+    parser.add_argument('lidar_port', nargs='?', type=str, default=config.LIDAR_PORT,
+                       help=f'LIDAR serial port (positional, default: {config.LIDAR_PORT})')
+    parser.add_argument('arduino_port', nargs='?', type=str, default=config.ARDUINO_PORT,
+                       help=f'Arduino serial port (positional, default: {config.ARDUINO_PORT})')
     parser.add_argument('--arduino-baudrate', type=int, default=config.ARDUINO_BAUDRATE,
                        help=f'Arduino baudrate (default: {config.ARDUINO_BAUDRATE})')
     parser.add_argument('--duration', type=int, default=30,
