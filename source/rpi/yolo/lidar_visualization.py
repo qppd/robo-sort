@@ -1,6 +1,8 @@
 import sys
 import os
 import time
+import matplotlib
+matplotlib.use('TkAgg')  # Use TkAgg backend for better real-time updating
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
@@ -10,7 +12,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ldrobo
 from listen_to_lidar import listen_to_lidar
 
 def update_plot(frame, lidar_data, ax):
-    ax.clear()
+    ax.cla()  # Clear current axes
     ax.set_thetamin(0)
     ax.set_thetamax(360)
     ax.set_rlim(0, 200)
