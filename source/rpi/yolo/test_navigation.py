@@ -406,7 +406,9 @@ def test_full_system(
                     time.sleep(0.1)
                     
             except KeyboardInterrupt:
-                print("\n⚠ Emergency stop!")
+                print("\n⚠ Emergency stop! Sending MSTOP to Arduino...")
+                navigator.arduino.stop()
+                print("Motors stopped via MSTOP command")
             except Exception as thread_error:
                 print(f"[NAV] Thread error: {thread_error}")
             finally:
@@ -421,7 +423,9 @@ def test_full_system(
         try:
             import signal
             def signal_handler(signum, frame):
-                print("\n⚠ Received signal, shutting down...")
+                print("\n⚠ Received SIGINT (Ctrl+C) - Sending MSTOP to Arduino...")
+                navigator.arduino.stop()
+                print("Motors stopped via MSTOP command")
                 plt.close('all')
             
             signal.signal(signal.SIGINT, signal_handler)
@@ -440,7 +444,9 @@ def test_full_system(
             # Show visualization (blocking)
             plt.show()
         except KeyboardInterrupt:
-            print("\n⚠ Visualization interrupted by user")
+            print("\n⚠ Visualization interrupted by user - Sending MSTOP to Arduino...")
+            navigator.arduino.stop()
+            print("Motors stopped via MSTOP command")
         finally:
             # Stop navigation
             navigation_running[0] = False
