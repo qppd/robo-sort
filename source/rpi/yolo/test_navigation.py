@@ -7,6 +7,7 @@ import sys
 import os
 import time
 import argparse
+import keyboard
 
 # Add matplotlib imports for visualization
 import matplotlib
@@ -252,6 +253,14 @@ def test_full_system(
             print("✗ Failed to start navigation system")
             return False
         
+        # Set up emergency stop hotkey
+        def emergency_stop():
+            print("\n⚠ Emergency stop triggered by 'S' key")
+            navigator.arduino.stop()
+        
+        keyboard.add_hotkey('s', emergency_stop)
+        print("Press 'S' to emergency stop the motors")
+        
         # Set up the polar plot for visualization
         fig = plt.figure(figsize=(8, 8))
         ax = fig.add_subplot(111, polar=True)
@@ -434,6 +443,7 @@ def test_full_system(
             nav_thread.join(timeout=2.0)
             navigator.stop()
             plt.close('all')  # Ensure all plots are closed
+            keyboard.clear_all_hotkeys()  # Clean up hotkeys
             print("\n Full system test with visualization stopped")
             return True
             
