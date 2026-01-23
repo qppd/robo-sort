@@ -276,16 +276,13 @@ void ServoConfig::armExtend(int angle) {
   Serial.print(angle);
   Serial.println(" degrees (smooth, LOOK loosened)");
   
-  // Smooth movement with 5-degree steps for higher torque
-  int diff = angle - currentArmExtensionAngle;
-  int step = (diff > 0) ? 5 : -5;
+  // Smooth movement with 1-degree steps
+  int step = (angle > currentArmExtensionAngle) ? 1 : -1;
   
   while (currentArmExtensionAngle != angle) {
-    int remaining = abs(angle - currentArmExtensionAngle);
-    int actualStep = (remaining < 5) ? (diff > 0 ? remaining : -remaining) : step;
-    currentArmExtensionAngle += actualStep;
+    currentArmExtensionAngle += step;
     setServoAngle(4, currentArmExtensionAngle);
-    delay(10);  // 10ms per step for faster motion
+    delay(15);  // 15ms per degree for smooth motion
   }
   
   Serial.print("ARM-EXTENSION extension complete at ");
@@ -320,16 +317,13 @@ void ServoConfig::lookRotate(int angle) {
   Serial.print(angle);
   Serial.println(" degrees (smooth, ARM-EXTEND loosened)");
   
-  // Smooth movement with 5-degree steps for higher torque
-  int diff = angle - currentLookAngle;
-  int step = (diff > 0) ? 5 : -5;
+  // Smooth movement with 1-degree steps
+  int step = (angle > currentLookAngle) ? 1 : -1;
   
   while (currentLookAngle != angle) {
-    int remaining = abs(angle - currentLookAngle);
-    int actualStep = (remaining < 5) ? (diff > 0 ? remaining : -remaining) : step;
-    currentLookAngle += actualStep;
+    currentLookAngle += step;
     setServoAngle(5, currentLookAngle);
-    delay(10);  // 10ms per step for faster motion
+    delay(15);  // 15ms per degree for smooth motion
   }
   
   Serial.print("LOOK rotation complete at ");
