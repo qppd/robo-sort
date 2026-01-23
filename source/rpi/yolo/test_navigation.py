@@ -254,12 +254,16 @@ def test_full_system(
             return False
         
         # Set up emergency stop hotkey
-        def emergency_stop():
-            print("\n⚠ Emergency stop triggered by 'S' key")
-            navigator.arduino.stop()
-        
-        keyboard.add_hotkey('s', emergency_stop)
-        print("Press 'S' to emergency stop the motors")
+        try:
+            def emergency_stop():
+                print("\n⚠ Emergency stop triggered by 'S' key")
+                navigator.arduino.stop()
+            
+            keyboard.add_hotkey('s', emergency_stop)
+            print("Press 'S' to emergency stop the motors")
+        except Exception as e:
+            print(f"⚠ Warning: Could not set up keyboard hotkey (requires root/admin privileges on some systems): {e}")
+            print("Emergency stop via keyboard will not be available")
         
         # Set up the polar plot for visualization
         fig = plt.figure(figsize=(8, 8))
@@ -443,7 +447,10 @@ def test_full_system(
             nav_thread.join(timeout=2.0)
             navigator.stop()
             plt.close('all')  # Ensure all plots are closed
-            keyboard.clear_all_hotkeys()  # Clean up hotkeys
+            try:
+                keyboard.clear_all_hotkeys()  # Clean up hotkeys
+            except:
+                pass  # Ignore if hotkeys weren't set up
             print("\n Full system test with visualization stopped")
             return True
             
