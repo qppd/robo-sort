@@ -127,11 +127,15 @@ def test_arduino_connection(port: str = '/dev/ttyACM0', baudrate: int = 9600):
 
 def update_visualization_plot(frame, lidar_data, ax):
     """Update function for matplotlib animation"""
+    # Properly clear all previous artists
     ax.clear()
+    ax.set_theta_zero_location('N')
+    ax.set_theta_direction(1)
     ax.set_thetamin(0)
     ax.set_thetamax(360)
     ax.set_rlim(0, 200)
     ax.set_title("LIDAR Real-Time Visualization (Full Navigation Test)", va='bottom')
+    ax.grid(True, alpha=0.3)
     
     distances = lidar_data['distances'].copy()
     angles_deg = []
@@ -145,7 +149,8 @@ def update_visualization_plot(frame, lidar_data, ax):
     angles_rad = np.deg2rad(angles_deg)
     
     # Plot scatter
-    ax.scatter(angles_rad, distances_cm, s=1, c='red', alpha=0.7)
+    if angles_rad and distances_cm:
+        ax.scatter(angles_rad, distances_cm, s=1, c='red', alpha=0.7)
     
     return ax,
 
@@ -378,18 +383,28 @@ def test_full_system(
                         
                         # Normal navigation - check for side obstacles and adjust
                         if not obstacle_detected:
+                            # CRITICAL: Always check front distance before moving forward
+                            if front_dist < config.SAFE_DISTANCE:
+                                # Stop immediately if too close when trying to move forward
+                                print(f"[NAV] Front obstacle at {front_dist:.1f}cm - STOPPING")
+                                navigator.arduino.stop()
+                                time.sleep(0.1)
                             # Check side clearances
-                            if left_dist < 50:  # Left obstacle too close
+                            elif left_dist < 50:  # Left obstacle too close
                                 print(f"[NAV] Left obstacle at {left_dist:.1f}cm - adjusting right")
-                                navigator.arduino.turn_left(255)  # Turn slightly right
+                                navigator.arduino.turn_right(200)  # Turn slightly right (away from left obstacle)
                                 time.sleep(0.15)
                             elif right_dist < 50:  # Right obstacle too close
                                 print(f"[NAV] Right obstacle at {right_dist:.1f}cm - adjusting left")
-                                navigator.arduino.turn_right(255)  # Turn slightly left
+                                navigator.arduino.turn_left(200)  # Turn slightly left (away from right obstacle)
                                 time.sleep(0.15)
                             else:
-                                # Clear path, move forward
-                                navigator.arduino.forward(255)
+                                # Clear path on all sides, safe to move forward
+                                if front_dist > config.SAFE_DISTANCE + 10:  # Add buffer for safety
+                                    navigator.arduino.forward(200)
+                                else:
+                                    # Too close to safe threshold, move slowly or stop
+                                    navigator.arduino.stop()
                         
                         navigation_count += 1
                         if navigation_count % 50 == 0:  # Log every 50 cycles
