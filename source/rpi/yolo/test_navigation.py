@@ -302,37 +302,25 @@ def test_full_system(
                         
                         current_time = time.time()
                         
-                        # Check if we're in obstacle avoidance cooldown (just go forward)
-                        if current_time < obstacle_cooldown_until:
-                            # Force forward movement during cooldown - don't check obstacles
-                            navigator.arduino.forward(150)
-                            navigation_count += 1
-                            if navigation_count % 50 == 0:
-                                remaining_cooldown = obstacle_cooldown_until - current_time
-                                print(f"[NAV] Obstacle cooldown active ({remaining_cooldown:.1f}s) - forcing forward")
-                            time.sleep(0.1)
-                            continue
-                        else:
-                            # Cooldown just ended
-                            if obstacle_cooldown_until > 0:  # Only log once when cooldown ends
-                                print(f"[NAV] Obstacle cooldown ended - resuming normal navigation")
-                                print(f"[NAV] Current distances: Front={front_dist:.1f}cm, Left={left_dist:.1f}cm, Right={right_dist:.1f}cm")
-                                obstacle_cooldown_until = 0
+                        # Check for obstacles on ANY side and react immediately
+                        # Priority: Front > Left/Right sides
+                        obstacle_detected = False
                         
-                        # Check if we need to enter backup mode
-                        if not backup_mode and not turn_mode and front_dist < config.CRITICAL_DISTANCE:
+                        # Check front obstacle (highest priority)
+                        if not backup_mode and not turn_mode and front_dist < config.SAFE_DISTANCE:
                             print(f"[NAV] Front obstacle at {front_dist:.1f}cm - entering backup mode")
                             backup_mode = True
                             backup_start_time = current_time
-                            navigator.arduino.backward(150)
+                            navigator.arduino.backward(255)
+                            obstacle_detected = True
                             time.sleep(0.1)
                             continue
                         
-                        # Handle backup mode (2 seconds)
+                        # Handle backup mode (1.5 seconds)
                         if backup_mode:
-                            if current_time - backup_start_time < 2.0:
+                            if current_time - backup_start_time < 1.5:
                                 # Continue backing up
-                                navigator.arduino.backward(150)
+                                navigator.arduino.backward(255)
                                 time.sleep(0.1)
                                 continue
                             else:
@@ -344,47 +332,58 @@ def test_full_system(
                                 # Choose turn direction based on which side has more space
                                 if left_dist > right_dist:
                                     turn_direction = 'left'
-                                    navigator.arduino.turn_right(120)  # Inverted: turn_right to turn left
-                                    print(f"[NAV] Backup complete - turning LEFT (L:{left_dist:.1f}cm > R:{right_dist:.1f}cm)")
+                                    navigator.arduino.rotate_left(255)  # Rotate in place for better clearance
+                                    print(f"[NAV] Backup complete - rotating LEFT (L:{left_dist:.1f}cm > R:{right_dist:.1f}cm)")
                                 else:
                                     turn_direction = 'right'
-                                    navigator.arduino.turn_left(120)   # Inverted: turn_left to turn right
-                                    print(f"[NAV] Backup complete - turning RIGHT (L:{left_dist:.1f}cm < R:{right_dist:.1f}cm)")
+                                    navigator.arduino.rotate_right(255)  # Rotate in place for better clearance
+                                    print(f"[NAV] Backup complete - rotating RIGHT (L:{left_dist:.1f}cm < R:{right_dist:.1f}cm)")
                                 time.sleep(0.1)
                                 continue
                         
-                        # Handle turn mode (3 seconds or until front path is clear)
+                        # Handle turn mode (2 seconds or until all paths are clear)
                         if turn_mode:
-                            if current_time - turn_start_time < 3.0:
-                                # Check if front path is now clear - if so, switch to forward immediately
-                                if front_dist > config.SAFE_DISTANCE:
+                            if current_time - turn_start_time < 2.0:
+                                # Check if front path is now clear AND sides are safe
+                                if front_dist > config.SAFE_DISTANCE and left_dist > 60 and right_dist > 60:
                                     turn_mode = False
                                     turn_direction = None
-                                    print(f"[NAV] Front path clear at {front_dist:.1f}cm - switching to forward")
-                                    navigator.arduino.forward(150)  # Start moving forward immediately
+                                    print(f"[NAV] All paths clear - switching to forward")
+                                    navigator.arduino.forward(255)  # Start moving forward immediately
                                     time.sleep(0.1)
                                     continue
                                 
-                                # Continue turning
+                                # Continue rotating
                                 if turn_direction == 'left':
-                                    navigator.arduino.turn_right(120)  # Inverted: turn_right to turn left
+                                    navigator.arduino.rotate_left(255)
                                 else:
-                                    navigator.arduino.turn_left(120)   # Inverted: turn_left to turn right
+                                    navigator.arduino.rotate_right(255)
                                 time.sleep(0.1)
                                 continue
                             else:
-                                # Backup complete, resume forward movement
+                                # Turn complete, resume forward movement
                                 turn_mode = False
                                 turn_direction = None
-                                obstacle_cooldown_until = current_time + 15.0  # 15 second cooldown to prevent re-triggering
-                                print("[NAV] Turn complete - resuming forward movement (15s obstacle cooldown)")
+                                print("[NAV] Turn complete - resuming forward movement")
                         
-                        # Normal navigation - use default logic
-                        navigator.navigate_once()
+                        # Normal navigation - check for side obstacles and adjust
+                        if not obstacle_detected:
+                            # Check side clearances
+                            if left_dist < 50:  # Left obstacle too close
+                                print(f"[NAV] Left obstacle at {left_dist:.1f}cm - adjusting right")
+                                navigator.arduino.turn_left(255)  # Turn slightly right
+                                time.sleep(0.15)
+                            elif right_dist < 50:  # Right obstacle too close
+                                print(f"[NAV] Right obstacle at {right_dist:.1f}cm - adjusting left")
+                                navigator.arduino.turn_right(255)  # Turn slightly left
+                                time.sleep(0.15)
+                            else:
+                                # Clear path, move forward
+                                navigator.arduino.forward(255)
+                        
                         navigation_count += 1
-                        
                         if navigation_count % 50 == 0:  # Log every 50 cycles
-                            print(f"[NAV] Completed {navigation_count} navigation cycles")
+                            print(f"[NAV] Completed {navigation_count} navigation cycles - F:{front_dist:.0f} L:{left_dist:.0f} R:{right_dist:.0f}")
                             
                     except Exception as nav_error:
                         print(f"[NAV] Navigation error (continuing): {nav_error}")
