@@ -14,14 +14,14 @@ ARDUINO_BAUDRATE = 9600  # Arduino serial communication baudrate
 
 # ===== OBSTACLE AVOIDANCE PARAMETERS =====
 # Distance thresholds (in centimeters) - adjusted for MIN_VALID_DISTANCE = 40cm
-SAFE_DISTANCE = 75.0  # Minimum safe distance from obstacles (above critical)
-CRITICAL_DISTANCE = 55.0  # Distance requiring immediate turning (above danger)
-DANGER_DISTANCE = 45.0  # Distance requiring stop/reverse (just above min valid)
-CLEAR_PATH_THRESHOLD = 100.0  # Distance considered as clear path
+SAFE_DISTANCE = 100.0  # Minimum safe distance from obstacles (above critical)
+CRITICAL_DISTANCE = 60.0  # Distance requiring immediate backup (above danger)
+DANGER_DISTANCE = 50.0  # Distance requiring immediate stop (just above min valid)
+CLEAR_PATH_THRESHOLD = 120.0  # Distance considered as clear path
 
 # Angular zones (in degrees)
 # 0° is forward, angles increase counterclockwise
-FRONT_ANGLE_RANGE = 30  # ±30° from forward is considered "front"
+FRONT_ANGLE_RANGE = 45  # ±45° from forward is considered "front"
 LEFT_ANGLE_RANGE = (30, 100)  # Left side detection zone (adjusted to avoid rear objects)
 RIGHT_ANGLE_RANGE = (260, 330)  # Right side detection zone (adjusted to avoid rear objects)
 

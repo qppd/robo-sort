@@ -303,10 +303,20 @@ def test_full_system(
                         current_time = time.time()
                         
                         # Check for obstacles on ANY side and react immediately
-                        # Priority: Front > Left/Right sides
+                        # Priority: Critical zone > Front > Left/Right sides
                         obstacle_detected = False
                         
-                        # Check front obstacle (highest priority)
+                        # Check for CRITICAL front obstacle (very close - immediate stop and backup)
+                        if not backup_mode and not turn_mode and front_dist < config.CRITICAL_DISTANCE:
+                            print(f"[NAV] CRITICAL front obstacle at {front_dist:.1f}cm - immediate backup!")
+                            backup_mode = True
+                            backup_start_time = current_time
+                            navigator.arduino.backward(255)
+                            obstacle_detected = True
+                            time.sleep(0.1)
+                            continue
+                        
+                        # Check front obstacle (early warning - normal backup)
                         if not backup_mode and not turn_mode and front_dist < config.SAFE_DISTANCE:
                             print(f"[NAV] Front obstacle at {front_dist:.1f}cm - entering backup mode")
                             backup_mode = True
