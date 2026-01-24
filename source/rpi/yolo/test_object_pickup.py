@@ -9,7 +9,19 @@ import time
 import argparse
 import cv2
 import numpy as np
-from ultralytics import YOLO
+
+# Try to import YOLO libraries
+try:
+    from ultralytics import YOLO
+    ULTRALYTICS_AVAILABLE = True
+except ImportError:
+    ULTRALYTICS_AVAILABLE = False
+
+try:
+    import ncnn
+    NCNN_AVAILABLE = True
+except ImportError:
+    NCNN_AVAILABLE = False
 
 # Add paths for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -28,15 +40,34 @@ class ObjectPickupTester:
         Initialize object pickup tester
         
         Args:
-            model_path: Path to YOLO model file
+            model_path: Path to model file (.pt for YOLO, .param for NCNN)
             arduino_port: Arduino serial port
             arduino_baudrate: Arduino baudrate
         """
-        # Load YOLO model
-        print(f"Loading YOLO model from {model_path}...")
-        self.model = YOLO(model_path, task='detect')
-        self.labels = self.model.names
-        print(f"✓ Model loaded with {len(self.labels)} classes")
+        # Detect model type
+        self.model_type = self._detect_model_type(model_path)
+        self.model_path = model_path
+        
+        # Load model based on type
+        if self.model_type == 'yolo':
+            if not ULTRALYTICS_AVAILABLE:
+                raise Exception("Ultralytics YOLO not available. Install with: pip install ultralytics")
+            print(f"Loading YOLO model from {model_path}...")
+            self.model = YOLO(model_path, task='detect')
+            self.labels = self.model.names
+            print(f"✓ YOLO model loaded with {len(self.labels)} classes")
+            
+        elif self.model_type == 'ncnn':
+            if not NCNN_AVAILABLE:
+                raise Exception("NCNN not available. Install with: pip install ncnn")
+            print(f"Loading NCNN model from {model_path}...")
+            # Initialize default labels (will be updated by _load_ncnn_model if metadata available)
+            self.labels = {0: 'other', 1: 'paper', 2: 'plastic_bottle', 3: 'plastic_wrapper'}
+            self._load_ncnn_model()
+            print(f"✓ NCNN model loaded with {len(self.labels)} classes")
+            
+        else:
+            raise Exception(f"Unsupported model type: {self.model_type}")
         
         # Initialize Arduino controller
         print(f"Connecting to Arduino on {arduino_port}...")
@@ -47,6 +78,145 @@ class ObjectPickupTester:
         # Pickup parameters
         self.detection_threshold = 0.5
         self.pickup_in_progress = False
+        
+    def _run_ncnn_inference(self, image):
+        """
+        Run inference using NCNN model
+        
+        Args:
+            image: Input image (BGR format)
+            
+        Returns:
+            List of detections in format similar to Ultralytics
+        """
+        # Preprocess image
+        img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        img = cv2.resize(img, self.input_size)
+        img = img.astype(np.float32)
+        
+        # Normalize
+        img = (img - self.mean_vals) * self.norm_vals
+        img = np.transpose(img, (2, 0, 1))  # HWC to CHW
+        
+        # Create NCNN mat
+        mat_in = ncnn.Mat(img)
+        
+        # Run inference
+        with self.ncnn_net.create_extractor() as ex:
+            ex.input("in0", mat_in)
+            _, mat_out = ex.extract("out0")
+            
+            # Convert to numpy
+            output = np.array(mat_out)
+            
+        # Parse YOLOv8 output format (simplified)
+        # This is a basic implementation - you may need to adjust based on your model's output format
+        detections = []
+        
+        # YOLOv8 output is [batch, 84, 8400] for COCO dataset
+        # We need to parse this into bounding boxes
+        if len(output.shape) == 3:
+            output = output[0]  # Remove batch dimension
+            
+            # Each detection is 84 values: 4 bbox + 80 classes
+            num_classes = len(self.labels)
+            num_detections = output.shape[1] if len(output.shape) > 1 else 0
+            
+            for i in range(min(num_detections, 100)):  # Limit to prevent too many detections
+                detection = output[:, i] if len(output.shape) > 1 else output
+                
+                if len(detection) < 4 + num_classes:
+                    continue
+                    
+                # Extract bbox and confidence
+                bbox = detection[:4]
+                confs = detection[4:4+num_classes]
+                
+                # Find best class
+                class_id = np.argmax(confs)
+                confidence = confs[class_id]
+                
+                if confidence > self.detection_threshold:
+                    # Convert bbox from center-x, center-y, width, height to xmin, ymin, xmax, ymax
+                    cx, cy, w, h = bbox
+                    
+                    # Scale to original image size (assuming 640x640 input)
+                    cx *= image.shape[1] / self.input_size[0]
+                    cy *= image.shape[0] / self.input_size[1]
+                    w *= image.shape[1] / self.input_size[0]
+                    h *= image.shape[0] / self.input_size[1]
+                    
+                    xmin = int(cx - w/2)
+                    ymin = int(cy - h/2)
+                    xmax = int(cx + w/2)
+                    ymax = int(cy + h/2)
+                    
+                    detections.append({
+                        'bbox': [xmin, ymin, xmax, ymax],
+                        'class_id': int(class_id),
+                        'confidence': float(confidence),
+                        'class_name': self.labels[class_id]
+                    })
+        
+        return detections
+        
+    def _detect_model_type(self, model_path: str) -> str:
+        """Detect model type based on file extension and path"""
+        if model_path.endswith('.pt') or model_path.endswith('.torchscript'):
+            return 'yolo'
+        elif 'ncnn' in model_path.lower() or model_path.endswith('.param'):
+            return 'ncnn'
+        elif os.path.isdir(model_path) and any(f.endswith('.param') for f in os.listdir(model_path)):
+            return 'ncnn'
+        else:
+            # Default to YOLO if can't determine
+            return 'yolo'
+    
+    def _load_ncnn_model(self):
+        """Load NCNN model"""
+        try:
+            import yaml
+        except ImportError:
+            print("Warning: PyYAML not available, using default class names")
+            yaml = None
+
+        # Find model files
+        model_dir = self.model_path if os.path.isdir(self.model_path) else os.path.dirname(self.model_path)
+
+        param_file = None
+        bin_file = None
+        metadata_file = None
+
+        for file in os.listdir(model_dir):
+            if file.endswith('.param'):
+                param_file = os.path.join(model_dir, file)
+            elif file.endswith('.bin'):
+                bin_file = os.path.join(model_dir, file)
+            elif file == 'metadata.yaml':
+                metadata_file = os.path.join(model_dir, file)
+
+        if not param_file or not bin_file:
+            raise Exception(f"NCNN model files not found in {model_dir}")
+
+        # Load class names from metadata if available
+        if metadata_file and yaml:
+            try:
+                with open(metadata_file, 'r') as f:
+                    metadata = yaml.safe_load(f)
+                    self.labels = metadata.get('names', self.labels)
+                    print(f"Loaded class names from metadata: {self.labels}")
+            except Exception as e:
+                print(f"Warning: Could not load metadata: {e}")
+
+        # Load NCNN model
+        self.ncnn_net = ncnn.Net()
+        self.ncnn_net.load_param(param_file)
+        self.ncnn_net.load_model(bin_file)
+
+        # Model parameters
+        self.input_size = (640, 640)  # From metadata
+        self.mean_vals = [0, 0, 0]    # RGB mean
+        self.norm_vals = [1/255.0, 1/255.0, 1/255.0]  # Normalization
         
     def arm_rotate(self, angle: int):
         """Rotate arm to specified angle (0-180)"""
@@ -63,54 +233,58 @@ class ObjectPickupTester:
         self.arduino.send_command("LIFTER:DOWN")
         print("  → LIFTER DOWN")
         
-    def arm_extend(self):
-        """Extend arm forward"""
-        self.arduino.send_command("ARM-EXTEND")
-        print("  → ARM-EXTEND")
+    def arm_extend(self, angle: int = 180):
+        """Extend arm to specified angle (100=home, 180=fully extended)"""
+        self.arduino.send_command(f"ARM-EXTEND:{angle}")
+        print(f"  → ARM-EXTEND to {angle}°")
         
-    def arm_retract(self):
-        """Retract arm (return to home)"""
-        self.arduino.send_command("ARM-RETRACT")
-        print("  → ARM-RETRACT")
-        
-    def look(self):
-        """Move arm to look/scan position"""
-        self.arduino.send_command("LOOK")
-        print("  → LOOK")
+    def look(self, angle: int = 160):
+        """Move head to look at specified angle (160=object, 180=BIN)"""
+        self.arduino.send_command(f"LOOK:{angle}")
+        print(f"  → LOOK at {angle}°")
         
     def grip_rotate(self, angle: int):
         """Rotate gripper to specified angle (0-180)"""
         self.arduino.send_command(f"GRIP-ROTATE:{angle}")
         print(f"  → GRIP-ROTATE to {angle}°")
         
-    def grip_open(self):
-        """Open gripper"""
-        self.arduino.send_command("GRIP:OPEN")
-        print("  → GRIP OPEN")
-        
-    def grip_close(self):
-        """Close gripper"""
-        self.arduino.send_command("GRIP:CLOSE")
-        print("  → GRIP CLOSE")
+    def grip(self, angle: int):
+        """Set gripper position (110=open, 180=closed)"""
+        self.arduino.send_command(f"GRIP:{angle}")
+        print(f"  → GRIP to {angle}°")
         
     def reset_arm(self):
-        """Reset arm to home position"""
-        print("\n[RESET] Resetting arm to home position...")
-        self.grip_open()
-        time.sleep(0.5)
-        self.arm_retract()
-        time.sleep(1.0)
-        self.lifter_down()
-        time.sleep(0.8)
-        self.arm_rotate(90)  # Center position
-        time.sleep(0.5)
-        self.grip_rotate(90)  # Center gripper
-        time.sleep(0.5)
-        print("✓ Arm reset complete\n")
+        """Initial homing sequence"""
+        print("\n[HOMING] Starting initial homing sequence...")
+        print("[HOMING] Step 1: LIFTER UP until limit switch triggers")
+        self.lifter_up()
+        time.sleep(3.0)  # Wait for limit switch
         
-    def pickup_sequence(self, object_name: str, x_center: int, frame_width: int):
+        print("[HOMING] Step 2: ARM-ROTATE to 180 (front)")
+        self.arm_rotate(180)
+        time.sleep(1.5)
+        
+        print("[HOMING] Step 3: ARM-EXTEND to 100 (home)")
+        self.arm_extend(100)
+        time.sleep(1.0)
+        
+        print("[HOMING] Step 4: LOOK at 180 (BIN)")
+        self.look(180)
+        time.sleep(1.0)
+        
+        print("[HOMING] Step 5: GRIP-ROTATE to 0")
+        self.grip_rotate(0)
+        time.sleep(1.0)
+        
+        print("[HOMING] Step 6: GRIP to 110 (open)")
+        self.grip(110)
+        time.sleep(0.5)
+        
+        print("✓ Homing sequence complete\n")
+        
+    def pickup_and_drop_sequence(self, object_name: str, x_center: int, frame_width: int):
         """
-        Execute pickup sequence for detected object
+        Execute complete pickup and drop sequence for detected object
         
         Args:
             object_name: Name of detected object
@@ -122,49 +296,65 @@ class ObjectPickupTester:
             
         self.pickup_in_progress = True
         print(f"\n{'='*60}")
-        print(f"[PICKUP] Starting pickup sequence for: {object_name}")
+        print(f"[PICKUP & DROP] Starting sequence for: {object_name}")
         print(f"{'='*60}")
         
         try:
-            # Calculate rotation angle based on object position
-            # Center of frame = 90°, left edge = 0°, right edge = 180°
-            rotation_angle = int((x_center / frame_width) * 180)
-            rotation_angle = max(30, min(150, rotation_angle))  # Limit to safe range
+            # Object is centered in camera, arm should already be at 180 (front)
+            # No rotation needed initially - arm stays at 180
             
-            print(f"[PICKUP] Step 1: Position arm (object at x={x_center}, angle={rotation_angle}°)")
-            self.arm_rotate(rotation_angle)
-            time.sleep(1.5)
-            
-            print("[PICKUP] Step 2: Look at object")
-            self.look()
-            time.sleep(1.0)
-            
-            print("[PICKUP] Step 3: Open gripper")
-            self.grip_open()
-            time.sleep(0.8)
-            
-            print("[PICKUP] Step 4: Extend arm to object")
-            self.arm_extend()
-            time.sleep(1.5)
-            
-            print("[PICKUP] Step 5: Lower lifter")
+            print("[STEP 1] LIFTER DOWN for 60 seconds (slowly lower to pickup height)")
             self.lifter_down()
+            time.sleep(60.0)  # 60 seconds to lower slowly
+            
+            print("[STEP 2] ARM-EXTEND to 180 (reach toward object)")
+            self.arm_extend(180)
+            time.sleep(2.0)
+            
+            print("[STEP 3] LOOK at 160 (tilt head to look at object)")
+            self.look(160)
             time.sleep(1.0)
             
-            print("[PICKUP] Step 6: Close gripper to grab object")
-            self.grip_close()
-            time.sleep(1.0)
-            
-            print("[PICKUP] Step 7: Lift object")
-            self.lifter_up()
-            time.sleep(1.0)
-            
-            print("[PICKUP] Step 8: Retract arm")
-            self.arm_retract()
+            print("[STEP 4] GRIP-ROTATE to 90 (rotate gripper to align with object)")
+            self.grip_rotate(90)
             time.sleep(1.5)
             
-            print(f"✓ Pickup sequence complete for {object_name}!")
+            print("[STEP 5] GRIP to 180 (close gripper to grasp object)")
+            self.grip(180)
+            time.sleep(1.5)
+            
+            print("[STEP 6] LIFTER UP until limit switch triggers (lift entire arm)")
+            self.lifter_up()
+            time.sleep(3.0)  # Wait for limit switch
+            
+            print("[STEP 7] LOOK at 180 (look at BIN)")
+            self.look(180)
+            time.sleep(1.0)
+            
+            print("[STEP 8] ARM-EXTEND to 100 (retract arm)")
+            self.arm_extend(100)
+            time.sleep(1.5)
+            
+            print("[STEP 9] Wait for LIFTER UP to finish (limit switch triggered)")
+            time.sleep(1.0)
+            
+            print("[STEP 10] ARM-ROTATE to 0 (rotate base toward BIN)")
+            self.arm_rotate(0)
+            time.sleep(2.0)
+            
+            print("[STEP 11] GRIP to 110 (open gripper to drop object)")
+            self.grip(110)
+            time.sleep(1.0)
+            
+            print(f"✓ Pickup and drop sequence complete for {object_name}!")
             print(f"{'='*60}\n")
+            
+            # Return to home position
+            print("[RETURN] Returning to home position...")
+            self.arm_rotate(180)  # Return to front
+            time.sleep(2.0)
+            self.grip_rotate(0)  # Reset gripper rotation
+            time.sleep(1.0)
             
             # Wait before next pickup
             time.sleep(2.0)
@@ -230,44 +420,71 @@ class ObjectPickupTester:
                 
                 frame_height, frame_width = frame.shape[:2]
                 
-                # Run YOLO detection
-                results = self.model(frame, verbose=False)
-                detections = results[0].boxes
+                # Run detection based on model type
+                if self.model_type == 'yolo':
+                    results = self.model(frame, verbose=False)
+                    detections = results[0].boxes
+                elif self.model_type == 'ncnn':
+                    detections = self._run_ncnn_inference(frame)
+                else:
+                    detections = []
                 
                 # Track detected objects
                 detected_objects = []
                 
                 # Process detections
-                for i in range(len(detections)):
-                    # Get bounding box
-                    xyxy = detections[i].xyxy.cpu().numpy().squeeze()
-                    xmin, ymin, xmax, ymax = xyxy.astype(int)
-                    
-                    # Get class and confidence
-                    classidx = int(detections[i].cls.item())
-                    classname = self.labels[classidx]
-                    conf = detections[i].conf.item()
-                    
-                    # Draw if confidence is high enough
-                    if conf > self.detection_threshold:
-                        # Calculate center
-                        x_center = (xmin + xmax) // 2
-                        y_center = (ymin + ymax) // 2
+                if self.model_type == 'yolo':
+                    # Ultralytics YOLO format
+                    for i in range(len(detections)):
+                        # Get bounding box
+                        xyxy = detections[i].xyxy.cpu().numpy().squeeze()
+                        xmin, ymin, xmax, ymax = xyxy.astype(int)
                         
+                        # Get class and confidence
+                        classidx = int(detections[i].cls.item())
+                        classname = self.labels[classidx]
+                        conf = detections[i].conf.item()
+                        
+                        if conf > self.detection_threshold:
+                            x_center = (xmin + xmax) // 2
+                            detected_objects.append({
+                                'name': classname,
+                                'conf': conf,
+                                'x': x_center,
+                                'y': (ymin + ymax) // 2,
+                                'bbox': (xmin, ymin, xmax, ymax)
+                            })
+                            
+                            # Draw bounding box
+                            color = (0, 255, 0) if not self.pickup_in_progress else (0, 165, 255)
+                            cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), color, 2)
+                            cv2.circle(frame, (x_center, (ymin + ymax) // 2), 5, (0, 0, 255), -1)
+                            
+                            # Draw label
+                            label = f'{classname}: {int(conf*100)}%'
+                            cv2.putText(frame, label, (xmin, ymin-10), 
+                                      cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                
+                elif self.model_type == 'ncnn':
+                    # NCNN format
+                    for det in detections:
+                        xmin, ymin, xmax, ymax = det['bbox']
+                        classname = det['class_name']
+                        conf = det['confidence']
+                        
+                        x_center = (xmin + xmax) // 2
                         detected_objects.append({
                             'name': classname,
                             'conf': conf,
                             'x': x_center,
-                            'y': y_center,
+                            'y': (ymin + ymax) // 2,
                             'bbox': (xmin, ymin, xmax, ymax)
                         })
                         
                         # Draw bounding box
                         color = (0, 255, 0) if not self.pickup_in_progress else (0, 165, 255)
                         cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), color, 2)
-                        
-                        # Draw center point
-                        cv2.circle(frame, (x_center, y_center), 5, (0, 0, 255), -1)
+                        cv2.circle(frame, (x_center, (ymin + ymax) // 2), 5, (0, 0, 255), -1)
                         
                         # Draw label
                         label = f'{classname}: {int(conf*100)}%'
@@ -307,7 +524,7 @@ class ObjectPickupTester:
                     if detected_objects and not self.pickup_in_progress:
                         # Pick up the first detected object
                         obj = detected_objects[0]
-                        self.pickup_sequence(obj['name'], obj['x'], frame_width)
+                        self.pickup_and_drop_sequence(obj['name'], obj['x'], frame_width)
                 
                 # Calculate FPS
                 t_stop = time.perf_counter()
@@ -341,12 +558,12 @@ def main():
 Examples:
   python test_object_pickup.py --model my_model.pt --camera usb0
   python test_object_pickup.py --model best.pt --camera usb1 --arduino /dev/ttyACM0
-  python test_object_pickup.py --model my_model.pt --camera picamera0
+  python test_object_pickup.py --model my_model_ncnn_model --camera picamera0
         """
     )
     
     parser.add_argument('--model', type=str, required=True,
-                       help='Path to YOLO model file (e.g., "my_model.pt")')
+                       help='Path to model file (.pt for YOLO, .param or directory for NCNN)')
     parser.add_argument('--camera', type=str, default='usb0',
                        help='Camera source: usb0, usb1, picamera0, etc. (default: usb0)')
     parser.add_argument('--arduino', type=str, default='/dev/ttyACM0',
