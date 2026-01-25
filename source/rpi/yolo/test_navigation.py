@@ -331,10 +331,21 @@ def test_full_system(
                             obstacle_detected = True
                             continue
                         
-                        # Handle backup mode (1.5 seconds)
+                        # Handle backup mode - check real-time if path is now clear
                         if backup_mode:
-                            if current_time - backup_start_time < 1.5:
-                                # Continue backing up
+                            # Re-read fresh lidar data
+                            fresh_distances = navigator.lidar_data['distances'].copy()
+                            fresh_analysis = navigator.obstacle_avoidance.analyze_obstacles(fresh_distances)
+                            fresh_front = fresh_analysis['front_min_distance']
+                            
+                            # Exit backup early if front is now clear, or continue for max 0.5 seconds
+                            if fresh_front > config.SAFE_DISTANCE + 20:
+                                print(f"[NAV] Front now clear at {fresh_front:.1f}cm - stopping backup early")
+                                backup_mode = False
+                                navigator.arduino.forward(200)
+                                continue
+                            elif current_time - backup_start_time < 0.5:
+                                # Continue backing up for max 0.5 seconds
                                 navigator.arduino.backward(255)
                                 continue
                             else:
@@ -354,17 +365,25 @@ def test_full_system(
                                     print(f"[NAV] Backup complete - rotating RIGHT (L:{left_dist:.1f}cm < R:{right_dist:.1f}cm)")
                                 continue
                         
-                        # Handle turn mode (2 seconds or until all paths are clear)
+                        # Handle turn mode - check real-time if path is clear
                         if turn_mode:
-                            if current_time - turn_start_time < 2.0:
-                                # Check if front path is now clear AND sides are safe
-                                if front_dist > config.SAFE_DISTANCE and left_dist > 60 and right_dist > 60:
-                                    turn_mode = False
-                                    turn_direction = None
-                                    print(f"[NAV] All paths clear - switching to forward")
-                                    navigator.arduino.forward(255)  # Start moving forward immediately
-                                    continue
-                                
+                            # Re-read fresh lidar data
+                            fresh_distances = navigator.lidar_data['distances'].copy()
+                            fresh_analysis = navigator.obstacle_avoidance.analyze_obstacles(fresh_distances)
+                            fresh_front = fresh_analysis['front_min_distance']
+                            fresh_left = fresh_analysis['left_min_distance']
+                            fresh_right = fresh_analysis['right_min_distance']
+                            
+                            # Check if front path is now clear with fresh data
+                            if fresh_front > config.SAFE_DISTANCE and fresh_left > 60 and fresh_right > 60:
+                                turn_mode = False
+                                turn_direction = None
+                                print(f"[NAV] All paths clear - switching to forward")
+                                navigator.arduino.forward(255)
+                                continue
+                            
+                            # Max turn time 0.8 seconds
+                            if current_time - turn_start_time < 0.8:
                                 # Continue rotating
                                 if turn_direction == 'left':
                                     navigator.arduino.rotate_left(255)
@@ -385,10 +404,10 @@ def test_full_system(
                                 print(f"[NAV] Front obstacle at {front_dist:.1f}cm - STOPPING")
                                 navigator.arduino.stop()
                             # Check side clearances
-                            elif left_dist < 50:  # Left obstacle too close
+                            elif left_dist < 60:  # Left obstacle too close
                                 print(f"[NAV] Left obstacle at {left_dist:.1f}cm - adjusting right")
                                 navigator.arduino.turn_right(200)  # Turn slightly right (away from left obstacle)
-                            elif right_dist < 50:  # Right obstacle too close
+                            elif right_dist < 60:  # Right obstacle too close
                                 print(f"[NAV] Right obstacle at {right_dist:.1f}cm - adjusting left")
                                 navigator.arduino.turn_left(200)  # Turn slightly left (away from right obstacle)
                             else:
