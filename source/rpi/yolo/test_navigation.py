@@ -318,7 +318,7 @@ def test_full_system(
                         elif left_dist < 60:
                             print(f"[NAV] Left obstacle at {left_dist:.1f}cm - turning right")
                             # Decide rotation vs turn based on how close
-                            if left_dist < config.CRITICAL_DISTANCE:
+                            if left_dist < 60:
                                 navigator.arduino.rotate_right(255)  # Rotate in place if very close
                             else:
                                 navigator.arduino.turn_right(200)  # Gentle turn if moderate distance
@@ -327,7 +327,7 @@ def test_full_system(
                         elif right_dist < 60:
                             print(f"[NAV] Right obstacle at {right_dist:.1f}cm - turning left")
                             # Decide rotation vs turn based on how close
-                            if right_dist < config.CRITICAL_DISTANCE:
+                            if right_dist < 60:
                                 navigator.arduino.rotate_left(255)  # Rotate in place if very close
                             else:
                                 navigator.arduino.turn_left(200)  # Gentle turn if moderate distance
