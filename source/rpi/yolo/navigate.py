@@ -67,11 +67,23 @@ class ArduinoController:
     
     def disconnect(self):
         """Close serial connection"""
-        if self.serial_conn and self.serial_conn.is_open:
-            self.stop()
-            self.serial_conn.close()
+        try:
+            if self.serial_conn and self.serial_conn.is_open:
+                self.stop()
+                time.sleep(0.1)  # Give time for stop command to send
+                self.serial_conn.flush()  # Flush remaining data
+                self.serial_conn.close()
+                self.connected = False
+                print("✓ Disconnected from Arduino")
+        except Exception as e:
+            print(f"⚠ Error during disconnect: {e}")
             self.connected = False
-            print("✓ Disconnected from Arduino")
+            # Force close if still open
+            try:
+                if self.serial_conn:
+                    self.serial_conn.close()
+            except:
+                pass
     
     def send_command(self, command: str) -> bool:
         """
@@ -87,13 +99,21 @@ class ArduinoController:
             print("✗ Not connected to Arduino")
             return False
         
+        # Check if connection is still valid
+        if not self.serial_conn.is_open:
+            print("✗ Serial connection closed unexpectedly")
+            self.connected = False
+            return False
+        
         try:
             if not command.endswith('\n'):
                 command += '\n'
             self.serial_conn.write(command.encode('utf-8'))
+            self.serial_conn.flush()  # Ensure data is sent immediately
             return True
         except Exception as e:
             print(f"✗ Error sending command: {e}")
+            self.connected = False  # Mark as disconnected on error
             return False
     
     def forward(self, speed: int = 150):
@@ -201,8 +221,11 @@ class AutonomousNavigator:
     def stop_lidar(self):
         """Stop LIDAR data collection"""
         if self.lidar_stop_func:
-            self.lidar_stop_func()
-            print("✓ LIDAR stopped")
+            try:
+                self.lidar_stop_func()
+                print("✓ LIDAR stopped")
+            except Exception as e:
+                print(f"⚠ Error stopping LIDAR: {e}")
     
     def start(self) -> bool:
         """
@@ -230,9 +253,21 @@ class AutonomousNavigator:
     def stop(self):
         """Stop autonomous navigation"""
         self.running = False
-        self.arduino.stop()
-        self.arduino.disconnect()
-        self.stop_lidar()
+        try:
+            self.arduino.stop()
+        except Exception as e:
+            print(f"⚠ Error stopping motors: {e}")
+        
+        try:
+            self.arduino.disconnect()
+        except Exception as e:
+            print(f"⚠ Error disconnecting Arduino: {e}")
+        
+        try:
+            self.stop_lidar()
+        except Exception as e:
+            print(f"⚠ Error stopping LIDAR: {e}")
+        
         print("✓ Autonomous navigation stopped")
     
     def navigate_once(self):

@@ -5,10 +5,16 @@ Centralized configuration for LIDAR, obstacle avoidance, and motor control
 
 # ===== SERIAL PORT CONFIGURATION =====
 # LIDAR (LD06) Serial Port
-LIDAR_PORT = '/dev/ttyUSB1'  # Default USB serial port for LIDAR
+# Option 1: Use stable symlink (after installing udev rules - see 99-robosort.rules)
+# LIDAR_PORT = '/dev/robosort-lidar'
+# Option 2: Use direct USB device (may change on reconnect: ttyUSB0 -> ttyUSB1, etc.)
+LIDAR_PORT = '/dev/ttyUSB0'  # Default USB serial port for LIDAR
 LIDAR_BAUDRATE = 230400  # LD06 LIDAR baudrate
 
 # Arduino Serial Port
+# Option 1: Use stable symlink (after installing udev rules)
+# ARDUINO_PORT = '/dev/robosort-arduino'
+# Option 2: Use direct device
 ARDUINO_PORT = '/dev/ttyACM0'  # Default Arduino Mega port on Raspberry Pi
 ARDUINO_BAUDRATE = 9600  # Arduino serial communication baudrate
 

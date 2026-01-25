@@ -1,0 +1,27 @@
+# udev rules for RoboSort USB devices
+# This creates stable symlinks for LIDAR and Arduino regardless of USB port
+# 
+# Installation:
+# 1. sudo cp 99-robosort.rules /etc/udev/rules.d/
+# 2. sudo udevadm control --reload-rules
+# 3. sudo udevadm trigger
+# 4. Unplug and replug USB devices
+#
+# After installation, use these stable device paths:
+#   /dev/robosort-lidar  (for LD06 LIDAR)
+#   /dev/robosort-arduino (for Arduino)
+
+# LD06 LIDAR - USB Serial (CH340/CH341 chip)
+# Find your device: udevadm info -a -n /dev/ttyUSB0 | grep -E 'vendor|product'
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", SYMLINK+="robosort-lidar", MODE="0666"
+
+# Alternative for FTDI-based LIDAR
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", SYMLINK+="robosort-lidar-ftdi", MODE="0666"
+
+# Arduino Uno/Nano/Mega (FTDI or CH340)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", SYMLINK+="robosort-arduino", MODE="0666"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", ENV{ID_MM_DEVICE_IGNORE}="1", SYMLINK+="robosort-arduino-ch340", MODE="0666"
+
+# Note: If you have multiple CH340 devices, you need to identify them by serial number
+# Run: udevadm info -a -n /dev/ttyUSB0 | grep -E 'serial|ATTRS{serial}'
+# Then add: ATTRS{serial}=="your_serial_number_here"

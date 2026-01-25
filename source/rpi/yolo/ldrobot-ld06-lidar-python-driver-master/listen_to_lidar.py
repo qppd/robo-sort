@@ -79,7 +79,12 @@ def listen_to_lidar(port: str = '/dev/tty.usbserial-0001') -> tuple[dict, callab
         # send interrupt signal
         data_channel['interrupt'] = True
         # wait for thread to terminate
-        read_thread.join()
-        serial_port.close()
+        read_thread.join(timeout=2.0)  # Add timeout to prevent hanging
+        # Close serial port safely
+        try:
+            if serial_port.is_open:
+                serial_port.close()
+        except Exception as e:
+            print(f"⚠ Error closing LIDAR serial port: {e}")
 
     return data, stop
