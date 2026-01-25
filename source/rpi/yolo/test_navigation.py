@@ -314,33 +314,38 @@ def test_full_system(
                             print(f"[NAV] Front obstacle at {front_dist:.1f}cm - backing up")
                             navigator.arduino.backward(200)
                         
-                        # Priority 3: Left obstacle close - turn right to avoid
-                        elif left_dist < 70:
-                            print(f"[NAV] Left obstacle at {left_dist:.1f}cm - turning right")
-                            # Rotate in place if very close (< 70cm), turn if moderate
-                            if left_dist < 70:
-                                navigator.arduino.rotate_right(255)  # Rotate in place if very close
+                        # Priority 3: Check if path is clear enough to move forward
+                        elif front_dist > config.SAFE_DISTANCE:
+                            # Front is clear - move forward, but adjust for side obstacles if very close
+                            if left_dist < 75 and left_dist < right_dist:
+                                # Left obstacle closer and very close - slight right adjustment while moving
+                                print(f"[NAV] Front clear, adjusting right for left obstacle at {left_dist:.1f}cm")
+                                navigator.arduino.turn_right(180)
+                            elif right_dist < 75 and right_dist < left_dist:
+                                # Right obstacle closer and very close - slight left adjustment while moving
+                                print(f"[NAV] Front clear, adjusting left for right obstacle at {right_dist:.1f}cm")
+                                navigator.arduino.turn_left(180)
                             else:
-                                navigator.arduino.turn_right(200)  # Gentle turn if moderate distance
+                                # Path clear - move forward
+                                if front_dist > config.CLEAR_PATH_THRESHOLD:
+                                    navigator.arduino.forward(255)  # Full speed when very clear
+                                elif front_dist > config.SAFE_DISTANCE + 30:
+                                    navigator.arduino.forward(200)  # Medium speed
+                                else:
+                                    navigator.arduino.forward(150)  # Slow speed near threshold
                         
-                        # Priority 4: Right obstacle close - turn left to avoid
-                        elif right_dist < 70:
-                            print(f"[NAV] Right obstacle at {right_dist:.1f}cm - turning left")
-                            # Rotate in place if very close (< 70cm), turn if moderate
-                            if right_dist < 70:
-                                navigator.arduino.rotate_left(255)  # Rotate in place if very close
-                            else:
-                                navigator.arduino.turn_left(200)  # Gentle turn if moderate distance
+                        # Priority 4: Side obstacles when front is not clear - turn to find clear path
+                        elif left_dist < 80:
+                            print(f"[NAV] Front blocked, turning right to avoid left obstacle at {left_dist:.1f}cm")
+                            navigator.arduino.rotate_right(255)
                         
-                        # Priority 5: Path clear - move forward
+                        elif right_dist < 80:
+                            print(f"[NAV] Front blocked, turning left to avoid right obstacle at {right_dist:.1f}cm")
+                            navigator.arduino.rotate_left(255)
+                        
+                        # No action needed - all conditions false
                         else:
-                            # All clear, move forward at speed based on front clearance
-                            if front_dist > config.CLEAR_PATH_THRESHOLD:
-                                navigator.arduino.forward(255)  # Full speed when very clear
-                            elif front_dist > config.SAFE_DISTANCE + 20:
-                                navigator.arduino.forward(200)  # Medium speed with good clearance
-                            else:
-                                navigator.arduino.forward(150)  # Slow speed near threshold
+                            navigator.arduino.stop()  # Stop if no clear direction
                         
                         navigation_count += 1
                         if navigation_count % 50 == 0:  # Log every 50 cycles
