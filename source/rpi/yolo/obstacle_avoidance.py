@@ -23,7 +23,7 @@ class ObstacleAvoidance:
         side_weight: float = 0.7,  # Weight for side obstacle scoring
         clear_path_threshold: float = 80.0,  # cm - distance considered clear path
         valid_angle_ranges: list = None,  # List of (min, max) angle ranges to use
-        min_valid_distance: float = 45.0,  # cm - minimum valid distance (ignore closer readings)
+        min_valid_distance: float = 60.0,  # cm - minimum valid distance (ignore closer readings)
     ):
         """
         Initialize obstacle avoidance system

@@ -141,7 +141,7 @@ def update_visualization_plot(frame, lidar_data, ax):
     angles_deg = []
     distances_cm = []
     for angle, dist in distances.items():
-        if dist > 45:  # Only plot distances greater than 45cm
+        if dist > 60:  # Only plot distances greater than 60cm
             angles_deg.append(angle)
             distances_cm.append(dist)
     
@@ -315,19 +315,19 @@ def test_full_system(
                             navigator.arduino.backward(200)
                         
                         # Priority 3: Left obstacle close - turn right to avoid
-                        elif left_dist < 60:
+                        elif left_dist < 70:
                             print(f"[NAV] Left obstacle at {left_dist:.1f}cm - turning right")
-                            # Decide rotation vs turn based on how close
-                            if left_dist < 60:
+                            # Rotate in place if very close (< 70cm), turn if moderate
+                            if left_dist < 70:
                                 navigator.arduino.rotate_right(255)  # Rotate in place if very close
                             else:
                                 navigator.arduino.turn_right(200)  # Gentle turn if moderate distance
                         
                         # Priority 4: Right obstacle close - turn left to avoid
-                        elif right_dist < 60:
+                        elif right_dist < 70:
                             print(f"[NAV] Right obstacle at {right_dist:.1f}cm - turning left")
-                            # Decide rotation vs turn based on how close
-                            if right_dist < 60:
+                            # Rotate in place if very close (< 70cm), turn if moderate
+                            if right_dist < 70:
                                 navigator.arduino.rotate_left(255)  # Rotate in place if very close
                             else:
                                 navigator.arduino.turn_left(200)  # Gentle turn if moderate distance

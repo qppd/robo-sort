@@ -13,11 +13,11 @@ ARDUINO_PORT = '/dev/ttyACM0'  # Default Arduino Mega port on Raspberry Pi
 ARDUINO_BAUDRATE = 9600  # Arduino serial communication baudrate
 
 # ===== OBSTACLE AVOIDANCE PARAMETERS =====
-# Distance thresholds (in centimeters) - adjusted for MIN_VALID_DISTANCE = 45cm
-SAFE_DISTANCE = 105.0  # Minimum safe distance from obstacles (above critical)
-CRITICAL_DISTANCE = 65.0  # Distance requiring immediate backup (above danger)
-DANGER_DISTANCE = 55.0  # Distance requiring immediate stop (just above min valid)
-CLEAR_PATH_THRESHOLD = 125.0  # Distance considered as clear path
+# Distance thresholds (in centimeters) - adjusted for MIN_VALID_DISTANCE = 60cm
+SAFE_DISTANCE = 120.0  # Minimum safe distance from obstacles (above critical)
+CRITICAL_DISTANCE = 75.0  # Distance requiring immediate backup (above danger)
+DANGER_DISTANCE = 65.0  # Distance requiring immediate stop (just above min valid)
+CLEAR_PATH_THRESHOLD = 140.0  # Distance considered as clear path
 
 # Angular zones (in degrees)
 # 0° is forward, angles increase counterclockwise
@@ -66,8 +66,8 @@ STATUS_REPORT_INTERVAL = 5.0  # Interval for status reports (seconds)
 USE_COLORS = True  # Use ANSI colors in terminal output (if supported)
 
 # ===== ADVANCED PARAMETERS =====
-# Obstacle detection sensitivity - tuned for 45cm minimum detection
-MIN_VALID_DISTANCE = 45.0  # Minimum valid LIDAR reading (cm) - ignore objects closer than 45cm
+# Obstacle detection sensitivity - tuned for 60cm minimum detection
+MIN_VALID_DISTANCE = 60.0  # Minimum valid LIDAR reading (cm) - ignore objects closer than 60cm
 MAX_VALID_DISTANCE = 1000.0  # Maximum valid LIDAR reading (cm)
 
 # Path planning
@@ -85,26 +85,26 @@ MAP_RESOLUTION = 10.0  # Map grid resolution (cm)
 MAP_SIZE = (500, 500)  # Map size in cm (width, height)
 
 # ===== BEHAVIOR MODES =====
-# Different navigation behavior profiles - adjusted for 45cm minimum valid distance
+# Different navigation behavior profiles - adjusted for 60cm minimum valid distance
 BEHAVIOR_MODES = {
     'cautious': {
-        'safe_distance': 80.0,
-        'critical_distance': 60.0,
-        'danger_distance': 50.0,
+        'safe_distance': 95.0,
+        'critical_distance': 75.0,
+        'danger_distance': 65.0,
         'forward_speed': 120,
         'rotate_speed': 150,
     },
     'normal': {
-        'safe_distance': 70.0,
-        'critical_distance': 50.0,
-        'danger_distance': 40.0,
+        'safe_distance': 85.0,
+        'critical_distance': 70.0,
+        'danger_distance': 65.0,
         'forward_speed': 180,
         'rotate_speed': 180,
     },
     'aggressive': {
-        'safe_distance': 60.0,
-        'critical_distance': 45.0,
-        'danger_distance': 38.0,
+        'safe_distance': 75.0,
+        'critical_distance': 65.0,
+        'danger_distance': 62.0,
         'forward_speed': 200,
         'rotate_speed': 200,
     }
