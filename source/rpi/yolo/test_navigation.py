@@ -25,6 +25,64 @@ from navigate import ArduinoController, AutonomousNavigator
 import nav_config as config
 
 
+class DirectionFilter:
+    """Exponential Moving Average filter for temporal smoothing of distance measurements"""
+    def __init__(self, alpha=0.4):
+        self.value = None
+        self.alpha = alpha
+
+    def update(self, measurement):
+        if self.value is None:
+            self.value = measurement
+        else:
+            self.value = self.alpha * measurement + (1 - self.alpha) * self.value
+        return self.value
+
+
+def get_sector_distance(distances, angle_range, min_valid=60, max_valid=200, k=5):
+    """
+    Get median of nearest K distances in angle sector - more robust than min
+    
+    Args:
+        distances: Dictionary of angle -> distance readings
+        angle_range: Tuple (min_angle, max_angle) or single value for ±range
+        min_valid: Minimum valid distance (cm)
+        max_valid: Maximum valid distance (cm)
+        k: Number of nearest points to use for median
+    
+    Returns:
+        Median distance of K nearest points, or inf if no valid readings
+    """
+    # Handle both tuple range and single value (±range)
+    if isinstance(angle_range, (tuple, list)):
+        min_angle, max_angle = angle_range
+    else:
+        # ±range from 0° (front)
+        min_angle = 360 - angle_range if angle_range > 0 else 0
+        max_angle = angle_range
+    
+    # Collect valid distances in angle sector
+    vals = []
+    for angle, dist in distances.items():
+        # Handle wraparound at 0°/360°
+        in_range = False
+        if min_angle > max_angle:  # Wraparound case (e.g., 330-30)
+            in_range = (angle >= min_angle or angle <= max_angle)
+        else:
+            in_range = (min_angle <= angle <= max_angle)
+        
+        if in_range and min_valid < dist < max_valid:
+            vals.append(dist)
+    
+    if not vals:
+        return float('inf')
+    
+    # Sort and take median of K nearest points
+    vals.sort()
+    k_vals = vals[:min(k, len(vals))]
+    return np.median(k_vals)
+
+
 def test_lidar_connection(port: str = '/dev/ttyUSB0'):
     """
     Test LIDAR connection and display data
@@ -138,19 +196,38 @@ def update_visualization_plot(frame, lidar_data, ax):
     ax.grid(True, alpha=0.3)
     
     distances = lidar_data['distances'].copy()
-    angles_deg = []
-    distances_cm = []
+    
+    # Separate points by sector for color coding
+    front_angles, front_dists = [], []
+    left_angles, left_dists = [], []
+    right_angles, right_dists = [], []
+    other_angles, other_dists = [], []
+    
     for angle, dist in distances.items():
         if dist > 60:  # Only plot distances greater than 60cm
-            angles_deg.append(angle)
-            distances_cm.append(dist)
+            # Categorize by sector
+            if angle <= config.FRONT_ANGLE_RANGE or angle >= (360 - config.FRONT_ANGLE_RANGE):
+                front_angles.append(angle)
+                front_dists.append(dist)
+            elif config.LEFT_ANGLE_RANGE[0] <= angle <= config.LEFT_ANGLE_RANGE[1]:
+                left_angles.append(angle)
+                left_dists.append(dist)
+            elif config.RIGHT_ANGLE_RANGE[0] <= angle <= config.RIGHT_ANGLE_RANGE[1]:
+                right_angles.append(angle)
+                right_dists.append(dist)
+            else:
+                other_angles.append(angle)
+                other_dists.append(dist)
     
-    # Convert angles to radians for polar plot
-    angles_rad = np.deg2rad(angles_deg)
-    
-    # Plot scatter
-    if len(angles_rad) > 0 and len(distances_cm) > 0:
-        ax.scatter(angles_rad, distances_cm, s=1, c='red', alpha=0.7)
+    # Plot with color coding: front=green, left=blue, right=yellow, other=gray
+    if front_angles:
+        ax.scatter(np.deg2rad(front_angles), front_dists, s=2, c='green', alpha=0.8, label='Front')
+    if left_angles:
+        ax.scatter(np.deg2rad(left_angles), left_dists, s=2, c='blue', alpha=0.8, label='Left')
+    if right_angles:
+        ax.scatter(np.deg2rad(right_angles), right_dists, s=2, c='yellow', alpha=0.8, label='Right')
+    if other_angles:
+        ax.scatter(np.deg2rad(other_angles), other_dists, s=1, c='gray', alpha=0.3)
     
     return ax,
 
@@ -281,6 +358,11 @@ def test_full_system(
             try:
                 navigation_count = 0
                 
+                # Initialize EMA filters for each direction
+                front_filter = DirectionFilter(alpha=0.4)
+                left_filter = DirectionFilter(alpha=0.4)
+                right_filter = DirectionFilter(alpha=0.4)
+                
                 while navigation_running[0]:
                     try:
                         # Check if matplotlib window is still open
@@ -295,11 +377,16 @@ def test_full_system(
                             
                         distances = navigator.lidar_data['distances'].copy()
                         
-                        # Analyze obstacles with fresh data
-                        analysis = navigator.obstacle_avoidance.analyze_obstacles(distances)
-                        front_dist = analysis['front_min_distance']
-                        left_dist = analysis['left_min_distance'] 
-                        right_dist = analysis['right_min_distance']
+                        # Use median filtering + EMA smoothing for robust obstacle detection
+                        # Get raw median distances from angle sectors
+                        front_raw = get_sector_distance(distances, config.FRONT_ANGLE_RANGE, min_valid=60, k=5)
+                        left_raw = get_sector_distance(distances, config.LEFT_ANGLE_RANGE, min_valid=60, k=5)
+                        right_raw = get_sector_distance(distances, config.RIGHT_ANGLE_RANGE, min_valid=60, k=5)
+                        
+                        # Apply temporal smoothing (EMA)
+                        front_dist = front_filter.update(front_raw)
+                        left_dist = left_filter.update(left_raw)
+                        right_dist = right_filter.update(right_raw)
                         
                         # PURELY REACTIVE NAVIGATION - No delays, no state machines
                         # React immediately to current sensor readings
