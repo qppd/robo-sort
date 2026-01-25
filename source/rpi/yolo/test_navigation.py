@@ -249,7 +249,7 @@ def test_full_system(
         navigator = AutonomousNavigator(
             lidar_port=lidar_port,
             arduino_port=arduino_port,
-            update_rate=0.1,
+            update_rate=0.0,
             verbose=True
         )
         
@@ -297,7 +297,6 @@ def test_full_system(
                             
                         # Get current LIDAR data
                         if not navigator.lidar_data or not navigator.lidar_data['distances']:
-                            time.sleep(0.1)
                             continue
                             
                         distances = navigator.lidar_data['distances'].copy()
@@ -321,7 +320,6 @@ def test_full_system(
                             backup_start_time = current_time
                             navigator.arduino.backward(255)
                             obstacle_detected = True
-                            time.sleep(0.1)
                             continue
                         
                         # Check front obstacle (early warning - normal backup)
@@ -331,7 +329,6 @@ def test_full_system(
                             backup_start_time = current_time
                             navigator.arduino.backward(255)
                             obstacle_detected = True
-                            time.sleep(0.1)
                             continue
                         
                         # Handle backup mode (1.5 seconds)
@@ -339,7 +336,6 @@ def test_full_system(
                             if current_time - backup_start_time < 1.5:
                                 # Continue backing up
                                 navigator.arduino.backward(255)
-                                time.sleep(0.1)
                                 continue
                             else:
                                 # Backup complete, decide turn direction
@@ -356,7 +352,6 @@ def test_full_system(
                                     turn_direction = 'right'
                                     navigator.arduino.rotate_right(255)  # Rotate in place for better clearance
                                     print(f"[NAV] Backup complete - rotating RIGHT (L:{left_dist:.1f}cm < R:{right_dist:.1f}cm)")
-                                time.sleep(0.1)
                                 continue
                         
                         # Handle turn mode (2 seconds or until all paths are clear)
@@ -368,7 +363,6 @@ def test_full_system(
                                     turn_direction = None
                                     print(f"[NAV] All paths clear - switching to forward")
                                     navigator.arduino.forward(255)  # Start moving forward immediately
-                                    time.sleep(0.1)
                                     continue
                                 
                                 # Continue rotating
@@ -376,7 +370,6 @@ def test_full_system(
                                     navigator.arduino.rotate_left(255)
                                 else:
                                     navigator.arduino.rotate_right(255)
-                                time.sleep(0.1)
                                 continue
                             else:
                                 # Turn complete, resume forward movement
@@ -391,16 +384,13 @@ def test_full_system(
                                 # Stop immediately if too close when trying to move forward
                                 print(f"[NAV] Front obstacle at {front_dist:.1f}cm - STOPPING")
                                 navigator.arduino.stop()
-                                time.sleep(0.1)
                             # Check side clearances
                             elif left_dist < 50:  # Left obstacle too close
                                 print(f"[NAV] Left obstacle at {left_dist:.1f}cm - adjusting right")
                                 navigator.arduino.turn_right(200)  # Turn slightly right (away from left obstacle)
-                                time.sleep(0.15)
                             elif right_dist < 50:  # Right obstacle too close
                                 print(f"[NAV] Right obstacle at {right_dist:.1f}cm - adjusting left")
                                 navigator.arduino.turn_left(200)  # Turn slightly left (away from right obstacle)
-                                time.sleep(0.15)
                             else:
                                 # Clear path on all sides, safe to move forward
                                 if front_dist > config.SAFE_DISTANCE + 10:  # Add buffer for safety
@@ -415,9 +405,6 @@ def test_full_system(
                             
                     except Exception as nav_error:
                         print(f"[NAV] Navigation error (continuing): {nav_error}")
-                        time.sleep(0.5)
-                        
-                    time.sleep(0.1)
                     
             except KeyboardInterrupt:
                 print("\n⚠ Emergency stop! Sending MSTOP to Arduino...")
