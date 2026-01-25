@@ -149,7 +149,7 @@ def update_visualization_plot(frame, lidar_data, ax):
     angles_rad = np.deg2rad(angles_deg)
     
     # Plot scatter
-    if angles_rad and distances_cm:
+    if len(angles_rad) > 0 and len(distances_cm) > 0:
         ax.scatter(angles_rad, distances_cm, s=1, c='red', alpha=0.7)
     
     return ax,
