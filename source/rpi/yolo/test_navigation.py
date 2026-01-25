@@ -130,7 +130,7 @@ def update_visualization_plot(frame, lidar_data, ax):
     # Properly clear all previous artists
     ax.clear()
     ax.set_theta_zero_location('N')
-    ax.set_theta_direction(1)
+    ax.set_theta_direction(-1)  # Clockwise
     ax.set_thetamin(0)
     ax.set_thetamax(360)
     ax.set_rlim(0, 200)
@@ -260,10 +260,13 @@ def test_full_system(
         # Set up the polar plot for visualization
         fig = plt.figure(figsize=(8, 8))
         ax = fig.add_subplot(111, polar=True)
+        ax.set_theta_zero_location('N')
+        ax.set_theta_direction(-1)  # Clockwise
         ax.set_thetamin(0)
         ax.set_thetamax(360)
         ax.set_rlim(0, 200)
         ax.set_title("LIDAR Real-Time Visualization (Full Navigation Test)", va='bottom')
+        ax.grid(True, alpha=0.3)
         
         # Animation
         ani = animation.FuncAnimation(fig, update_visualization_plot, fargs=(navigator.lidar_data, ax), 
