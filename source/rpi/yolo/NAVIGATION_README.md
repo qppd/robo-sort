@@ -401,9 +401,9 @@ from obstacle_avoidance import ObstacleAvoidance
 
 # Create custom instance
 oa = ObstacleAvoidance(
-    safe_distance=60.0,
-    critical_distance=40.0,
-    danger_distance=20.0,
+    safe_distance=70.0,
+    critical_distance=50.0,
+    danger_distance=40.0,
     front_angle_range=45,  # Wider front zone
 )
 

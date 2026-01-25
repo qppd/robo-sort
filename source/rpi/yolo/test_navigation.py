@@ -141,7 +141,7 @@ def update_visualization_plot(frame, lidar_data, ax):
     angles_deg = []
     distances_cm = []
     for angle, dist in distances.items():
-        if dist > 40:  # Only plot distances greater than 40cm
+        if dist > 45:  # Only plot distances greater than 45cm
             angles_deg.append(angle)
             distances_cm.append(dist)
     
