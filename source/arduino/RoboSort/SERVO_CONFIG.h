@@ -20,8 +20,9 @@ private:
   bool lifterRunning;
   bool lifterDirection;  // true = UP, false = DOWN
   unsigned long lifterStartTime;  // For DOWN timer only
-  unsigned long lifterTimeout;    // Variable timeout for DOWN (3s or 75s)
+  unsigned long lifterTimeout;    // Variable timeout for DOWN (3s or large when using rotations)
   int lifterRotationCount;        // Count rotations during DOWN
+  int lifterMaxRotations;         // Max rotations for DOWN (0 means use time)
   
   // Arm servo position tracking
   int currentArmAngle;  // Track current position of channel 1 arm servo

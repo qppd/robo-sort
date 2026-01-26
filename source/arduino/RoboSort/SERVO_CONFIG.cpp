@@ -20,6 +20,7 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   lifterStartTime = 0;
   lifterTimeout = 3000;  // Default 3 seconds
   lifterRotationCount = 0;  // Initialize rotation count
+  lifterMaxRotations = 0;   // Default to time-based
   currentArmAngle = 180;  // Initialize arm to 180 degrees
   currentGripperAngle = 105;  // Initialize gripper to 105 degrees (default position)
   currentGripperRotationAngle = 90;  // Initialize gripper rotation to 90 degrees (default position)
@@ -67,7 +68,7 @@ void ServoConfig::begin() {
 void ServoConfig::update() {
   if (!lifterRunning) return;  // Nothing to do if lifter is OFF
   
-  // LIFTER DOWN: Auto-stop after variable timeout (3s or 75s)
+  // LIFTER DOWN: Auto-stop after variable timeout or max rotations
   if (!lifterDirection) {
     unsigned long elapsed = millis() - lifterStartTime;
     int rotations = elapsed / ROTATION_TIME_MS;
@@ -75,9 +76,16 @@ void ServoConfig::update() {
       lifterRotationCount = rotations;
       Serial.println("LIFTER DOWN rotation count: " + String(lifterRotationCount));
     }
-    if (elapsed >= lifterTimeout) {
-      lifterStop();
+    bool shouldStop = false;
+    if (lifterMaxRotations > 0 && lifterRotationCount >= lifterMaxRotations) {
+      shouldStop = true;
+      Serial.println("LIFTER DOWN complete (42 rotations)");
+    } else if (elapsed >= lifterTimeout) {
+      shouldStop = true;
       Serial.println("LIFTER DOWN complete (" + String(lifterTimeout/1000) + "s)");
+    }
+    if (shouldStop) {
+      lifterStop();
     }
   }
   
@@ -102,12 +110,14 @@ void ServoConfig::lifterDown() {
   // Check if ARM limit switch is currently pressed
   bool armSwitchPressed = (digitalRead(ARM_LIMIT_PIN) == LOW);
   
-  // Set timeout based on ARM switch state
+  // Set timeout and max rotations based on ARM switch state
   if (armSwitchPressed) {
-    lifterTimeout = 72000;  // 72 seconds when ARM switch is pressed
-    Serial.println("LIFTER DOWN - ON (ARM switch pressed, 72s timeout)");
+    lifterMaxRotations = 42;  // 42 rotations when ARM switch is pressed
+    lifterTimeout = 1000000;  // Large timeout, stop on rotations
+    Serial.println("LIFTER DOWN - ON (ARM switch pressed, 42 rotations)");
   } else {
-    lifterTimeout = 3000;   // 3 seconds normal timeout
+    lifterMaxRotations = 0;   // Use time-based for normal
+    lifterTimeout = 3000;     // 3 seconds normal timeout
     Serial.println("LIFTER DOWN - ON (auto-stop after 3s)");
   }
   
