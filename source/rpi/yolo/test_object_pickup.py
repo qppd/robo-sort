@@ -32,7 +32,7 @@ from navigate import ArduinoController
 
 class ObjectPickupTester:
     """
-    Test object detection and pickup functionality
+    Test object detection (bounding boxes only, no segmentation) and pickup functionality
     """
     
     def __init__(self, model_path: str, arduino_port: str = '/dev/ttyACM0', arduino_baudrate: int = 9600):
@@ -53,9 +53,15 @@ class ObjectPickupTester:
             if not ULTRALYTICS_AVAILABLE:
                 raise Exception("Ultralytics YOLO not available. Install with: pip install ultralytics")
             print(f"Loading YOLO model from {model_path}...")
+            # Explicitly load as detection model only (no segmentation)
             self.model = YOLO(model_path, task='detect')
+            
+            # Validate that this is a detection model, not segmentation
+            if hasattr(self.model, 'task') and self.model.task not in ['detect', 'detection']:
+                print(f"Warning: Model task is '{self.model.task}', forcing detection mode")
+            
             self.labels = self.model.names
-            print(f"✓ YOLO model loaded with {len(self.labels)} classes")
+            print(f"✓ YOLO detection model loaded with {len(self.labels)} classes")
             
         elif self.model_type == 'ncnn':
             if not NCNN_AVAILABLE:
@@ -422,7 +428,8 @@ class ObjectPickupTester:
                 
                 # Run detection based on model type
                 if self.model_type == 'yolo':
-                    results = self.model(frame, verbose=False)
+                    # Run detection only (no segmentation masks)
+                    results = self.model(frame, verbose=False, task='detect')
                     detections = results[0].boxes
                 elif self.model_type == 'ncnn':
                     detections = self._run_ncnn_inference(frame)
