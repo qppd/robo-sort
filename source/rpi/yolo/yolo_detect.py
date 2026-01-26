@@ -176,7 +176,7 @@ while True:
     object_count = 0
 
     # Go through each detection and get bbox coords, confidence, and class
-    for i in range(1):
+    for i in range(len(detections)):
 
         # Get bounding box coordinates
         # Ultralytics returns results in Tensor format, which have to be converted to a regular Python array
