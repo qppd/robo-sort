@@ -79,7 +79,7 @@ void ServoConfig::update() {
     bool shouldStop = false;
     if (lifterMaxRotations > 0 && lifterRotationCount >= lifterMaxRotations) {
       shouldStop = true;
-      Serial.println("LIFTER DOWN complete (42 rotations)");
+      Serial.println("LIFTER DOWN complete (" + String(lifterMaxRotations) + " rotations)");
     } else if (elapsed >= lifterTimeout) {
       shouldStop = true;
       Serial.println("LIFTER DOWN complete (" + String(lifterTimeout/1000) + "s)");
@@ -112,9 +112,9 @@ void ServoConfig::lifterDown() {
   
   // Set timeout and max rotations based on ARM switch state
   if (armSwitchPressed) {
-    lifterMaxRotations = 42;  // 42 rotations when ARM switch is pressed
+    lifterMaxRotations = 34;  // 34 rotations when ARM switch is pressed
     lifterTimeout = 1000000;  // Large timeout, stop on rotations
-    Serial.println("LIFTER DOWN - ON (ARM switch pressed, 42 rotations)");
+    Serial.println("LIFTER DOWN - ON (ARM switch pressed, " + String(lifterMaxRotations) + " rotations)");
   } else {
     lifterMaxRotations = 0;   // Use time-based for normal
     lifterTimeout = 3000;     // 3 seconds normal timeout
