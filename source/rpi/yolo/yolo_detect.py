@@ -125,6 +125,11 @@ frame_rate_buffer = []
 fps_avg_len = 200
 img_count = 0
 
+# Initialize centering detection variables
+last_centered_class = None
+consecutive_centered_count = 0
+centering_threshold = 50  # pixels
+
 # Begin inference loop
 while True:
 
@@ -175,6 +180,10 @@ while True:
     # Initialize variable for basic object counting example
     object_count = 0
 
+    # Initialize centering check for this frame
+    centered = False
+    centered_class = None
+
     # Go through each detection and get bbox coords, confidence, and class
     for i in range(len(detections)):
 
@@ -206,12 +215,37 @@ while True:
             # Basic example: count the number of objects in the image
             object_count = object_count + 1
 
+            # Check if object center is close to crosshair
+            center_x = (xmin + xmax) // 2
+            center_y = (ymin + ymax) // 2
+            dx = center_x - crosshair_x
+            dy = center_y - crosshair_y
+            if dx * dx + dy * dy < centering_threshold * centering_threshold:
+                if not centered:
+                    centered = True
+                    centered_class = classidx
+
+    # Update consecutive centering count
+    if centered:
+        if centered_class == last_centered_class:
+            consecutive_centered_count += 1
+        else:
+            last_centered_class = centered_class
+            consecutive_centered_count = 1
+    else:
+        consecutive_centered_count = 0
+        last_centered_class = None
+
     # Calculate and draw framerate (if using video, USB, or Picamera source)
     if source_type == 'video' or source_type == 'usb' or source_type == 'picamera':
         cv2.putText(frame, f'FPS: {avg_frame_rate:0.2f}', (10,20), cv2.FONT_HERSHEY_SIMPLEX, .7, (0,255,255), 2) # Draw framerate
     
     # Display detection results
     cv2.putText(frame, f'Number of objects: {object_count}', (10,40), cv2.FONT_HERSHEY_SIMPLEX, .7, (0,255,255), 2) # Draw total number of detected objects
+    
+    # Display centered message if consecutive count >= 5
+    if consecutive_centered_count >= 5:
+        cv2.putText(frame, 'Object is centered', (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
     
     # Draw crosshair in the middle
     cv2.line(frame, (crosshair_x - 10, crosshair_y), (crosshair_x + 10, crosshair_y), (255, 255, 255), 2)
