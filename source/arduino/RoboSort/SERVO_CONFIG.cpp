@@ -19,6 +19,7 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   lifterDirection = false;
   lifterStartTime = 0;
   lifterTimeout = 3000;  // Default 3 seconds
+  lifterRotationCount = 0;  // Initialize rotation count
   currentArmAngle = 180;  // Initialize arm to 180 degrees
   currentGripperAngle = 105;  // Initialize gripper to 105 degrees (default position)
   currentGripperRotationAngle = 90;  // Initialize gripper rotation to 90 degrees (default position)
@@ -68,7 +69,13 @@ void ServoConfig::update() {
   
   // LIFTER DOWN: Auto-stop after variable timeout (3s or 75s)
   if (!lifterDirection) {
-    if (millis() - lifterStartTime >= lifterTimeout) {
+    unsigned long elapsed = millis() - lifterStartTime;
+    int rotations = elapsed / ROTATION_TIME_MS;
+    if (rotations > lifterRotationCount) {
+      lifterRotationCount = rotations;
+      Serial.println("LIFTER DOWN rotation count: " + String(lifterRotationCount));
+    }
+    if (elapsed >= lifterTimeout) {
       lifterStop();
       Serial.println("LIFTER DOWN complete (" + String(lifterTimeout/1000) + "s)");
     }
@@ -103,6 +110,9 @@ void ServoConfig::lifterDown() {
     lifterTimeout = 3000;   // 3 seconds normal timeout
     Serial.println("LIFTER DOWN - ON (auto-stop after 3s)");
   }
+  
+  // Reset rotation count
+  lifterRotationCount = 0;
   
   // Turn ON - rotate DOWN
   pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_DOWN_SPEED);
