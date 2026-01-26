@@ -162,6 +162,10 @@ while True:
     if resize == True:
         frame = cv2.resize(frame,(resW,resH))
 
+    # Define crosshair position (center of frame)
+    crosshair_x = frame.shape[1] // 2
+    crosshair_y = frame.shape[0] // 2
+
     # Run inference on frame
     results = model(frame, verbose=False)
 
@@ -172,7 +176,7 @@ while True:
     object_count = 0
 
     # Go through each detection and get bbox coords, confidence, and class
-    for i in range(len(detections)):
+    for i in range(1):
 
         # Get bounding box coordinates
         # Ultralytics returns results in Tensor format, which have to be converted to a regular Python array
@@ -208,6 +212,11 @@ while True:
     
     # Display detection results
     cv2.putText(frame, f'Number of objects: {object_count}', (10,40), cv2.FONT_HERSHEY_SIMPLEX, .7, (0,255,255), 2) # Draw total number of detected objects
+    
+    # Draw crosshair in the middle
+    cv2.line(frame, (crosshair_x - 10, crosshair_y), (crosshair_x + 10, crosshair_y), (255, 255, 255), 2)
+    cv2.line(frame, (crosshair_x, crosshair_y - 10), (crosshair_x, crosshair_y + 10), (255, 255, 255), 2)
+    
     cv2.imshow('YOLO detection results',frame) # Display image
     if record: recorder.write(frame)
 
