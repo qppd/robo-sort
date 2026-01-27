@@ -313,6 +313,14 @@ class RoboSortRemoteControl:
             elif isinstance(data, dict) and data.get("type") == "lifter":
                 action = str(data.get("action", "")).upper()
                 if action in {"UP", "DOWN", "STOP"}:
+                    # Safety check: Prevent LIFTER DOWN if ARM-EXTEND is below 110 degrees
+                    if action == "DOWN":
+                        arm_extend_angle = self.servo_angles.get("servo4", 110)  # servo4 = ARM-EXTEND
+                        if arm_extend_angle < 110:
+                            print(f"⚠ SAFETY BLOCK: LIFTER DOWN blocked - ARM-EXTEND is at {arm_extend_angle}° (must be ≥110°)")
+                            print("  Extend arm first before lowering lifter!")
+                            return  # Don't send the command
+                    
                     self.send_text_command(f"LIFTER {action}")
                 else:
                     print(f"Unknown lifter action: {data}")
