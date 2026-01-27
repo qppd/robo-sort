@@ -7,6 +7,7 @@ import serial
 
 import cv2
 import numpy as np
+import pygame
 from ultralytics import YOLO
 
 # Define and parse user input arguments
@@ -46,6 +47,14 @@ if (not os.path.exists(model_path)):
 # Load the model into memory and get labemap
 model = YOLO(model_path, task='detect')
 labels = model.names
+
+# Initialize Pygame
+pygame.init()
+if user_res:
+    screen = pygame.display.set_mode((resW, resH))
+else:
+    screen = pygame.display.set_mode((640, 480))
+pygame.display.set_caption('YOLO Detection with Motor Control')
 
 # Initialize Arduino serial connection if port is provided
 arduino_ser = None
@@ -278,34 +287,50 @@ while True:
     cv2.line(frame, (crosshair_x - 10, crosshair_y), (crosshair_x + 10, crosshair_y), (255, 255, 255), 2)
     cv2.line(frame, (crosshair_x, crosshair_y - 10), (crosshair_x, crosshair_y + 10), (255, 255, 255), 2)
     
-    cv2.imshow('YOLO detection results',frame) # Display image
+    # Convert frame to RGB and display with Pygame
+    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    surf = pygame.surfarray.make_surface(np.transpose(frame_rgb, (1, 0, 2)))
+    screen.blit(surf, (0, 0))
+    pygame.display.flip()
+    
     if record: recorder.write(frame)
 
-    # If inferencing on individual images, wait for user keypress before moving to next image. Otherwise, wait 5ms before moving to next frame.
-    if source_type == 'image' or source_type == 'folder':
-        key = cv2.waitKey()
-    elif source_type == 'video' or source_type == 'usb' or source_type == 'picamera':
-        key = cv2.waitKey(5)
+    # Handle Pygame events and key presses
+    running = True
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
     
-    if key == ord('q') or key == ord('Q'): # Press 'q' to quit
-        break
-    elif key == ord('s') or key == ord('S'): # Press 's' to pause inference
-        cv2.waitKey()
-    elif key == ord('p') or key == ord('P'): # Press 'p' to save a picture of results on this frame
-        cv2.imwrite('capture.png',frame)
+    keys = pygame.key.get_pressed()
     
-    # Motor control keys
+    if keys[pygame.K_q]:  # Quit
+        running = False
+    elif keys[pygame.K_s]:  # Pause inference
+        paused = True
+        while paused:
+            pygame.event.pump()
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_s]:
+                paused = False
+            time.sleep(0.1)
+    elif keys[pygame.K_p]:  # Save picture
+        cv2.imwrite('capture.png', frame)
+    
+    # Motor control with arrow keys
     if arduino_ser:
-        if key == ord('w') or key == ord('W'):
+        if keys[pygame.K_UP]:
             arduino_ser.write(b"FORWARD\n")
-        elif key == ord('s') or key == ord('S'):
+        elif keys[pygame.K_DOWN]:
             arduino_ser.write(b"BACKWARD\n")
-        elif key == ord('a') or key == ord('A'):
+        elif keys[pygame.K_LEFT]:
             arduino_ser.write(b"LEFT\n")
-        elif key == ord('d') or key == ord('D'):
+        elif keys[pygame.K_RIGHT]:
             arduino_ser.write(b"RIGHT\n")
-        elif key == 32:  # Space bar
+        elif keys[pygame.K_SPACE]:
             arduino_ser.write(b"STOP\n")
+    
+    if not running:
+        break
     
     # Calculate FPS for this frame
     t_stop = time.perf_counter()
@@ -329,6 +354,6 @@ if source_type == 'video' or source_type == 'usb':
 elif source_type == 'picamera':
     cap.stop()
 if record: recorder.release()
-cv2.destroyAllWindows()
+pygame.quit()
 if arduino_ser:
     arduino_ser.close()
