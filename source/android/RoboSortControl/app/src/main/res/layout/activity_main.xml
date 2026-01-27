@@ -1,19 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Title -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RoboSort Remote Control"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_dark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp" />
+
+        <!-- Connection Status -->
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="● Disconnected"
+            android:textSize="16sp"
+            android:textColor="@android:color/holo_red_dark"
+            app:layout_constraintTop_toBottomOf="@id/titleText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <!-- Motor Control Section -->
+        <TextView
+            android:id="@+id/motorControlLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Motor Control"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/statusText"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="24dp" />
+
+        <!-- Motor Control Buttons -->
+        <LinearLayout
+            android:id="@+id/motorControlLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/motorControlLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp">
+
+            <!-- Forward Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnForward"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="↑ FORWARD"
+                android:textSize="16sp"
+                app:cornerRadius="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Left and Right Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLeft"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="← LEFT"
+                    android:textSize="16sp"
+                    app:cornerRadius="8dp"
+                    android:layout_marginEnd="4dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRight"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="RIGHT →"
+                    android:textSize="16sp"
+                    app:cornerRadius="8dp"
+                    android:layout_marginStart="4dp" />
+            </LinearLayout>
+
+            <!-- Backward Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBackward"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="↓ BACKWARD"
+                android:textSize="16sp"
+                app:cornerRadius="8dp"
+                android:layout_marginTop="8dp" />
+
+            <!-- Stop Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStop"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="⬛ STOP"
+                android:textSize="16sp"
+                app:cornerRadius="8dp"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- Servo Control Section -->
+        <TextView
+            android:id="@+id/servoControlLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Servo Control"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/motorControlLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="24dp" />
+
+        <!-- Servo 1 (Arm Base) -->
+        <TextView
+            android:id="@+id/servo1Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Arm Base (S1): 90°"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/servoControlLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="12dp" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/servo1Slider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:valueFrom="0"
+            android:valueTo="180"
+            android:value="90"
+            android:stepSize="1"
+            app:layout_constraintTop_toBottomOf="@id/servo1Label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp" />
+
+        <!-- Servo 2 (Arm Shoulder) -->
+        <TextView
+            android:id="@+id/servo2Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Arm Shoulder (S2): 90°"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/servo1Slider"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="12dp" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/servo2Slider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:valueFrom="0"
+            android:valueTo="180"
+            android:value="90"
+            android:stepSize="1"
+            app:layout_constraintTop_toBottomOf="@id/servo2Label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp" />
+
+        <!-- Servo 3 (Arm Elbow) -->
+        <TextView
+            android:id="@+id/servo3Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Arm Elbow (S3): 90°"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/servo2Slider"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="12dp" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/servo3Slider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:valueFrom="0"
+            android:valueTo="180"
+            android:value="90"
+            android:stepSize="1"
+            app:layout_constraintTop_toBottomOf="@id/servo3Label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp" />
+
+        <!-- Servo 4 (Gripper) -->
+        <TextView
+            android:id="@+id/servo4Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gripper (S4): 90°"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/servo3Slider"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="12dp" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/servo4Slider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:valueFrom="0"
+            android:valueTo="180"
+            android:value="90"
+            android:stepSize="1"
+            app:layout_constraintTop_toBottomOf="@id/servo4Label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp" />
+
+        <!-- Feedback Display -->
+        <TextView
+            android:id="@+id/feedbackLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Robot Feedback"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/servo4Slider"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="24dp" />
+
+        <TextView
+            android:id="@+id/feedbackText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Waiting for feedback..."
+            android:textSize="14sp"
+            android:padding="12dp"
+            android:background="@android:drawable/edit_text"
+            android:minHeight="80dp"
+            app:layout_constraintTop_toBottomOf="@id/feedbackLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
