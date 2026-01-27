@@ -150,7 +150,15 @@ class RoboSortRemoteControl:
             else:
                 arduino_cmd = f"{direction}:{speed}\n"
             
-            self.arduino.write(arduino_cmd.encode())
+            print(f"DEBUG: About to send to Arduino: '{arduino_cmd.strip()}' (length: {len(arduino_cmd)})")
+            print(f"DEBUG: Arduino port: {self.arduino.port}, is_open: {self.arduino.is_open}")
+            
+            bytes_written = self.arduino.write(arduino_cmd.encode())
+            print(f"DEBUG: Bytes written to Arduino: {bytes_written}")
+            
+            self.arduino.flush()  # Ensure data is sent
+            print(f"DEBUG: Flushed Arduino serial buffer")
+            
             self.motor_state = direction
             
             # Update Firebase status (non-blocking)
@@ -159,6 +167,8 @@ class RoboSortRemoteControl:
 
         except Exception as e:
             print(f"Motor command error: {e}")
+            import traceback
+            traceback.print_exc()
 
     def send_servo_command(self, servo_num, command_data):
         """Send servo command to Arduino"""
