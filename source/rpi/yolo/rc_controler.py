@@ -112,9 +112,9 @@ class RoboSortRemoteControl:
                 print("Data is None, skipping")
                 return
             
-            # Handle motor commands
-            if "motor" in data:
-                command = data["motor"]
+            # Handle motor commands - data comes directly as motor command
+            if "direction" in data and "speed" in data:
+                command = data  # The data IS the motor command
                 direction = command.get("direction", "STOP")
                 print(f"Motor command found: {direction}")
                 
@@ -126,15 +126,17 @@ class RoboSortRemoteControl:
                 else:
                     print(f"Command skipped (same as current): {direction}")
 
-            # Handle servo commands
-            if "servo1" in data:
+            # Handle servo commands - check for servo keys
+            elif "servo1" in data:
                 self.send_servo_command(1, data["servo1"])
-            if "servo2" in data:
+            elif "servo2" in data:
                 self.send_servo_command(2, data["servo2"])
-            if "servo3" in data:
+            elif "servo3" in data:
                 self.send_servo_command(3, data["servo3"])
-            if "servo4" in data:
+            elif "servo4" in data:
                 self.send_servo_command(4, data["servo4"])
+            else:
+                print(f"Unknown data structure: {data}")
 
     def send_motor_command(self, command):
         """Send motor command to Arduino"""
