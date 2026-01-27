@@ -4,10 +4,13 @@ import argparse
 import glob
 import time
 import serial
+import threading
 
 import cv2
 import numpy as np
 import pygame
+from pynput import keyboard
+
 from ultralytics import YOLO
 
 # Define and parse user input arguments
@@ -54,6 +57,26 @@ if (not os.path.exists(model_path)):
 # Load the model into memory and get labemap
 model = YOLO(model_path, task='detect')
 labels = model.names
+
+# Initialize pressed keys set
+pressed_keys = set()
+
+# Keyboard listener functions
+def on_press(key):
+    try:
+        pressed_keys.add(key.char)
+    except AttributeError:
+        pressed_keys.add(str(key))
+
+def on_release(key):
+    try:
+        pressed_keys.discard(key.char)
+    except AttributeError:
+        pressed_keys.discard(str(key))
+
+# Start keyboard listener in a thread
+listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+listener.start()
 
 # Initialize Pygame
 pygame.init()
@@ -305,32 +328,28 @@ while True:
         if event.type == pygame.QUIT:
             running = False
     
-    keys = pygame.key.get_pressed()
-    
-    if keys[pygame.K_q]:  # Quit
+    if 'q' in pressed_keys:  # Quit
         running = False
-    elif keys[pygame.K_s]:  # Pause inference
+    elif 's' in pressed_keys:  # Pause inference
         paused = True
         while paused:
-            pygame.event.pump()
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_s]:
+            if 's' in pressed_keys:
                 paused = False
             time.sleep(0.1)
-    elif keys[pygame.K_p]:  # Save picture
+    elif 'p' in pressed_keys:  # Save picture
         cv2.imwrite('capture.png', frame)
     
     # Motor control with arrow keys
     if arduino_ser:
-        if keys[pygame.K_UP]:
+        if 'Key.up' in pressed_keys:
             arduino_ser.write(b"FORWARD\n")
-        elif keys[pygame.K_DOWN]:
+        elif 'Key.down' in pressed_keys:
             arduino_ser.write(b"BACKWARD\n")
-        elif keys[pygame.K_LEFT]:
+        elif 'Key.left' in pressed_keys:
             arduino_ser.write(b"LEFT\n")
-        elif keys[pygame.K_RIGHT]:
+        elif 'Key.right' in pressed_keys:
             arduino_ser.write(b"RIGHT\n")
-        elif keys[pygame.K_SPACE]:
+        elif ' ' in pressed_keys:  # Space
             arduino_ser.write(b"STOP\n")
     
     if not running:
@@ -359,5 +378,6 @@ elif source_type == 'picamera':
     cap.stop()
 if record: recorder.release()
 pygame.quit()
+listener.stop()
 if arduino_ser:
     arduino_ser.close()
