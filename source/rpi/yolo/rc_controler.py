@@ -100,7 +100,11 @@ class RoboSortRemoteControl:
         """
         if message["event"] == "put":
             data = message["data"]
-
+            
+            # Check if data is valid (not None)
+            if data is None:
+                return
+            
             # Handle motor commands
             if "motor" in data:
                 command = data["motor"]
