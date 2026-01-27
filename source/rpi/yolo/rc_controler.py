@@ -156,14 +156,25 @@ class RoboSortRemoteControl:
             self.arduino.flush()  # Ensure data is sent
             print(f"DEBUG: Flushed Arduino serial buffer")
             
+            # Wait a bit for Arduino to process and respond
+            import time
+            time.sleep(0.1)  # 100ms delay
+            
+            # Read Arduino response (if any)
+            if self.arduino.in_waiting > 0:
+                response = self.arduino.read(self.arduino.in_waiting).decode('utf-8', errors='ignore').strip()
+                print(f"← Arduino response: '{response}'")
+            else:
+                print(f"DEBUG: No response from Arduino (in_waiting: {self.arduino.in_waiting})")
+            
             self.motor_state = direction
             
             # Update Firebase status (non-blocking)
             self.update_status_async("motor_state", direction)
-            print(f"Sent to Arduino: {arduino_cmd.strip()}")
+            print(f"✓ Sent to Arduino: {arduino_cmd.strip()}")
 
         except Exception as e:
-            print(f"Motor command error: {e}")
+            print(f"✗ Motor command error: {e}")
             import traceback
             traceback.print_exc()
 
@@ -209,6 +220,8 @@ class RoboSortRemoteControl:
                     line = self.arduino.readline().decode('utf-8').strip()
 
                     if line:
+                        print(f"← Arduino response: '{line}'")
+                        
                         # Parse feedback: format "S:1:90" or "M:FORWARD"
                         parts = line.split(':')
 
