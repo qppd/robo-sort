@@ -136,6 +136,42 @@ class RoboSortRemoteControl:
             if data is None:
                 print("Data is None, skipping")
                 return
+
+            # Firebase stream sometimes delivers a full snapshot of /commands on first connect:
+            # {
+            #   "motor": {direction,speed,...},
+            #   "servo1": {type:"servo", servo:1, angle:...},
+            #   ...
+            # }
+            is_snapshot = (
+                isinstance(data, dict)
+                and (
+                    "motor" in data
+                    or any(k in data for k in ("servo1", "servo2", "servo3", "servo4", "servo5"))
+                )
+                and not ("direction" in data and "speed" in data)
+                and data.get("type") not in {"servo", "lifter"}
+            )
+
+            if is_snapshot and "motor" in data and isinstance(data.get("motor"), dict):
+                motor = data.get("motor")
+                if isinstance(motor, dict) and "direction" in motor and "speed" in motor:
+                    self.current_command = motor.get("direction", "STOP")
+                    self.send_motor_command(motor)
+
+            if is_snapshot:
+                for key in ("servo1", "servo2", "servo3", "servo4", "servo5"):
+                    if key in data and isinstance(data.get(key), dict):
+                        servo_cmd = data.get(key)
+                        # legacy android: {type:'servo', servo:n, angle:x}
+                        if servo_cmd.get("type") == "servo" and "servo" in servo_cmd and "angle" in servo_cmd:
+                            self.send_servo_command(int(servo_cmd.get("servo")), {"angle": servo_cmd.get("angle")})
+                        # new schema: {type:'servo', cmd:'ARM-ROTATE', angle:x}
+                        elif servo_cmd.get("type") == "servo" and "cmd" in servo_cmd and "angle" in servo_cmd:
+                            self.send_named_servo_command(str(servo_cmd.get("cmd")), servo_cmd.get("angle"))
+
+                # Snapshot handled; don't fall through and re-handle keys below.
+                return
             
             # Handle motor commands - data comes directly as motor command
             if "direction" in data and "speed" in data:
@@ -157,9 +193,22 @@ class RoboSortRemoteControl:
                     print(f"Unknown lifter action: {data}")
 
             elif isinstance(data, dict) and data.get("type") == "servo":
-                cmd = str(data.get("cmd", "")).upper()
-                angle = data.get("angle")
-                self.send_named_servo_command(cmd, angle)
+                # Support BOTH:
+                # 1) legacy android: {type:'servo', servo:1, angle:180}
+                # 2) new schema:     {type:'servo', cmd:'ARM-ROTATE', angle:180}
+                if "cmd" in data and "angle" in data:
+                    cmd = str(data.get("cmd", "")).upper()
+                    angle = data.get("angle")
+                    self.send_named_servo_command(cmd, angle)
+                elif "servo" in data and "angle" in data:
+                    try:
+                        servo_num = int(data.get("servo"))
+                    except Exception:
+                        print(f"Invalid servo number: {data}")
+                        return
+                    self.send_servo_command(servo_num, {"angle": data.get("angle")})
+                else:
+                    print(f"Unknown servo payload: {data}")
 
             # Handle servo commands - check for servo keys
             elif "servo1" in data:
