@@ -11,6 +11,7 @@ import argparse
 import threading
 import json
 import pyrebase
+import time
 
 # Firebase Configuration
 firebase_config = {
@@ -21,8 +22,9 @@ firebase_config = {
 }
 
 class RoboSortRemoteControl:
-    def __init__(self, arduino_port, camera_source):
+    def __init__(self, arduino_port, camera_source, arduino_baud):
         self.arduino_port = arduino_port
+        self.arduino_baud = arduino_baud
         self.camera_source = camera_source
         self.arduino = None
         self.camera = None
@@ -44,8 +46,24 @@ class RoboSortRemoteControl:
     def init_arduino(self):
         """Initialize serial connection to Arduino"""
         try:
-            self.arduino = serial.Serial(self.arduino_port, 115200, timeout=0.01)
-            print(f"✓ Arduino connected on {self.arduino_port}")
+            # IMPORTANT: Arduino sketch in this repo uses Serial.begin(9600)
+            # Using the wrong baud rate will make Arduino receive garbage.
+            self.arduino = serial.Serial(
+                self.arduino_port,
+                self.arduino_baud,
+                timeout=0.05,
+                write_timeout=0.2,
+            )
+
+            # Opening the port resets many Arduino boards; give it a moment to boot.
+            time.sleep(2.0)
+            try:
+                self.arduino.reset_input_buffer()
+                self.arduino.reset_output_buffer()
+            except Exception:
+                pass
+
+            print(f"✓ Arduino connected on {self.arduino_port} @ {self.arduino_baud} baud")
         except Exception as e:
             print(f"✗ Arduino connection failed: {e}")
             raise
@@ -325,13 +343,15 @@ def main():
     parser = argparse.ArgumentParser(description='RoboSort Real-Time Remote Control')
     parser.add_argument('--source', default='usb0', help='Camera source (usb0, usb1, or device id)')
     parser.add_argument('--arduino', default='/dev/ttyUSB1', help='Arduino serial port')
+    parser.add_argument('--baud', type=int, default=9600, help='Arduino serial baud rate (default: 9600)')
 
     args = parser.parse_args()
 
     try:
         controller = RoboSortRemoteControl(
             arduino_port=args.arduino,
-            camera_source=args.source
+            camera_source=args.source,
+            arduino_baud=args.baud,
         )
         controller.run()
 
