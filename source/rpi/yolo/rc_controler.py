@@ -125,39 +125,42 @@ class RoboSortRemoteControl:
     def send_motor_command(self, command):
         """Send motor command to Arduino"""
         try:
-            cmd_map = {
-                "FORWARD": "M:F\n",
-                "BACKWARD": "M:B\n",
-                "TURN_LEFT": "M:L\n",
-                "TURN_RIGHT": "M:R\n",
-                "STOP": "M:S\n"
-            }
-
-            if command in cmd_map:
-                self.arduino.write(cmd_map[command].encode())
-                self.motor_state = command
-
-                # Update Firebase status (non-blocking)
-                self.update_status_async("motor_state", command)
+            direction = command.get("direction", "STOP")
+            speed = command.get("speed", 0)
+            
+            # Format command for Arduino: FORWARD:255, BACKWARD:255, etc.
+            if direction == "STOP":
+                arduino_cmd = "MSTOP\n"
+            else:
+                arduino_cmd = f"{direction}:{speed}\n"
+            
+            self.arduino.write(arduino_cmd.encode())
+            self.motor_state = direction
+            
+            # Update Firebase status (non-blocking)
+            self.update_status_async("motor_state", direction)
+            print(f"Sent to Arduino: {arduino_cmd.strip()}")
 
         except Exception as e:
             print(f"Motor command error: {e}")
 
-    def send_servo_command(self, servo_id, angle):
+    def send_servo_command(self, servo_num, command_data):
         """Send servo command to Arduino"""
         try:
+            angle = command_data.get("angle", 90)
             # Clamp angle between 0-180
             angle = max(0, min(180, int(angle)))
 
-            # Format: S:servo_id:angle
-            command = f"S:{servo_id}:{angle}\n"
-            self.arduino.write(command.encode())
+            # Format: S<servo> <angle> (e.g., S1 90)
+            arduino_cmd = f"S{servo_num} {angle}\n"
+            self.arduino.write(arduino_cmd.encode())
 
             # Update local state
-            self.servo_angles[f"servo{servo_id}"] = angle
+            self.servo_angles[f"servo{servo_num}"] = angle
 
             # Update Firebase status (non-blocking)
-            self.update_status_async(f"servo{servo_id}", angle)
+            self.update_status_async(f"servo{servo_num}", angle)
+            print(f"Sent to Arduino: {arduino_cmd.strip()}")
 
         except Exception as e:
             print(f"Servo command error: {e}")

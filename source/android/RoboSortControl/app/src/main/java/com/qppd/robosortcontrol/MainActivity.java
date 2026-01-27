@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         // Forward button - hold to move
         btnForward.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                sendMotorCommand("FORWARD", 200);
+                sendMotorCommand("FORWARD", 255);
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 sendMotorCommand("STOP", 0);
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         // Backward button - hold to move
         btnBackward.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                sendMotorCommand("BACKWARD", 200);
+                sendMotorCommand("BACKWARD", 255);
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 sendMotorCommand("STOP", 0);
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         // Left button - hold to turn
         btnLeft.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                sendMotorCommand("LEFT", 150);
+                sendMotorCommand("TURN_LEFT", 255);
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 sendMotorCommand("STOP", 0);
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         // Right button - hold to turn
         btnRight.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                sendMotorCommand("RIGHT", 150);
+                sendMotorCommand("TURN_RIGHT", 255);
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 sendMotorCommand("STOP", 0);
