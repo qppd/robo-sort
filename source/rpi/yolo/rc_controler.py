@@ -108,9 +108,13 @@ class RoboSortRemoteControl:
             # Handle motor commands
             if "motor" in data:
                 command = data["motor"]
-                if command != self.current_command:
-                    self.current_command = command
+                direction = command.get("direction", "STOP")
+                
+                # Only process if direction changed
+                if direction != self.current_command:
+                    self.current_command = direction
                     self.send_motor_command(command)
+                    print(f"Command received: {direction}")
 
             # Handle servo commands
             if "servo1" in data:
