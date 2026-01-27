@@ -222,15 +222,45 @@ class RoboSortRemoteControl:
         Event-driven, NO delays
         """
         print(f"Stream event received: {message['event']}")
+        print(f"Stream path: {message.get('path', '')}")
         print(f"Stream data: {message.get('data', 'No data')}")
         
         if message["event"] == "put":
             data = message["data"]
+            path = str(message.get("path", ""))
             
             # Check if data is valid (not None)
             if data is None:
                 print("Data is None, skipping")
                 return
+
+            # Some stream events deliver nested snapshots, e.g. {"bin": {...}}
+            # when listening at /robosort/commands and only one child changed.
+            if isinstance(data, dict) and "bin" in data and isinstance(data.get("bin"), dict):
+                # Only unwrap if it looks like a bin payload
+                inner = data.get("bin")
+                if inner.get("type") == "bin" or str(inner.get("command", "")).upper().startswith("BIN_"):
+                    data = inner
+
+            # BIN fast-path (supports both full object writes and leaf updates)
+            if (
+                isinstance(data, dict)
+                and (data.get("type") == "bin" or str(data.get("command", "")).upper().startswith("BIN_"))
+            ):
+                bin_cmd = str(data.get("command", "")).strip().upper()
+                if bin_cmd in {"BIN_HOME", "BIN_1", "BIN_2", "BIN_3", "BIN_4"}:
+                    self.send_text_command(bin_cmd)
+                    print(f"✓ Sent BIN command: {bin_cmd}")
+                    return
+                print(f"Unknown BIN command payload: {data}")
+                return
+
+            if isinstance(data, str) and "bin" in path.lower():
+                bin_cmd = data.strip().upper()
+                if bin_cmd in {"BIN_HOME", "BIN_1", "BIN_2", "BIN_3", "BIN_4"}:
+                    self.send_text_command(bin_cmd)
+                    print(f"✓ Sent BIN command: {bin_cmd}")
+                    return
 
             # Firebase stream sometimes delivers a full snapshot of /commands on first connect:
             # {
