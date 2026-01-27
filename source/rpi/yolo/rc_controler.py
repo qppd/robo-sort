@@ -28,6 +28,7 @@ class RoboSortRemoteControl:
         self.camera = None
         self.firebase = None
         self.db = None
+        self.stream = None
         self.running = True
 
         # Current state
@@ -87,7 +88,9 @@ class RoboSortRemoteControl:
             })
 
             # Start listening to commands
-            self.db.child("robosort").child("commands").stream(self.on_command_change)
+            print("Starting Firebase stream listener...")
+            self.stream = self.db.child("robosort").child("commands").stream(self.on_command_change)
+            print("✓ Firebase stream listener started")
 
         except Exception as e:
             print(f"✗ Firebase connection failed: {e}")
@@ -98,23 +101,30 @@ class RoboSortRemoteControl:
         Firebase stream callback - handles incoming commands
         Event-driven, NO delays
         """
+        print(f"Stream event received: {message['event']}")
+        print(f"Stream data: {message.get('data', 'No data')}")
+        
         if message["event"] == "put":
             data = message["data"]
             
             # Check if data is valid (not None)
             if data is None:
+                print("Data is None, skipping")
                 return
             
             # Handle motor commands
             if "motor" in data:
                 command = data["motor"]
                 direction = command.get("direction", "STOP")
+                print(f"Motor command found: {direction}")
                 
                 # Only process if direction changed
                 if direction != self.current_command:
                     self.current_command = direction
                     self.send_motor_command(command)
                     print(f"Command received: {direction}")
+                else:
+                    print(f"Command skipped (same as current): {direction}")
 
             # Handle servo commands
             if "servo1" in data:
@@ -255,6 +265,13 @@ class RoboSortRemoteControl:
         """Clean shutdown"""
         print("\nShutting down...")
         self.running = False
+
+        # Close Firebase stream
+        if self.stream:
+            try:
+                self.stream.close()
+            except:
+                pass
 
         # Stop motors
         if self.arduino:
