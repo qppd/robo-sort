@@ -14,10 +14,10 @@ import pyrebase
 
 # Firebase Configuration
 firebase_config = {
-    "apiKey": "YOUR_API_KEY",
-    "authDomain": "YOUR_PROJECT_ID.firebaseapp.com",
-    "databaseURL": "https://YOUR_PROJECT_ID.firebaseio.com",
-    "storageBucket": "YOUR_PROJECT_ID.appspot.com"
+    "apiKey": "AIzaSyCqx9VuRO3F5DICYS4xDlM0fjUyL-TlGPw",
+    "authDomain": "robosortcontrol.firebaseapp.com",
+    "databaseURL": "https://robosortcontrol.firebaseio.com",
+    "storageBucket": "robosortcontrol.appspot.com"
 }
 
 class RoboSortRemoteControl:
