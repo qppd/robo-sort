@@ -71,26 +71,29 @@ public class MainActivity extends AppCompatActivity {
     private void initializeFirebase() {
         try {
             database = FirebaseDatabase.getInstance();
-            // Use your Firebase database URL from google-services.json
-            database.useEmulator("10.0.2.2", 9000); // Remove this line for production
+            // REMOVED: database.useEmulator("10.0.2.2", 9000); // For production use
             
             commandsRef = database.getReference("robosort/commands");
             feedbackRef = database.getReference("robosort/feedback");
             
-            // Test connection
+            // Test connection with detailed logging
             commandsRef.child("timestamp").setValue(System.currentTimeMillis())
                 .addOnSuccessListener(aVoid -> {
                     isConnected = true;
                     updateConnectionStatus(true);
+                    feedbackText.setText("Firebase connected successfully!");
                 })
                 .addOnFailureListener(e -> {
                     isConnected = false;
                     updateConnectionStatus(false);
+                    feedbackText.setText("Firebase connection failed: " + e.getMessage());
+                    e.printStackTrace();
                 });
                 
         } catch (Exception e) {
             e.printStackTrace();
             updateConnectionStatus(false);
+            feedbackText.setText("Firebase initialization error: " + e.getMessage());
         }
     }
     
@@ -230,7 +233,10 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void sendMotorCommand(String direction, int speed) {
-        if (!isConnected) return;
+        if (!isConnected) {
+            feedbackText.setText("Cannot send command: Not connected to Firebase");
+            return;
+        }
         
         Map<String, Object> command = new HashMap<>();
         command.put("type", "motor");
@@ -238,9 +244,14 @@ public class MainActivity extends AppCompatActivity {
         command.put("speed", speed);
         command.put("timestamp", System.currentTimeMillis());
         
+        feedbackText.setText("Sending: " + direction + " at speed " + speed);
+        
         commandsRef.child("motor").setValue(command)
+            .addOnSuccessListener(aVoid -> {
+                feedbackText.setText("Command sent successfully: " + direction);
+            })
             .addOnFailureListener(e -> {
-                runOnUiThread(() -> feedbackText.setText("Failed to send motor command: " + e.getMessage()));
+                feedbackText.setText("Failed to send command: " + e.getMessage());
             });
     }
     
