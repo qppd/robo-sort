@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1183396847",
+    "project_id": "robosortcontrol",
+    "storage_bucket": "robosortcontrol.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1183396847:android:02b1eb8f0058f6bd60bc1a",
+        "android_client_info": {
+          "package_name": "com.qppd.robosortcontrol"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqx9VuRO3F5DICYS4xDlM0fjUyL-TlGPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
