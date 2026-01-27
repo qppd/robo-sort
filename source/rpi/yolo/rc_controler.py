@@ -12,6 +12,14 @@ import threading
 import json
 import pyrebase
 import time
+from typing import Optional
+
+try:
+    # Optional: only needed when camera streaming is enabled
+    from flask import Flask, Response
+except Exception:
+    Flask = None
+    Response = None
 
 # Firebase Configuration
 firebase_config = {
@@ -22,16 +30,35 @@ firebase_config = {
 }
 
 class RoboSortRemoteControl:
-    def __init__(self, arduino_port, camera_source, arduino_baud):
+    def __init__(
+        self,
+        arduino_port,
+        camera_source,
+        arduino_baud,
+        stream_enabled: bool,
+        stream_host: str,
+        stream_port: int,
+    ):
         self.arduino_port = arduino_port
         self.arduino_baud = arduino_baud
         self.camera_source = camera_source
+        self.stream_enabled = stream_enabled
+        self.stream_host = stream_host
+        self.stream_port = stream_port
         self.arduino = None
         self.camera = None
         self.firebase = None
         self.db = None
         self.stream = None
         self.running = True
+
+        # Latest camera frame shared to MJPEG stream
+        self._latest_frame: Optional[any] = None
+        self._frame_lock = threading.Lock()
+
+        # Flask server
+        self._flask_app = None
+        self._flask_thread = None
 
         # Current state
         self.current_command = "STOP"
@@ -44,6 +71,9 @@ class RoboSortRemoteControl:
         self.init_arduino()
         self.init_camera()
         self.init_firebase()
+
+        if self.stream_enabled:
+            self.init_camera_stream_server()
 
     def init_arduino(self):
         """Initialize serial connection to Arduino"""
@@ -93,6 +123,68 @@ class RoboSortRemoteControl:
         except Exception as e:
             print(f"✗ Camera initialization failed: {e}")
             self.camera = None
+
+    def init_camera_stream_server(self):
+        """Start Flask MJPEG camera streaming server in a background thread."""
+        if Flask is None or Response is None:
+            print("✗ Flask is not installed. Install it with: pip install Flask")
+            print("  Or disable streaming with: --no-stream")
+            self.stream_enabled = False
+            return
+
+        if not self.camera:
+            print("✗ Camera is not available; MJPEG stream will not start")
+            self.stream_enabled = False
+            return
+
+        app = Flask(__name__)
+
+        def gen_frames():
+            """Generate MJPEG frames from the latest captured frame."""
+            while self.running:
+                with self._frame_lock:
+                    frame = None if self._latest_frame is None else self._latest_frame.copy()
+
+                if frame is None:
+                    time.sleep(0.02)
+                    continue
+
+                ok, buffer = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 80])
+                if not ok:
+                    continue
+
+                jpg = buffer.tobytes()
+                yield (
+                    b"--frame\r\n"
+                    b"Content-Type: image/jpeg\r\n"
+                    b"Content-Length: "
+                    + str(len(jpg)).encode("ascii")
+                    + b"\r\n\r\n"
+                    + jpg
+                    + b"\r\n"
+                )
+
+        @app.get("/")
+        def index():
+            return (
+                "<html><head><title>RoboSort Camera</title></head>"
+                "<body style='margin:0;background:#111;display:flex;align-items:center;justify-content:center;height:100vh'>"
+                "<img src='/video' style='max-width:100%;max-height:100%' />"
+                "</body></html>"
+            )
+
+        @app.get("/video")
+        def video():
+            return Response(gen_frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
+
+        def run_server():
+            # use_reloader=False is critical when running inside threads
+            app.run(host=self.stream_host, port=self.stream_port, threaded=True, use_reloader=False)
+
+        self._flask_app = app
+        self._flask_thread = threading.Thread(target=run_server, daemon=True)
+        self._flask_thread.start()
+        print(f"✓ MJPEG stream started: http://{self.stream_host}:{self.stream_port}/video")
 
     def init_firebase(self):
         """Initialize Firebase connection"""
@@ -391,6 +483,10 @@ class RoboSortRemoteControl:
             ret, frame = self.camera.read()
 
             if ret:
+                # Share latest frame to stream (before overlay so stream matches what you see)
+                with self._frame_lock:
+                    self._latest_frame = frame
+
                 # Add status overlay
                 cv2.putText(frame, f"Motor: {self.motor_state}", (10, 30),
                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
@@ -466,6 +562,14 @@ def main():
     parser.add_argument('--arduino', default='/dev/ttyUSB1', help='Arduino serial port')
     parser.add_argument('--baud', type=int, default=9600, help='Arduino serial baud rate (default: 9600)')
 
+    stream_group = parser.add_mutually_exclusive_group()
+    stream_group.add_argument('--stream', dest='stream', action='store_true', help='Enable MJPEG camera stream (default)')
+    stream_group.add_argument('--no-stream', dest='stream', action='store_false', help='Disable MJPEG camera stream')
+    parser.set_defaults(stream=True)
+
+    parser.add_argument('--stream-host', default='0.0.0.0', help='MJPEG stream bind host (default: 0.0.0.0)')
+    parser.add_argument('--stream-port', type=int, default=5000, help='MJPEG stream port (default: 5000)')
+
     args = parser.parse_args()
 
     try:
@@ -473,6 +577,9 @@ def main():
             arduino_port=args.arduino,
             camera_source=args.source,
             arduino_baud=args.baud,
+            stream_enabled=args.stream,
+            stream_host=args.stream_host,
+            stream_port=args.stream_port,
         )
         controller.run()
 
