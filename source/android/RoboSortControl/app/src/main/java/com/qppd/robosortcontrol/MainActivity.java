@@ -3,6 +3,7 @@ package com.qppd.robosortcontrol;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -147,10 +148,13 @@ public class MainActivity extends AppCompatActivity {
         
         // Left button - hold to turn
         btnLeft.setOnTouchListener((v, event) -> {
+            Log.d("RoboSort", "Left button touch event: " + event.getAction());
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                Log.d("RoboSort", "Left button: ACTION_DOWN - sending TURN_LEFT");
                 sendMotorCommand("TURN_LEFT", 255);
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                Log.d("RoboSort", "Left button: ACTION_UP - sending STOP");
                 sendMotorCommand("STOP", 0);
                 v.performClick();
                 return true;
@@ -160,10 +164,13 @@ public class MainActivity extends AppCompatActivity {
         
         // Right button - hold to turn
         btnRight.setOnTouchListener((v, event) -> {
+            Log.d("RoboSort", "Right button touch event: " + event.getAction());
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                Log.d("RoboSort", "Right button: ACTION_DOWN - sending TURN_RIGHT");
                 sendMotorCommand("TURN_RIGHT", 255);
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                Log.d("RoboSort", "Right button: ACTION_UP - sending STOP");
                 sendMotorCommand("STOP", 0);
                 v.performClick();
                 return true;
@@ -233,7 +240,9 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void sendMotorCommand(String direction, int speed) {
+        Log.d("RoboSort", "sendMotorCommand called: direction=" + direction + ", speed=" + speed);
         if (!isConnected) {
+            Log.w("RoboSort", "Cannot send command: Not connected to Firebase");
             feedbackText.setText("Cannot send command: Not connected to Firebase");
             return;
         }
@@ -244,13 +253,16 @@ public class MainActivity extends AppCompatActivity {
         command.put("speed", speed);
         command.put("timestamp", System.currentTimeMillis());
         
+        Log.d("RoboSort", "Sending command to Firebase: " + command);
         feedbackText.setText("Sending: " + direction + " at speed " + speed);
         
         commandsRef.child("motor").setValue(command)
             .addOnSuccessListener(aVoid -> {
+                Log.d("RoboSort", "Command sent successfully: " + direction);
                 feedbackText.setText("Command sent successfully: " + direction);
             })
             .addOnFailureListener(e -> {
+                Log.e("RoboSort", "Failed to send command: " + e.getMessage());
                 feedbackText.setText("Failed to send command: " + e.getMessage());
             });
     }
