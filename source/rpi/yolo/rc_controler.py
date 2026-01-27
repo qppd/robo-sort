@@ -35,7 +35,9 @@ class RoboSortRemoteControl:
 
         # Current state
         self.current_command = "STOP"
-        self.servo_angles = {"servo1": 90, "servo2": 90, "servo3": 90, "servo4": 90}
+        # Match Arduino SERVO_CONFIG defaults (channels 1-4):
+        # 1: armRotate=180, 2: gripper=105, 3: gripperRotation=90, 4: armExtend=90
+        self.servo_angles = {"servo1": 180, "servo2": 105, "servo3": 90, "servo4": 90}
         self.motor_state = "STOP"
 
         # Initialize connections
@@ -102,7 +104,11 @@ class RoboSortRemoteControl:
             # Set initial state
             self.db.child("robosort").child("status").update({
                 "motor_state": "STOP",
-                "connected": True
+                "connected": True,
+                "servo1": self.servo_angles["servo1"],
+                "servo2": self.servo_angles["servo2"],
+                "servo3": self.servo_angles["servo3"],
+                "servo4": self.servo_angles["servo4"],
             })
 
             # Start listening to commands

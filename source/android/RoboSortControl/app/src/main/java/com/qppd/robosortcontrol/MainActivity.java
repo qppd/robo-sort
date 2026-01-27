@@ -45,8 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler;
     
     // Servo positions
-    private int servo1Pos = 90;
-    private int servo2Pos = 90;
+    // Match Arduino SERVO_CONFIG defaults (channels 1-4)
+    private int servo1Pos = 180;
+    private int servo2Pos = 105;
     private int servo3Pos = 90;
     private int servo4Pos = 90;
 
@@ -75,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
             // REMOVED: database.useEmulator("10.0.2.2", 9000); // For production use
             
             commandsRef = database.getReference("robosort/commands");
-            feedbackRef = database.getReference("robosort/feedback");
+            // RPi publishes live state under robosort/status
+            feedbackRef = database.getReference("robosort/status");
             
             // Test connection with detailed logging
             commandsRef.child("timestamp").setValue(System.currentTimeMillis())
@@ -117,6 +119,17 @@ public class MainActivity extends AppCompatActivity {
         servo2Slider = findViewById(R.id.servo2Slider);
         servo3Slider = findViewById(R.id.servo3Slider);
         servo4Slider = findViewById(R.id.servo4Slider);
+
+        // Initialize sliders/labels to match Arduino defaults immediately
+        servo1Slider.setValue(servo1Pos);
+        servo2Slider.setValue(servo2Pos);
+        servo3Slider.setValue(servo3Pos);
+        servo4Slider.setValue(servo4Pos);
+
+        servo1Label.setText(String.format(Locale.US, "Arm Base (S1): %d°", servo1Pos));
+        servo2Label.setText(String.format(Locale.US, "Arm Shoulder (S2): %d°", servo2Pos));
+        servo3Label.setText(String.format(Locale.US, "Arm Elbow (S3): %d°", servo3Pos));
+        servo4Label.setText(String.format(Locale.US, "Gripper (S4): %d°", servo4Pos));
     }
     
     private void setupMotorControls() {
