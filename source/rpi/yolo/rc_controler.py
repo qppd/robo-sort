@@ -118,13 +118,10 @@ class RoboSortRemoteControl:
                 direction = command.get("direction", "STOP")
                 print(f"Motor command found: {direction}")
                 
-                # Only process if direction changed
-                if direction != self.current_command:
-                    self.current_command = direction
-                    self.send_motor_command(command)
-                    print(f"Command received: {direction}")
-                else:
-                    print(f"Command skipped (same as current): {direction}")
+                # Always send motor commands for real-time control
+                self.current_command = direction
+                self.send_motor_command(command)
+                print(f"Command processed: {direction}")
 
             # Handle servo commands - check for servo keys
             elif "servo1" in data:
