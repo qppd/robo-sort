@@ -39,6 +39,13 @@ user_res = args.resolution
 record = args.record
 arduino_port = args.arduino
 
+# Parse user-specified display resolution
+resize = False
+resW, resH = 640, 480  # default
+if user_res:
+    resize = True
+    resW, resH = int(user_res.split('x')[0]), int(user_res.split('x')[1])
+
 # Check if model file exists and is valid
 if (not os.path.exists(model_path)):
     print('ERROR: Model path is invalid or model was not found. Make sure the model filename was entered correctly.')
@@ -50,10 +57,7 @@ labels = model.names
 
 # Initialize Pygame
 pygame.init()
-if user_res:
-    screen = pygame.display.set_mode((resW, resH))
-else:
-    screen = pygame.display.set_mode((640, 480))
+screen = pygame.display.set_mode((resW, resH))
 pygame.display.set_caption('YOLO Detection with Motor Control')
 
 # Initialize Arduino serial connection if port is provided
