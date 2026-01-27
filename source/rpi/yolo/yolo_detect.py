@@ -294,6 +294,19 @@ while True:
     elif key == ord('p') or key == ord('P'): # Press 'p' to save a picture of results on this frame
         cv2.imwrite('capture.png',frame)
     
+    # Motor control keys
+    if arduino_ser:
+        if key == ord('w') or key == ord('W'):
+            arduino_ser.write(b"FORWARD\n")
+        elif key == ord('s') or key == ord('S'):
+            arduino_ser.write(b"BACKWARD\n")
+        elif key == ord('a') or key == ord('A'):
+            arduino_ser.write(b"LEFT\n")
+        elif key == ord('d') or key == ord('D'):
+            arduino_ser.write(b"RIGHT\n")
+        elif key == 32:  # Space bar
+            arduino_ser.write(b"STOP\n")
+    
     # Calculate FPS for this frame
     t_stop = time.perf_counter()
     frame_rate_calc = float(1/(t_stop - t_start))
