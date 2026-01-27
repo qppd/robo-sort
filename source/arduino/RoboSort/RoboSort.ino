@@ -186,18 +186,41 @@ void loop() {
       servoConfig.lifterStop();
     } else if (input.startsWith("ARM-ROTATE:")) {
       int angle = input.substring(11).toInt();  // Extract angle after "ARM-ROTATE:"
+
+      // Safety: only allow angles < 180 when arm is lifted up and ARM limit switch is pressed.
+      // If switch not pressed, force angle to 180 to avoid damaging the arm.
+      if (digitalRead(ARM_LIMIT_PIN) != LOW && angle < 180) {
+        Serial.println("ARM-ROTATE blocked: ARM limit switch not pressed. Forcing to 180.");
+        angle = 180;
+      }
+      if (angle < 0) angle = 0;
+      if (angle > 180) angle = 180;
       servoConfig.armRotate(angle);
     } else if (input.startsWith("GRIP:")) {
       int angle = input.substring(5).toInt();  // Extract angle after "GRIP:"
+
+      // Requested range: 110 (closed) .. 180 (open)
+      if (angle < 110) angle = 110;
+      if (angle > 180) angle = 180;
       servoConfig.gripperRotate(angle);
     } else if (input.startsWith("GRIP-ROTATE:")) {
       int angle = input.substring(12).toInt();  // Extract angle after "GRIP-ROTATE:"
+
+      if (angle < 0) angle = 0;
+      if (angle > 180) angle = 180;
       servoConfig.gripperRotationRotate(angle);
     } else if (input.startsWith("ARM-EXTEND:")) {
       int angle = input.substring(11).toInt();  // Extract angle after "ARM-EXTEND:"
+
+      // Requested range: 110..180
+      if (angle < 110) angle = 110;
+      if (angle > 180) angle = 180;
       servoConfig.armExtend(angle);
     } else if (input.startsWith("LOOK:")) {
       int angle = input.substring(5).toInt();  // Extract angle after "LOOK:"
+
+      if (angle < 0) angle = 0;
+      if (angle > 180) angle = 180;
       servoConfig.lookRotate(angle);
     } else if (input.equalsIgnoreCase("SERVO STATUS")) {
       Serial.println("=== SERVO STATUS ===");

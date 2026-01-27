@@ -4,6 +4,9 @@ source/rpi/ros2-robosort/log/
 source/rpi/yolo/venv/
 source/rpi/RoboSort/venv/
 
+# Android app (keep local only)
+source/android/RoboSortControl/
+
 **/build/
 **/install/
 **/log/

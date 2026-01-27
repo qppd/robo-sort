@@ -35,9 +35,9 @@ class RoboSortRemoteControl:
 
         # Current state
         self.current_command = "STOP"
-        # Match Arduino SERVO_CONFIG defaults (channels 1-4):
-        # 1: armRotate=180, 2: gripper=105, 3: gripperRotation=90, 4: armExtend=90
-        self.servo_angles = {"servo1": 180, "servo2": 105, "servo3": 90, "servo4": 90}
+        # Match Arduino SERVO_CONFIG defaults (channels 1-5):
+        # 1: ARM-ROTATE=180, 2: GRIP=110, 3: GRIP-ROTATE=90, 4: ARM-EXTEND=110, 5: LOOK=90
+        self.servo_angles = {"servo1": 180, "servo2": 110, "servo3": 90, "servo4": 110, "servo5": 90}
         self.motor_state = "STOP"
 
         # Initialize connections
@@ -109,6 +109,7 @@ class RoboSortRemoteControl:
                 "servo2": self.servo_angles["servo2"],
                 "servo3": self.servo_angles["servo3"],
                 "servo4": self.servo_angles["servo4"],
+                "servo5": self.servo_angles["servo5"],
             })
 
             # Start listening to commands
@@ -147,6 +148,19 @@ class RoboSortRemoteControl:
                 self.send_motor_command(command)
                 print(f"Command processed: {direction}")
 
+            # New servo command schema: {type:'servo'|'lifter', cmd/action, angle}
+            elif isinstance(data, dict) and data.get("type") == "lifter":
+                action = str(data.get("action", "")).upper()
+                if action in {"UP", "DOWN", "STOP"}:
+                    self.send_text_command(f"LIFTER {action}")
+                else:
+                    print(f"Unknown lifter action: {data}")
+
+            elif isinstance(data, dict) and data.get("type") == "servo":
+                cmd = str(data.get("cmd", "")).upper()
+                angle = data.get("angle")
+                self.send_named_servo_command(cmd, angle)
+
             # Handle servo commands - check for servo keys
             elif "servo1" in data:
                 self.send_servo_command(1, data["servo1"])
@@ -156,8 +170,57 @@ class RoboSortRemoteControl:
                 self.send_servo_command(3, data["servo3"])
             elif "servo4" in data:
                 self.send_servo_command(4, data["servo4"])
+            elif "servo5" in data:
+                self.send_servo_command(5, data["servo5"])
             else:
                 print(f"Unknown data structure: {data}")
+
+    def send_text_command(self, text: str):
+        """Send a raw text command to Arduino (newline will be appended)."""
+        try:
+            cmd = text.strip() + "\n"
+            print(f"DEBUG: About to send to Arduino: '{cmd.strip()}'")
+            self.arduino.write(cmd.encode())
+            self.arduino.flush()
+            print(f"✓ Sent to Arduino: {cmd.strip()}")
+        except Exception as e:
+            print(f"✗ Arduino write error: {e}")
+
+    def send_named_servo_command(self, cmd: str, angle_value):
+        """Send one of the high-level servo commands the Arduino sketch supports."""
+        if cmd in {"ARM-ROTATE", "ARM_EXTEND", "ARM-EXTEND", "LOOK", "GRIP", "GRIP-ROTATE", "GRIP_ROTATE"}:
+            try:
+                angle = int(angle_value)
+            except Exception:
+                print(f"Invalid angle for {cmd}: {angle_value}")
+                return
+
+            # Canonicalize command spelling
+            if cmd == "ARM_EXTEND":
+                cmd = "ARM-EXTEND"
+            if cmd == "GRIP_ROTATE":
+                cmd = "GRIP-ROTATE"
+
+            # Update local status mirror (for Android slider sync)
+            if cmd == "ARM-ROTATE":
+                self.servo_angles["servo1"] = angle
+                self.update_status_async("servo1", angle)
+            elif cmd == "GRIP":
+                self.servo_angles["servo2"] = angle
+                self.update_status_async("servo2", angle)
+            elif cmd == "GRIP-ROTATE":
+                self.servo_angles["servo3"] = angle
+                self.update_status_async("servo3", angle)
+            elif cmd == "ARM-EXTEND":
+                self.servo_angles["servo4"] = angle
+                self.update_status_async("servo4", angle)
+            elif cmd == "LOOK":
+                self.servo_angles["servo5"] = angle
+                self.update_status_async("servo5", angle)
+
+            self.send_text_command(f"{cmd}:{angle}")
+        else:
+            print(f"Unknown servo cmd: {cmd}")
 
     def send_motor_command(self, command):
         """Send motor command to Arduino"""
@@ -209,16 +272,19 @@ class RoboSortRemoteControl:
             # Clamp angle between 0-180
             angle = max(0, min(180, int(angle)))
 
-            # Format: S<servo> <angle> (e.g., S1 90)
-            arduino_cmd = f"S{servo_num} {angle}\n"
-            self.arduino.write(arduino_cmd.encode())
-
-            # Update local state
-            self.servo_angles[f"servo{servo_num}"] = angle
-
-            # Update Firebase status (non-blocking)
-            self.update_status_async(f"servo{servo_num}", angle)
-            print(f"Sent to Arduino: {arduino_cmd.strip()}")
+            # Backward-compat path: map servo numbers to the Arduino high-level commands
+            if servo_num == 1:
+                self.send_named_servo_command("ARM-ROTATE", angle)
+            elif servo_num == 2:
+                self.send_named_servo_command("GRIP", angle)
+            elif servo_num == 3:
+                self.send_named_servo_command("GRIP-ROTATE", angle)
+            elif servo_num == 4:
+                self.send_named_servo_command("ARM-EXTEND", angle)
+            elif servo_num == 5:
+                self.send_named_servo_command("LOOK", angle)
+            else:
+                print(f"Unsupported servo_num: {servo_num}")
 
         except Exception as e:
             print(f"Servo command error: {e}")

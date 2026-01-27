@@ -22,9 +22,9 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   lifterRotationCount = 0;  // Initialize rotation count
   lifterMaxRotations = 0;   // Default to time-based
   currentArmAngle = 180;  // Initialize arm to 180 degrees
-  currentGripperAngle = 105;  // Initialize gripper to 105 degrees (default position)
+  currentGripperAngle = 110;  // Initialize gripper to 110 degrees (default closed)
   currentGripperRotationAngle = 90;  // Initialize gripper rotation to 90 degrees (default position)
-  currentArmExtensionAngle = 90;  // Initialize arm extension to 90 degrees (default position)
+  currentArmExtensionAngle = 110;  // Initialize arm extension to 110 degrees (safe minimum)
   currentLookAngle = 90;  // Initialize look servo to 90 degrees (default position)
   
   // Initialize mutual exclusion flags
@@ -48,13 +48,13 @@ void ServoConfig::begin() {
   setServoAngle(1, 180);
   
   // Set gripper servo to default position (105 degrees)
-  setServoAngle(2, 105);
+  setServoAngle(2, 110);
   
   // Set gripper rotation servo to default position (90 degrees)
   setServoAngle(3, 90);
   
   // Set arm extension servo to default position (90 degrees)
-  setServoAngle(4, 90);
+  setServoAngle(4, 110);
   
   // Set look servo to default position (90 degrees)
   setServoAngle(5, 90);
