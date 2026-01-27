@@ -3,6 +3,7 @@ import sys
 import argparse
 import glob
 import time
+import serial
 
 import cv2
 import numpy as np
@@ -23,6 +24,8 @@ parser.add_argument('--resolution', help='Resolution in WxH to display inference
                     default=None)
 parser.add_argument('--record', help='Record results from video or webcam and save it as "demo1.avi". Must specify --resolution argument to record.',
                     action='store_true')
+parser.add_argument('--arduino', help='Serial port for Arduino communication (example: "/dev/ttyUSB0")',
+                    default=None)
 
 args = parser.parse_args()
 
@@ -33,6 +36,7 @@ img_source = args.source
 min_thresh = args.thresh
 user_res = args.resolution
 record = args.record
+arduino_port = args.arduino
 
 # Check if model file exists and is valid
 if (not os.path.exists(model_path)):
@@ -42,6 +46,16 @@ if (not os.path.exists(model_path)):
 # Load the model into memory and get labemap
 model = YOLO(model_path, task='detect')
 labels = model.names
+
+# Initialize Arduino serial connection if port is provided
+arduino_ser = None
+if arduino_port:
+    try:
+        arduino_ser = serial.Serial(arduino_port, 9600, timeout=1)
+        print(f"Connected to Arduino on {arduino_port}")
+    except serial.SerialException as e:
+        print(f"Failed to connect to Arduino on {arduino_port}: {e}")
+        arduino_ser = None
 
 # Parse input to determine if image source is a file, folder, video, or USB camera
 img_ext_list = ['.jpg','.JPG','.jpeg','.JPEG','.png','.PNG','.bmp','.BMP']
@@ -129,6 +143,7 @@ img_count = 0
 last_centered_class = None
 consecutive_centered_count = 0
 centering_threshold = 50  # pixels
+sent_commands = False
 
 # Begin inference loop
 while True:
@@ -235,6 +250,18 @@ while True:
     else:
         consecutive_centered_count = 0
         last_centered_class = None
+        sent_commands = False  # Reset when centering breaks
+
+    # Send commands to Arduino if centered for 5 consecutive frames and not already sent
+    if consecutive_centered_count >= 5 and not sent_commands and arduino_ser:
+        try:
+            arduino_ser.write(b"ARM-EXTEND:170\n")
+            time.sleep(0.1)
+            arduino_ser.write(b"LOOK:140\n")
+            print("Sent ARM-EXTEND:170 and LOOK:140 to Arduino")
+            sent_commands = True
+        except serial.SerialException as e:
+            print(f"Failed to send commands to Arduino: {e}")
 
     # Calculate and draw framerate (if using video, USB, or Picamera source)
     if source_type == 'video' or source_type == 'usb' or source_type == 'picamera':
@@ -290,3 +317,5 @@ elif source_type == 'picamera':
     cap.stop()
 if record: recorder.release()
 cv2.destroyAllWindows()
+if arduino_ser:
+    arduino_ser.close()
