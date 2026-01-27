@@ -164,6 +164,9 @@ class RoboSortRemoteControl:
                     + b"\r\n"
                 )
 
+                # Limit to 10 FPS to reduce network congestion
+                time.sleep(0.1)
+
         @app.get("/")
         def index():
             return (
