@@ -16,7 +16,7 @@ import pyrebase
 firebase_config = {
     "apiKey": "AIzaSyCqx9VuRO3F5DICYS4xDlM0fjUyL-TlGPw",
     "authDomain": "robosortcontrol.firebaseapp.com",
-    "databaseURL": "https://robosortcontrol.firebaseio.com",
+    "databaseURL": "https://robosortcontrol-default-rtdb.firebaseio.com",
     "storageBucket": "robosortcontrol.appspot.com"
 }
 
