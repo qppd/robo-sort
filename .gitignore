@@ -4,8 +4,12 @@ source/rpi/ros2-robosort/log/
 source/rpi/yolo/venv/
 source/rpi/RoboSort/venv/
 
-# Android app (keep local only)
-source/android/RoboSortControl/
+# Android app
+# Keep the project trackable, but ignore local machine config + secrets.
+source/android/RoboSortControl/**/local.properties
+source/android/RoboSortControl/**/google-services.json
+source/android/RoboSortControl/**/.idea/
+source/android/RoboSortControl/**/.gradle/
 
 **/build/
 **/install/
