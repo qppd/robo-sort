@@ -313,11 +313,11 @@ class RoboSortRemoteControl:
             elif isinstance(data, dict) and data.get("type") == "lifter":
                 action = str(data.get("action", "")).upper()
                 if action in {"UP", "DOWN", "STOP"}:
-                    # Safety check: Prevent LIFTER DOWN if ARM-EXTEND is below 110 degrees
+                    # Safety check: Prevent LIFTER DOWN if ARM-EXTEND is below 90 degrees
                     if action == "DOWN":
                         arm_extend_angle = self.servo_angles.get("servo4", 110)  # servo4 = ARM-EXTEND
-                        if arm_extend_angle < 110:
-                            print(f"⚠ SAFETY BLOCK: LIFTER DOWN blocked - ARM-EXTEND is at {arm_extend_angle}° (must be ≥110°)")
+                        if arm_extend_angle < 90:
+                            print(f"⚠ SAFETY BLOCK: LIFTER DOWN blocked - ARM-EXTEND is at {arm_extend_angle}° (must be ≥90°)")
                             print("  Extend arm first before lowering lifter!")
                             return  # Don't send the command
                     
@@ -382,6 +382,12 @@ class RoboSortRemoteControl:
                 cmd = "ARM-EXTEND"
             if cmd == "GRIP_ROTATE":
                 cmd = "GRIP-ROTATE"
+
+            # Clamp angles to valid ranges
+            if cmd == "ARM-EXTEND":
+                angle = max(90, min(180, angle))  # ARM-EXTEND range: 90-180 degrees
+            else:
+                angle = max(0, min(180, angle))  # Default range: 0-180 degrees
 
             # Update local status mirror (for Android slider sync)
             if cmd == "ARM-ROTATE":

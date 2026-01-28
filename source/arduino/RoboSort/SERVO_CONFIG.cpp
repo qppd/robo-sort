@@ -274,9 +274,9 @@ void ServoConfig::gripperRotationRotate(int angle) {
 }
 
 void ServoConfig::armExtend(int angle) {
-  // Control arm extension servo on channel 4 (0-180 degrees)
-  if (angle < 0 || angle > 180) {
-    Serial.println("Invalid angle. Range: 0-180");
+  // Control arm extension servo on channel 4 (90-180 degrees)
+  if (angle < 90 || angle > 180) {
+    Serial.println("Invalid angle. Range: 90-180");
     return;
   }
   
