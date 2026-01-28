@@ -56,8 +56,8 @@ void ServoConfig::begin() {
   // Set arm extension servo to default position (90 degrees)
   setServoAngle(4, 110);
   
-  // Set look servo to default position (90 degrees)
-  setServoAngle(5, 90);
+  // Set look servo to default position (180 degrees)
+  setServoAngle(5, 180);
   
   // Enable servos by default
   enableServos();
