@@ -524,7 +524,15 @@ class RoboSortRemoteControl:
             ret, frame = self.camera.read()
 
             if ret:
-                # Share latest frame to stream (before overlay so stream matches what you see)
+                # Define crosshair position (center of frame)
+                crosshair_x = frame.shape[1] // 2
+                crosshair_y = frame.shape[0] // 2
+
+                # Draw crosshair
+                cv2.line(frame, (crosshair_x - 20, crosshair_y), (crosshair_x + 20, crosshair_y), (0, 255, 0), 2)
+                cv2.line(frame, (crosshair_x, crosshair_y - 20), (crosshair_x, crosshair_y + 20), (0, 255, 0), 2)
+
+                # Share latest frame to stream (after crosshair so stream matches what you see)
                 with self._frame_lock:
                     self._latest_frame = frame
 
