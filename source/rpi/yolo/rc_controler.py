@@ -526,7 +526,7 @@ class RoboSortRemoteControl:
             if ret:
                 # Define crosshair position (center of frame)
                 crosshair_x = frame.shape[1] // 2
-                crosshair_y = frame.shape[0] // 2
+                crosshair_y = (frame.shape[0] // 2) + 100  # Move crosshair down by 50 pixels
 
                 # Draw crosshair
                 cv2.line(frame, (crosshair_x - 20, crosshair_y), (crosshair_x + 20, crosshair_y), (0, 255, 0), 2)
