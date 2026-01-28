@@ -5,6 +5,8 @@ source/rpi/yolo/venv/
 source/rpi/RoboSort/venv/
 
 # Android app
+source/android/
+
 # Keep the project trackable, but ignore local machine config + secrets.
 source/android/RoboSortControl/**/local.properties
 source/android/RoboSortControl/**/google-services.json
