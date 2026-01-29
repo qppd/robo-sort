@@ -385,7 +385,7 @@ class RoboSortRemoteControl:
 
             # Clamp angles to valid ranges
             if cmd == "ARM-EXTEND":
-                angle = max(0, min(180, angle))  # ARM-EXTEND range: 0-180 degrees
+                angle = max(90, min(180, angle))  # ARM-EXTEND range: 90-180 degrees
             else:
                 angle = max(0, min(180, angle))  # Default range: 0-180 degrees
 
