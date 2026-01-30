@@ -249,8 +249,9 @@ class RoboSortRemoteControl:
             ):
                 bin_cmd = str(data.get("command", "")).strip().upper()
                 if bin_cmd in {"BIN_HOME", "BIN_1", "BIN_2", "BIN_3", "BIN_4"}:
-                    self.send_text_command(bin_cmd)
-                    print(f"✓ Sent BIN command: {bin_cmd}")
+                    # TEMPORARILY DEACTIVATED: BIN commands sending to Arduino
+                    # self.send_text_command(bin_cmd)
+                    print(f"⚠ BIN command DEACTIVATED: {bin_cmd} (not sent to Arduino)")
                     return
                 print(f"Unknown BIN command payload: {data}")
                 return
@@ -258,8 +259,9 @@ class RoboSortRemoteControl:
             if isinstance(data, str) and "bin" in path.lower():
                 bin_cmd = data.strip().upper()
                 if bin_cmd in {"BIN_HOME", "BIN_1", "BIN_2", "BIN_3", "BIN_4"}:
-                    self.send_text_command(bin_cmd)
-                    print(f"✓ Sent BIN command: {bin_cmd}")
+                    # TEMPORARILY DEACTIVATED: BIN commands sending to Arduino
+                    # self.send_text_command(bin_cmd)
+                    print(f"⚠ BIN command DEACTIVATED: {bin_cmd} (not sent to Arduino)")
                     return
 
             # Firebase stream sometimes delivers a full snapshot of /commands on first connect:
