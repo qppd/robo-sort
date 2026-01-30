@@ -5,11 +5,11 @@ BuzzerConfig::BuzzerConfig() : _beeping(false), _beepStartTime(0), _beepDuration
 
 void BuzzerConfig::begin() {
     pinMode(BUZZER_PIN, OUTPUT);
-    digitalWrite(BUZZER_PIN, LOW);
+    noTone(BUZZER_PIN);  // Ensure buzzer is off initially
 }
 
 void BuzzerConfig::beep(uint16_t duration) {
-    digitalWrite(BUZZER_PIN, HIGH);
+    tone(BUZZER_PIN, 1000);  // 1000 Hz tone
     _beeping = true;
     _beepStartTime = millis();
     _beepDuration = duration;
@@ -49,7 +49,7 @@ void BuzzerConfig::warningBeep() {
 
 void BuzzerConfig::update() {
     if (_beeping && (millis() - _beepStartTime >= _beepDuration)) {
-        digitalWrite(BUZZER_PIN, LOW);
+        noTone(BUZZER_PIN);  // Stop the tone
         _beeping = false;
     }
 }
