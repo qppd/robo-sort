@@ -43,6 +43,10 @@ void setup() {
   ultrasonicConfig.begin();
   stepper.begin();
   buzzerConfig.begin();
+  
+  // Buzzer pattern: 0.5 second beep twice
+  buzzerConfig.beepPattern(2, 500, 200);
+  
   Serial.println("RoboSort Control System Ready!");
   buzzerConfig.startupBeep();
   Serial.println("Servo Commands: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
