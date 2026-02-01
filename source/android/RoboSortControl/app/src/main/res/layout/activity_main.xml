@@ -370,210 +370,216 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Servo 3 (Grip Rotate) -->
-        <TextView
-            android:id="@+id/servo3Label"
-            android:layout_width="wrap_content"
+        <!-- GRIP-ROTATE and ARM-EXTEND Controls (Side by Side) -->
+        <LinearLayout
+            android:id="@+id/gripRotateArmExtendRow"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="GRIP-ROTATE: 90°"
-            android:textSize="12sp"
-            android:textStyle="bold"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@id/binServoRow"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="8dp" />
-
-        <LinearLayout
-            android:id="@+id/gripRotateControls"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/servo3Label"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp">
+            android:layout_marginTop="8dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGripRotateMinus"
+            <!-- GRIP-ROTATE Column -->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="-"
-                android:textSize="16sp"
-                app:cornerRadius="6dp"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginEnd="3dp" />
+                android:orientation="vertical"
+                android:layout_marginEnd="4dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGripRotatePlus"
+                <TextView
+                    android:id="@+id/servo3Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GRIP-ROT: 90°"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGripRotateMinus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="-"
+                        android:textSize="14sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginEnd="2dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGripRotatePlus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="+"
+                        android:textSize="14sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGripRotateDownDiag"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="\"
+                        android:textSize="12sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="32dp"
+                        android:padding="2dp"
+                        android:layout_marginEnd="1dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGripRotateUpDiag"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="/"
+                        android:textSize="12sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="32dp"
+                        android:padding="2dp"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginEnd="1dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGripRotateVertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="|"
+                        android:textSize="12sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="32dp"
+                        android:padding="2dp"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginEnd="1dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGripRotateHorizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="—"
+                        android:textSize="12sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="32dp"
+                        android:padding="2dp"
+                        android:layout_marginStart="1dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ARM-EXTEND Column -->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="+"
-                android:textSize="16sp"
-                app:cornerRadius="6dp"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginStart="3dp" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:layout_marginStart="4dp">
 
-        <LinearLayout
-            android:id="@+id/gripRotatePresets"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/gripRotateControls"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp">
+                <TextView
+                    android:id="@+id/servo4Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ARM-EXT: 110°"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGripRotateDownDiag"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="\"
-                android:textSize="16sp"
-                app:cornerRadius="6dp"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginEnd="2dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGripRotateUpDiag"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="/"
-                android:textSize="16sp"
-                app:cornerRadius="6dp"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnArmExtendMinus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="-"
+                        android:textSize="14sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginEnd="2dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGripRotateVertical"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="|"
-                android:textSize="16sp"
-                app:cornerRadius="6dp"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnArmExtendPlus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="+"
+                        android:textSize="14sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGripRotateHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="—"
-                android:textSize="16sp"
-                app:cornerRadius="6dp"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginStart="2dp" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-        <!-- Servo 4 (ARM-EXTEND) -->
-        <TextView
-            android:id="@+id/servo4Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ARM-EXTEND: 110°"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/gripRotatePresets"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="8dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnArmExtend180"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="180°"
+                        android:textSize="9sp"
+                        app:cornerRadius="6dp"
+                        android:backgroundTint="@android:color/holo_green_dark"
+                        android:minHeight="32dp"
+                        android:padding="2dp"
+                        android:layout_marginEnd="1dp" />
 
-        <LinearLayout
-            android:id="@+id/armExtendControls"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/servo4Label"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnArmExtend110"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="110°"
+                        android:textSize="9sp"
+                        app:cornerRadius="6dp"
+                        android:backgroundTint="@android:color/holo_blue_dark"
+                        android:minHeight="32dp"
+                        android:padding="2dp"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginEnd="1dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnArmExtendMinus"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="-"
-                android:textSize="16sp"
-                app:cornerRadius="6dp"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginEnd="3dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnArmExtendPlus"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="+"
-                android:textSize="16sp"
-                app:cornerRadius="6dp"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginStart="3dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/armExtendPresets"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/armExtendControls"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnArmExtend180"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="180°"
-                android:textSize="11sp"
-                app:cornerRadius="6dp"
-                android:backgroundTint="@android:color/holo_green_dark"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginEnd="2dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnArmExtend110"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="110°"
-                android:textSize="11sp"
-                app:cornerRadius="6dp"
-                android:backgroundTint="@android:color/holo_blue_dark"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnArmExtend90"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="90°"
-                android:textSize="11sp"
-                app:cornerRadius="6dp"
-                android:backgroundTint="@android:color/holo_orange_dark"
-                android:minHeight="36dp"
-                android:padding="4dp"
-                android:layout_marginStart="2dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnArmExtend90"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="90°"
+                        android:textSize="9sp"
+                        app:cornerRadius="6dp"
+                        android:backgroundTint="@android:color/holo_orange_dark"
+                        android:minHeight="32dp"
+                        android:padding="2dp"
+                        android:layout_marginStart="1dp" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Servo 5 (LOOK) -->
@@ -584,7 +590,7 @@
             android:text="LOOK: 90°"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/armExtendPresets"
+            app:layout_constraintTop_toBottomOf="@id/gripRotateArmExtendRow"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="8dp" />
 
