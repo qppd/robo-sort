@@ -30,6 +30,10 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   // Initialize mutual exclusion flags
   armExtendOperating = false;
   lookOperating = false;
+  
+  // Initialize homing state
+  lifterHoming = false;
+  homingPhase = true;  // Start with UP phase
 }
 
 void ServoConfig::begin() {
@@ -64,10 +68,53 @@ void ServoConfig::begin() {
   enableServos();
   
   Serial.println("Servo config initialized");
+  
+  // Perform lifter homing sequence
+  Serial.println("Starting lifter homing sequence...");
+  lifterHome();
 }
 
 void ServoConfig::update() {
   if (!lifterRunning) return;  // Nothing to do if lifter is OFF
+  
+  // Handle homing sequence
+  if (lifterHoming) {
+    if (homingPhase) {
+      // UP phase - wait for limit switch
+      if (digitalRead(ARM_LIMIT_PIN) == LOW) {
+        lifterStop();
+        Serial.println("HOMING: Limit switch triggered, starting DOWN phase");
+        delay(500);  // Brief pause between phases
+        
+        // Switch to DOWN phase
+        homingPhase = false;
+        lifterMaxRotations = 40;
+        lifterTimeout = 1000000;  // Large timeout
+        lifterRotationCount = 0;
+        
+        // Start DOWN movement
+        pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_DOWN_SPEED);
+        lifterRunning = true;
+        lifterDirection = false;  // DOWN
+        lifterStartTime = millis();
+        Serial.println("HOMING: Moving down 40 rotations");
+      }
+    } else {
+      // DOWN phase - count rotations
+      unsigned long elapsed = millis() - lifterStartTime;
+      int rotations = elapsed / ROTATION_TIME_MS;
+      if (rotations > lifterRotationCount) {
+        lifterRotationCount = rotations;
+        Serial.println("HOMING: DOWN rotation count: " + String(lifterRotationCount));
+      }
+      if (lifterRotationCount >= lifterMaxRotations) {
+        lifterStop();
+        lifterHoming = false;
+        Serial.println("HOMING: Complete! Lifter is at HOME position");
+      }
+    }
+    return;
+  }
   
   // LIFTER DOWN: Auto-stop after variable timeout or max rotations
   if (!lifterDirection) {
@@ -142,6 +189,23 @@ void ServoConfig::lifterStop() {
   
   lifterRunning = false;
   Serial.println("LIFTER - OFF");
+}
+
+void ServoConfig::lifterHome() {
+  // Start homing sequence: UP until limit switch, then DOWN 40 rotations
+  Serial.println("LIFTER HOME: Starting homing sequence");
+  Serial.println("LIFTER HOME: Phase 1 - Moving UP to limit switch");
+  
+  lifterHoming = true;
+  homingPhase = true;  // Start with UP phase
+  
+  // Start UP movement
+  pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_UP_SPEED);
+  lifterRunning = true;
+  lifterDirection = true;  // UP
+  
+  // Wait for homing to complete (update() will handle the sequence)
+  // The update() function must be called repeatedly in the main loop
 }
 
 void ServoConfig::testServos() {

@@ -24,6 +24,10 @@ private:
   int lifterRotationCount;        // Count rotations during DOWN
   int lifterMaxRotations;         // Max rotations for DOWN (0 means use time)
   
+  // Homing sequence state
+  bool lifterHoming;              // Homing sequence in progress
+  bool homingPhase;               // true = UP phase, false = DOWN phase
+  
   // Arm servo position tracking
   int currentArmAngle;  // Track current position of channel 1 arm servo
   
@@ -52,6 +56,7 @@ public:
   void lifterUp();
   void lifterDown();
   void lifterStop();
+  void lifterHome();  // Home lifter: UP until limit switch, then DOWN 40 rotations
   
   // Servo control functions
   void testServos();
