@@ -252,6 +252,21 @@ class RoboSortRemoteControl:
                 if bin_cmd in {"BIN_HOME", "BIN_1", "BIN_2", "BIN_3", "BIN_4"}:
                     self.send_text_command(bin_cmd)
                     print(f"✓ Sent BIN command: {bin_cmd}")
+                    
+                    # Automatically set detected object based on BIN position
+                    bin_to_object = {
+                        "BIN_1": "plastic_bottle",
+                        "BIN_2": "plastic_wrapper",
+                        "BIN_3": "paper",
+                        "BIN_4": "other"
+                    }
+                    if bin_cmd in bin_to_object:
+                        self.detected_object = bin_to_object[bin_cmd]
+                        print(f"📦 Auto-detected object for {bin_cmd}: {self.detected_object}")
+                    elif bin_cmd == "BIN_HOME":
+                        self.detected_object = "None"
+                        print(f"🏠 BIN_HOME - Reset detected object to None")
+                    
                     return
                 print(f"Unknown BIN command payload: {data}")
                 return
@@ -261,6 +276,21 @@ class RoboSortRemoteControl:
                 if bin_cmd in {"BIN_HOME", "BIN_1", "BIN_2", "BIN_3", "BIN_4"}:
                     self.send_text_command(bin_cmd)
                     print(f"✓ Sent BIN command: {bin_cmd}")
+                    
+                    # Automatically set detected object based on BIN position
+                    bin_to_object = {
+                        "BIN_1": "plastic_bottle",
+                        "BIN_2": "plastic_wrapper",
+                        "BIN_3": "paper",
+                        "BIN_4": "other"
+                    }
+                    if bin_cmd in bin_to_object:
+                        self.detected_object = bin_to_object[bin_cmd]
+                        print(f"📦 Auto-detected object for {bin_cmd}: {self.detected_object}")
+                    elif bin_cmd == "BIN_HOME":
+                        self.detected_object = "None"
+                        print(f"🏠 BIN_HOME - Reset detected object to None")
+                    
                     return
 
             # Firebase stream sometimes delivers a full snapshot of /commands on first connect:

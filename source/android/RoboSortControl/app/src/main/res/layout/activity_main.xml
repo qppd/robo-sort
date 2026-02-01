@@ -655,109 +655,6 @@
                 android:layout_marginStart="2dp" />
         </LinearLayout>
 
-        <!-- Object Detection Section -->
-        <TextView
-            android:id="@+id/objectDetectionLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Object Detection"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/lookControls"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="8dp" />
-
-        <LinearLayout
-            android:id="@+id/objectDetectionControls"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/objectDetectionLabel"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp">
-
-            <!-- First Row: Plastic Bottle / Plastic Wrapper -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="3dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDetectPlasticBottle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🍾 PLASTIC BOTTLE"
-                    android:textSize="10sp"
-                    app:cornerRadius="6dp"
-                    android:backgroundTint="@android:color/holo_blue_light"
-                    android:minHeight="36dp"
-                    android:padding="4dp"
-                    android:layout_marginEnd="2dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDetectPlasticWrapper"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="📦 WRAPPER"
-                    android:textSize="10sp"
-                    app:cornerRadius="6dp"
-                    android:backgroundTint="@android:color/holo_blue_light"
-                    android:minHeight="36dp"
-                    android:padding="4dp"
-                    android:layout_marginStart="2dp" />
-            </LinearLayout>
-
-            <!-- Second Row: Paper / Other -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="3dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDetectPaper"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="📄 PAPER"
-                    android:textSize="10sp"
-                    app:cornerRadius="6dp"
-                    android:backgroundTint="@android:color/holo_orange_light"
-                    android:minHeight="36dp"
-                    android:padding="4dp"
-                    android:layout_marginEnd="2dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDetectOther"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="❓ OTHER"
-                    android:textSize="10sp"
-                    app:cornerRadius="6dp"
-                    android:backgroundTint="@android:color/darker_gray"
-                    android:minHeight="36dp"
-                    android:padding="4dp"
-                    android:layout_marginStart="2dp" />
-            </LinearLayout>
-
-            <!-- Clear Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDetectClear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="✖ CLEAR"
-                android:textSize="11sp"
-                app:cornerRadius="6dp"
-                android:backgroundTint="@android:color/holo_red_dark"
-                android:minHeight="36dp"
-                android:padding="4dp" />
-        </LinearLayout>
-
         <!-- Feedback Display -->
         <TextView
             android:id="@+id/feedbackLabel"
@@ -766,7 +663,7 @@
             android:text="Robot Feedback"
             android:textSize="13sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/objectDetectionControls"
+            app:layout_constraintTop_toBottomOf="@id/lookControls"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="8dp" />
 
