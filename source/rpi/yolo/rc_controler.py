@@ -373,6 +373,11 @@ class RoboSortRemoteControl:
                 else:
                     print(f"Unknown detected object: {data}")
 
+            elif isinstance(data, dict) and data.get("type") == "place_sequence":
+                # Handle PLACE sequence command from Android
+                print(f"🤖 PLACE sequence initiated")
+                threading.Thread(target=self.execute_place_sequence, daemon=True).start()
+
             elif isinstance(data, dict) and data.get("type") == "servo":
                 # Support BOTH:
                 # 1) legacy android: {type:'servo', servo:1, angle:180}
@@ -534,6 +539,61 @@ class RoboSortRemoteControl:
                 pass
 
         threading.Thread(target=update, daemon=True).start()
+
+    def execute_place_sequence(self):
+        """
+        Execute the PLACE sequence:
+        1. LIFTER UP (until limit switch triggers)
+        2. ARM-EXTEND:90
+        3. ARM-ROTATE:0
+        4. GRIP:110 (release)
+        5. ARM-ROTATE:180
+        6. ARM-EXTEND:180
+        7. LOOK:180
+        8. LIFTER DOWN (40 rotations)
+        """
+        try:
+            print("🤖 PLACE Step 1: LIFTER UP (waiting for limit switch)")
+            self.send_text_command("LIFTER UP")
+            
+            # Wait for ARM limit switch to trigger (monitor Arduino feedback)
+            # For now, use a timeout approach (adjust timing as needed)
+            time.sleep(3.0)  # Wait for lifter to reach top
+            
+            print("🤖 PLACE Step 2: ARM-EXTEND:90")
+            self.send_named_servo_command("ARM-EXTEND", 90)
+            time.sleep(1.0)
+            
+            print("🤖 PLACE Step 3: ARM-ROTATE:0")
+            self.send_named_servo_command("ARM-ROTATE", 0)
+            time.sleep(1.5)
+            
+            print("🤖 PLACE Step 4: GRIP:110 (release)")
+            self.send_named_servo_command("GRIP", 110)
+            time.sleep(1.0)
+            
+            print("🤖 PLACE Step 5: ARM-ROTATE:180")
+            self.send_named_servo_command("ARM-ROTATE", 180)
+            time.sleep(1.5)
+            
+            print("🤖 PLACE Step 6: ARM-EXTEND:180")
+            self.send_named_servo_command("ARM-EXTEND", 180)
+            time.sleep(1.0)
+            
+            print("🤖 PLACE Step 7: LOOK:180")
+            self.send_named_servo_command("LOOK", 180)
+            time.sleep(1.0)
+            
+            print("🤖 PLACE Step 8: LIFTER DOWN (40 rotations)")
+            self.send_text_command("LIFTER DOWN")
+            time.sleep(60.0)  # 40 rotations @ ~1.5s per rotation = ~60 seconds
+            
+            print("✅ PLACE sequence complete!")
+            
+        except Exception as e:
+            print(f"❌ PLACE sequence error: {e}")
+            import traceback
+            traceback.print_exc()
 
     def read_arduino_feedback(self):
         """

@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton btnForward, btnBackward, btnLeft, btnRight, btnStop;
     private MaterialButton btnLifterUp, btnLifterDown, btnLifterStop;
     private MaterialButton btnBinHome, btnBin1, btnBin2, btnBin3, btnBin4;
+    private MaterialButton btnPlace;
 
     // Servo buttons (replace sliders)
     private MaterialButton btnArmRotateFront, btnArmRotateBack;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         setupLifterControls();
         setupBinControls();
         setupServoControls();
+        setupPlaceControl();
 
         setupFeedbackListener();
     }
@@ -143,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
         btnBin2 = findViewById(R.id.btnBin2);
         btnBin3 = findViewById(R.id.btnBin3);
         btnBin4 = findViewById(R.id.btnBin4);
+        
+        btnPlace = findViewById(R.id.btnPlace);
         
         servo1Label = findViewById(R.id.servo1Label);
         servo2Label = findViewById(R.id.servo2Label);
@@ -253,6 +257,22 @@ public class MainActivity extends AppCompatActivity {
         btnBin2.setOnClickListener(v -> sendBinCommand("BIN_2"));
         btnBin3.setOnClickListener(v -> sendBinCommand("BIN_3"));
         btnBin4.setOnClickListener(v -> sendBinCommand("BIN_4"));
+    }
+    
+    private void setupPlaceControl() {
+        btnPlace.setOnClickListener(v -> {
+            Map<String, Object> placeCommand = new HashMap<>();
+            placeCommand.put("type", "place_sequence");
+            placeCommand.put("timestamp", System.currentTimeMillis());
+            
+            commandsRef.child("place").setValue(placeCommand)
+                .addOnSuccessListener(aVoid -> {
+                    feedbackText.setText("🤖 Executing PLACE sequence...");
+                })
+                .addOnFailureListener(e -> {
+                    feedbackText.setText("❌ Failed to send PLACE command");
+                });
+        });
     }
     
     private void setupServoControls() {
