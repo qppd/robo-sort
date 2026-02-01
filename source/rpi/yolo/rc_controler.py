@@ -66,6 +66,7 @@ class RoboSortRemoteControl:
         # 1: ARM-ROTATE=180, 2: GRIP=110, 3: GRIP-ROTATE=90, 4: ARM-EXTEND=180, 5: LOOK=180
         self.servo_angles = {"servo1": 180, "servo2": 110, "servo3": 90, "servo4": 180, "servo5": 180}
         self.motor_state = "STOP"
+        self.detected_object = "None"  # Store detected object for display
 
         # Initialize connections
         self.init_arduino()
@@ -332,6 +333,8 @@ class RoboSortRemoteControl:
                     print(f"📦 DETECTED command received: {detected_object}")
                     # Display on terminal/console
                     print(f"✓ Object detected: DETECTED:{detected_object}")
+                    # Store for camera display
+                    self.detected_object = detected_object
                     # You can add additional processing here (e.g., trigger sorting logic)
                 else:
                     print(f"Unknown detected object: {data}")
@@ -561,6 +564,10 @@ class RoboSortRemoteControl:
                            (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
                 cv2.putText(frame, f"S3:{self.servo_angles['servo3']} S4:{self.servo_angles['servo4']}",
+                # Display detected object
+                cv2.putText(frame, f"Detected: {self.detected_object}", (10, 120),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+
                            (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
                 cv2.imshow("RoboSort RC View", frame)
