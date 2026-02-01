@@ -271,6 +271,12 @@ class RoboSortRemoteControl:
                 print(f"Unknown BIN command payload: {data}")
                 return
 
+            # PLACE fast-path (check path for /place)
+            if "place" in path.lower() and isinstance(data, dict) and data.get("type") == "place_sequence":
+                print(f"🤖 PLACE sequence initiated (via path: {path})")
+                threading.Thread(target=self.execute_place_sequence, daemon=True).start()
+                return
+
             if isinstance(data, str) and "bin" in path.lower():
                 bin_cmd = data.strip().upper()
                 if bin_cmd in {"BIN_HOME", "BIN_1", "BIN_2", "BIN_3", "BIN_4"}:
