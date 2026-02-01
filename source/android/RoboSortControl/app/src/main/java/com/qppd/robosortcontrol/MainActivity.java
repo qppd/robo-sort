@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton btnArmRotateFront, btnArmRotateBack;
     private MaterialButton btnGripOpen, btnGripClose;
     private MaterialButton btnGripRotateMinus, btnGripRotatePlus;
+    private MaterialButton btnGripRotateDownDiag, btnGripRotateUpDiag, btnGripRotateVertical, btnGripRotateHorizontal;
     private MaterialButton btnArmExtendMinus, btnArmExtendPlus;
     private MaterialButton btnLookMinus, btnLookPlus;
     
@@ -152,6 +153,10 @@ public class MainActivity extends AppCompatActivity {
         btnGripClose = findViewById(R.id.btnGripClose);
         btnGripRotateMinus = findViewById(R.id.btnGripRotateMinus);
         btnGripRotatePlus = findViewById(R.id.btnGripRotatePlus);
+        btnGripRotateDownDiag = findViewById(R.id.btnGripRotateDownDiag);
+        btnGripRotateUpDiag = findViewById(R.id.btnGripRotateUpDiag);
+        btnGripRotateVertical = findViewById(R.id.btnGripRotateVertical);
+        btnGripRotateHorizontal = findViewById(R.id.btnGripRotateHorizontal);
         btnArmExtendMinus = findViewById(R.id.btnArmExtendMinus);
         btnArmExtendPlus = findViewById(R.id.btnArmExtendPlus);
         btnLookMinus = findViewById(R.id.btnLookMinus);
@@ -280,6 +285,31 @@ public class MainActivity extends AppCompatActivity {
         btnGripRotatePlus.setOnClickListener(v -> {
             servo3Pos += STEP_GRIP_ROTATE;
             servo3Pos = Math.max(0, Math.min(180, servo3Pos));
+            servo3Label.setText(String.format(Locale.US, "GRIP-ROTATE (S3): %d°", servo3Pos));
+            sendServoCommand(3, servo3Pos);
+        });
+
+        // GRIP-ROTATE presets: \ / | —
+        btnGripRotateDownDiag.setOnClickListener(v -> {
+            servo3Pos = 40;
+            servo3Label.setText(String.format(Locale.US, "GRIP-ROTATE (S3): %d°", servo3Pos));
+            sendServoCommand(3, servo3Pos);
+        });
+
+        btnGripRotateUpDiag.setOnClickListener(v -> {
+            servo3Pos = 120;
+            servo3Label.setText(String.format(Locale.US, "GRIP-ROTATE (S3): %d°", servo3Pos));
+            sendServoCommand(3, servo3Pos);
+        });
+
+        btnGripRotateVertical.setOnClickListener(v -> {
+            servo3Pos = 70;
+            servo3Label.setText(String.format(Locale.US, "GRIP-ROTATE (S3): %d°", servo3Pos));
+            sendServoCommand(3, servo3Pos);
+        });
+
+        btnGripRotateHorizontal.setOnClickListener(v -> {
+            servo3Pos = 170;
             servo3Label.setText(String.format(Locale.US, "GRIP-ROTATE (S3): %d°", servo3Pos));
             sendServoCommand(3, servo3Pos);
         });
