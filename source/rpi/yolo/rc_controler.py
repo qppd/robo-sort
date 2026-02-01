@@ -63,8 +63,8 @@ class RoboSortRemoteControl:
         # Current state
         self.current_command = "STOP"
         # Match Arduino SERVO_CONFIG defaults (channels 1-5):
-        # 1: ARM-ROTATE=180, 2: GRIP=110, 3: GRIP-ROTATE=90, 4: ARM-EXTEND=110, 5: LOOK=90
-        self.servo_angles = {"servo1": 180, "servo2": 110, "servo3": 90, "servo4": 110, "servo5": 90}
+        # 1: ARM-ROTATE=180, 2: GRIP=110, 3: GRIP-ROTATE=90, 4: ARM-EXTEND=180, 5: LOOK=180
+        self.servo_angles = {"servo1": 180, "servo2": 110, "servo3": 90, "servo4": 180, "servo5": 180}
         self.motor_state = "STOP"
 
         # Initialize connections
