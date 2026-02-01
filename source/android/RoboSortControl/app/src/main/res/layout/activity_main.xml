@@ -605,28 +605,54 @@
             android:layout_marginTop="4dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLookMinus"
+                android:id="@+id/btnLookMinus10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="-"
-                android:textSize="16sp"
+                android:text="-10"
+                android:textSize="11sp"
                 app:cornerRadius="6dp"
                 android:minHeight="36dp"
                 android:padding="4dp"
-                android:layout_marginEnd="3dp" />
+                android:layout_marginEnd="2dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLookPlus"
+                android:id="@+id/btnLookMinus5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="+"
-                android:textSize="16sp"
+                android:text="-5"
+                android:textSize="11sp"
                 app:cornerRadius="6dp"
                 android:minHeight="36dp"
                 android:padding="4dp"
-                android:layout_marginStart="3dp" />
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLookPlus5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="+5"
+                android:textSize="11sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLookPlus10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="+10"
+                android:textSize="11sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginStart="2dp" />
         </LinearLayout>
 
         <!-- Object Detection Section -->
