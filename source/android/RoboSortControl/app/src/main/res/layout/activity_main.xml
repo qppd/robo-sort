@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    tools:context=".MainActivity">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RoboSort Remote Control"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_dark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="6dp" />
+
+        <!-- Connection Status -->
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="● Disconnected"
+            android:textSize="13sp"
+            android:textColor="@android:color/holo_red_dark"
+            app:layout_constraintTop_toBottomOf="@id/titleText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp" />
+
+        <!-- Motor and Lifter Controls (Side by Side) -->
+        <LinearLayout
+            android:id="@+id/motorLifterRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/statusText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp">
+
+            <!-- Motor Control Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Motor"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnForward"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="↑"
+                    android:textSize="12sp"
+                    app:cornerRadius="6dp"
+                    android:minHeight="36dp"
+                    android:padding="4dp"
+                    android:layout_marginBottom="3dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLeft"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="←"
+                        android:textSize="12sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginEnd="2dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnStop"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="⬛"
+                        android:textSize="12sp"
+                        app:cornerRadius="6dp"
+                        android:backgroundTint="@android:color/holo_red_dark"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginEnd="2dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRight"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="→"
+                        android:textSize="12sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBackward"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="↓"
+                    android:textSize="12sp"
+                    app:cornerRadius="6dp"
+                    android:minHeight="36dp"
+                    android:padding="4dp" />
+            </LinearLayout>
+
+            <!-- Lifter Control Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lifter"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLifterUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="UP"
+                    android:textSize="11sp"
+                    app:cornerRadius="6dp"
+                    android:minHeight="36dp"
+                    android:padding="4dp"
+                    android:layout_marginBottom="3dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLifterDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DOWN"
+                    android:textSize="11sp"
+                    app:cornerRadius="6dp"
+                    android:minHeight="36dp"
+                    android:padding="4dp"
+                    android:layout_marginBottom="3dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLifterStop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="STOP"
+                    android:textSize="11sp"
+                    app:cornerRadius="6dp"
+                    android:backgroundTint="@android:color/holo_red_dark"
+                    android:minHeight="36dp"
+                    android:padding="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- BIN and Servo Controls (Side by Side) -->
+        <LinearLayout
+            android:id="@+id/binServoRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/motorLifterRow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp">
+
+            <!-- BIN Control Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BIN"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBinHome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🏠 HOME"
+                    android:textSize="10sp"
+                    app:cornerRadius="6dp"
+                    android:backgroundTint="@android:color/holo_orange_dark"
+                    android:minHeight="36dp"
+                    android:padding="4dp"
+                    android:layout_marginBottom="3dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBin1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="B1"
+                        android:textSize="10sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginEnd="2dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBin2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="B2"
+                        android:textSize="10sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBin3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="B3"
+                        android:textSize="10sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginEnd="2dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBin4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="B4"
+                        android:textSize="10sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Servo Control Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="4dp">
+
+                <TextView
+                    android:id="@+id/servo1Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ARM-ROT: 180°"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnArmRotateFront"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="FRONT"
+                        android:textSize="10sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginEnd="2dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnArmRotateBack"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="BACK"
+                        android:textSize="10sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/servo2Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GRIP: 110°"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGripOpen"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="OPEN"
+                        android:textSize="10sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginEnd="2dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGripClose"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="CLOSE"
+                        android:textSize="10sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Servo 3 (Grip Rotate) -->
+        <TextView
+            android:id="@+id/servo3Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GRIP-ROTATE: 90°"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/binServoRow"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <LinearLayout
+            android:id="@+id/gripRotateControls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/servo3Label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGripRotateMinus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="-"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginEnd="3dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGripRotatePlus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="+"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginStart="3dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/gripRotatePresets"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/gripRotateControls"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGripRotateDownDiag"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="\"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginEnd="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGripRotateUpDiag"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="/"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGripRotateVertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="|"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGripRotateHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="—"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginStart="2dp" />
+        </LinearLayout>
+
+        <!-- Servo 4 (ARM-EXTEND) -->
+        <TextView
+            android:id="@+id/servo4Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ARM-EXTEND: 110°"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/gripRotatePresets"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <LinearLayout
+            android:id="@+id/armExtendControls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/servo4Label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnArmExtendMinus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="-"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginEnd="3dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnArmExtendPlus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="+"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginStart="3dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/armExtendPresets"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/armExtendControls"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnArmExtend180"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="180°"
+                android:textSize="11sp"
+                app:cornerRadius="6dp"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginEnd="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnArmExtend110"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="110°"
+                android:textSize="11sp"
+                app:cornerRadius="6dp"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnArmExtend90"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="90°"
+                android:textSize="11sp"
+                app:cornerRadius="6dp"
+                android:backgroundTint="@android:color/holo_orange_dark"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginStart="2dp" />
+        </LinearLayout>
+
+        <!-- Servo 5 (LOOK) -->
+        <TextView
+            android:id="@+id/servo5Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOOK: 90°"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/armExtendPresets"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <LinearLayout
+            android:id="@+id/lookControls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/servo5Label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLookMinus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="-"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginEnd="3dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLookPlus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="+"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                android:minHeight="36dp"
+                android:padding="4dp"
+                android:layout_marginStart="3dp" />
+        </LinearLayout>
+
+        <!-- Object Detection Section -->
+        <TextView
+            android:id="@+id/objectDetectionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Object Detection"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/lookControls"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <LinearLayout
+            android:id="@+id/objectDetectionControls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/objectDetectionLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp">
+
+            <!-- First Row: Plastic Bottle / Plastic Wrapper -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="3dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDetectPlasticBottle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🍾 PLASTIC BOTTLE"
+                    android:textSize="10sp"
+                    app:cornerRadius="6dp"
+                    android:backgroundTint="@android:color/holo_blue_light"
+                    android:minHeight="36dp"
+                    android:padding="4dp"
+                    android:layout_marginEnd="2dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDetectPlasticWrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="📦 WRAPPER"
+                    android:textSize="10sp"
+                    app:cornerRadius="6dp"
+                    android:backgroundTint="@android:color/holo_blue_light"
+                    android:minHeight="36dp"
+                    android:padding="4dp"
+                    android:layout_marginStart="2dp" />
+            </LinearLayout>
+
+            <!-- Second Row: Paper / Other -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="3dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDetectPaper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="📄 PAPER"
+                    android:textSize="10sp"
+                    app:cornerRadius="6dp"
+                    android:backgroundTint="@android:color/holo_orange_light"
+                    android:minHeight="36dp"
+                    android:padding="4dp"
+                    android:layout_marginEnd="2dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDetectOther"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="❓ OTHER"
+                    android:textSize="10sp"
+                    app:cornerRadius="6dp"
+                    android:backgroundTint="@android:color/darker_gray"
+                    android:minHeight="36dp"
+                    android:padding="4dp"
+                    android:layout_marginStart="2dp" />
+            </LinearLayout>
+
+            <!-- Clear Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDetectClear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="✖ CLEAR"
+                android:textSize="11sp"
+                app:cornerRadius="6dp"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:minHeight="36dp"
+                android:padding="4dp" />
+        </LinearLayout>
+
+        <!-- Feedback Display -->
+        <TextView
+            android:id="@+id/feedbackLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Robot Feedback"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/objectDetectionControls"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/feedbackText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Waiting for feedback..."
+            android:textSize="11sp"
+            android:padding="6dp"
+            android:background="@android:drawable/edit_text"
+            android:minHeight="40dp"
+            app:layout_constraintTop_toBottomOf="@id/feedbackLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="6dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
