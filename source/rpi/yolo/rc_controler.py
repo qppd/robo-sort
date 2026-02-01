@@ -325,6 +325,17 @@ class RoboSortRemoteControl:
                 else:
                     print(f"Unknown lifter action: {data}")
 
+            elif isinstance(data, dict) and data.get("type") == "detected":
+                # Handle object detection command from Android
+                detected_object = str(data.get("object", "")).strip()
+                if detected_object in {"plastic_bottle", "plastic_wrapper", "paper", "other"}:
+                    print(f"📦 DETECTED command received: {detected_object}")
+                    # Display on terminal/console
+                    print(f"✓ Object detected: DETECTED:{detected_object}")
+                    # You can add additional processing here (e.g., trigger sorting logic)
+                else:
+                    print(f"Unknown detected object: {data}")
+
             elif isinstance(data, dict) and data.get("type") == "servo":
                 # Support BOTH:
                 # 1) legacy android: {type:'servo', servo:1, angle:180}
