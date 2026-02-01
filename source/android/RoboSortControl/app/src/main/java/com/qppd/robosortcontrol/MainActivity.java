@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     
     // Object detection buttons
     private MaterialButton btnDetectPlasticBottle, btnDetectPlasticWrapper, btnDetectPaper, btnDetectOther;
+    private MaterialButton btnDetectClear;
     
     // State
     private boolean isConnected = false;
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         btnDetectPlasticWrapper = findViewById(R.id.btnDetectPlasticWrapper);
         btnDetectPaper = findViewById(R.id.btnDetectPaper);
         btnDetectOther = findViewById(R.id.btnDetectOther);
+        btnDetectClear = findViewById(R.id.btnDetectClear);
 
         // Initialize labels to match Arduino defaults immediately
         servo1Label.setText(String.format(Locale.US, "ARM-ROTATE (S1): %d°", servo1Pos));
@@ -385,6 +387,7 @@ public class MainActivity extends AppCompatActivity {
         btnDetectPlasticWrapper.setOnClickListener(v -> sendDetectedObjectCommand("plastic_wrapper"));
         btnDetectPaper.setOnClickListener(v -> sendDetectedObjectCommand("paper"));
         btnDetectOther.setOnClickListener(v -> sendDetectedObjectCommand("other"));
+        btnDetectClear.setOnClickListener(v -> sendDetectedObjectCommand("none"));
     }
     
     private void sendDetectedObjectCommand(String objectType) {

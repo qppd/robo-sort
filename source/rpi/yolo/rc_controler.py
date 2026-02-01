@@ -329,12 +329,16 @@ class RoboSortRemoteControl:
             elif isinstance(data, dict) and data.get("type") == "detected":
                 # Handle object detection command from Android
                 detected_object = str(data.get("object", "")).strip()
-                if detected_object in {"plastic_bottle", "plastic_wrapper", "paper", "other"}:
-                    print(f"📦 DETECTED command received: {detected_object}")
-                    # Display on terminal/console
-                    print(f"✓ Object detected: DETECTED:{detected_object}")
-                    # Store for camera display
-                    self.detected_object = detected_object
+                if detected_object in {"plastic_bottle", "plastic_wrapper", "paper", "other", "none"}:
+                    if detected_object == "none":
+                        print(f"🧹 CLEAR command received - resetting detected object")
+                        self.detected_object = "None"
+                    else:
+                        print(f"📦 DETECTED command received: {detected_object}")
+                        # Display on terminal/console
+                        print(f"✓ Object detected: DETECTED:{detected_object}")
+                        # Store for camera display
+                        self.detected_object = detected_object
                     # You can add additional processing here (e.g., trigger sorting logic)
                 else:
                     print(f"Unknown detected object: {data}")
