@@ -12,6 +12,7 @@ import threading
 import json
 import pyrebase
 import time
+import os
 from typing import Optional
 
 try:
@@ -544,6 +545,9 @@ class RoboSortRemoteControl:
         if not self.camera:
             return
 
+        # Check if display is available
+        display_available = os.environ.get('DISPLAY') is not None
+
         while self.running:
             ret, frame = self.camera.read()
 
@@ -568,17 +572,22 @@ class RoboSortRemoteControl:
                            (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
                 cv2.putText(frame, f"S3:{self.servo_angles['servo3']} S4:{self.servo_angles['servo4']}",
+                           (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+
                 # Display detected object
                 cv2.putText(frame, f"Detected: {self.detected_object}", (10, 120),
                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
 
-                           (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+                if display_available:
+                    cv2.imshow("RoboSort RC View", frame)
 
-                cv2.imshow("RoboSort RC View", frame)
-
-                # Non-blocking key check
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    self.running = False
+                    # Non-blocking key check
+                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                        self.running = False
+                else:
+                    # No display available, just process frames for streaming
+                    # Sleep a bit to prevent busy loop
+                    time.sleep(0.1)
 
     def run(self):
         """Start all threads and run the control system"""
