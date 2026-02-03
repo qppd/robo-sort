@@ -198,7 +198,7 @@ class RoboSortRemoteControl:
             print("✓ Firebase connected")
 
             # Set initial state
-            self.db.child("robosort").child("status").update({
+            self.db.child("robosortv2").child("status").update({
                 "motor_state": "STOP",
                 "connected": True,
                 "servo1": self.servo_angles["servo1"],
@@ -210,7 +210,7 @@ class RoboSortRemoteControl:
 
             # Start listening to commands
             print("Starting Firebase stream listener...")
-            self.stream = self.db.child("robosort").child("commands").stream(self.on_command_change)
+            self.stream = self.db.child("robosortv2").child("commands").stream(self.on_command_change)
             print("✓ Firebase stream listener started")
 
         except Exception as e:
@@ -540,7 +540,7 @@ class RoboSortRemoteControl:
         """Update Firebase status in background thread (non-blocking)"""
         def update():
             try:
-                self.db.child("robosort").child("status").update({key: value})
+                self.db.child("robosortv2").child("status").update({key: value})
             except:
                 pass
 
@@ -712,7 +712,7 @@ class RoboSortRemoteControl:
 
         # Update Firebase
         try:
-            self.db.child("robosort").child("status").update({
+            self.db.child("robosortv2").child("status").update({
                 "motor_state": "STOP",
                 "connected": False
             })

@@ -42,8 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView servo1Label, servo2Label, servo3Label, servo4Label, servo5Label;
     
     private MaterialButton btnForward, btnBackward, btnLeft, btnRight, btnStop;
+    private MaterialButton btnTurnLeft, btnTurnRight;
     private MaterialButton btnLifterUp, btnLifterDown, btnLifterStop;
-    private MaterialButton btnBinHome, btnBin1, btnBin2, btnBin3, btnBin4;
+    private MaterialButton btnBinHome, btnBinClear, btnBin1, btnBin2, btnBin3, btnBin4;
     private MaterialButton btnPlace;
 
     // Servo buttons (replace sliders)
@@ -101,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
             database = FirebaseDatabase.getInstance();
             // REMOVED: database.useEmulator("10.0.2.2", 9000); // For production use
             
-            commandsRef = database.getReference("robosort/commands");
-            // RPi publishes live state under robosort/status
-            feedbackRef = database.getReference("robosort/status");
+            commandsRef = database.getReference("robosortv2/commands");
+            // RPi publishes live state under robosortv2/status
+            feedbackRef = database.getReference("robosortv2/status");
             
             // Test connection with detailed logging
             commandsRef.child("timestamp").setValue(System.currentTimeMillis())
@@ -135,12 +136,15 @@ public class MainActivity extends AppCompatActivity {
         btnLeft = findViewById(R.id.btnLeft);
         btnRight = findViewById(R.id.btnRight);
         btnStop = findViewById(R.id.btnStop);
+        btnTurnLeft = findViewById(R.id.btnTurnLeft);
+        btnTurnRight = findViewById(R.id.btnTurnRight);
 
         btnLifterUp = findViewById(R.id.btnLifterUp);
         btnLifterDown = findViewById(R.id.btnLifterDown);
         btnLifterStop = findViewById(R.id.btnLifterStop);
         
         btnBinHome = findViewById(R.id.btnBinHome);
+        btnBinClear = findViewById(R.id.btnBinClear);
         btnBin1 = findViewById(R.id.btnBin1);
         btnBin2 = findViewById(R.id.btnBin2);
         btnBin3 = findViewById(R.id.btnBin3);
@@ -247,12 +251,45 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
         
+        // Turn Left button - hold to turn (single motor)
+        btnTurnLeft.setOnTouchListener((v, event) -> {
+            Log.d("RoboSort", "Turn Left button touch event: " + event.getAction());
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                Log.d("RoboSort", "Turn Left button: ACTION_DOWN - sending LEFT");
+                sendMotorCommand("LEFT", 255);
+                return true;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                Log.d("RoboSort", "Turn Left button: ACTION_UP - sending STOP");
+                sendMotorCommand("STOP", 0);
+                v.performClick();
+                return true;
+            }
+            return false;
+        });
+        
+        // Turn Right button - hold to turn (single motor)
+        btnTurnRight.setOnTouchListener((v, event) -> {
+            Log.d("RoboSort", "Turn Right button touch event: " + event.getAction());
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                Log.d("RoboSort", "Turn Right button: ACTION_DOWN - sending RIGHT");
+                sendMotorCommand("RIGHT", 255);
+                return true;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                Log.d("RoboSort", "Turn Right button: ACTION_UP - sending STOP");
+                sendMotorCommand("STOP", 0);
+                v.performClick();
+                return true;
+            }
+            return false;
+        });
+        
         // Stop button - immediate stop
         btnStop.setOnClickListener(v -> sendMotorCommand("STOP", 0));
     }
     
     private void setupBinControls() {
         btnBinHome.setOnClickListener(v -> sendBinCommand("BIN_HOME"));
+        btnBinClear.setOnClickListener(v -> sendClearDetectionCommand());
         btnBin1.setOnClickListener(v -> sendBinCommand("BIN_1"));
         btnBin2.setOnClickListener(v -> sendBinCommand("BIN_2"));
         btnBin3.setOnClickListener(v -> sendBinCommand("BIN_3"));
@@ -429,6 +466,30 @@ public class MainActivity extends AppCompatActivity {
             .addOnFailureListener(e -> {
                 Log.e("RoboSort", "Failed to send BIN command: " + e.getMessage());
                 feedbackText.setText("Failed to send BIN command: " + e.getMessage());
+            });
+    }
+
+    private void sendClearDetectionCommand() {
+        if (!isConnected) {
+            feedbackText.setText("Cannot clear detection: Not connected to Firebase");
+            return;
+        }
+
+        Map<String, Object> command = new HashMap<>();
+        command.put("type", "detected");
+        command.put("object", "none");
+        command.put("timestamp", System.currentTimeMillis());
+
+        feedbackText.setText("🧹 Clearing detection...");
+
+        commandsRef.child("detected").setValue(command)
+            .addOnSuccessListener(aVoid -> {
+                Log.d("RoboSort", "Clear detection command sent successfully");
+                feedbackText.setText("🧹 Detection cleared");
+            })
+            .addOnFailureListener(e -> {
+                Log.e("RoboSort", "Failed to clear detection: " + e.getMessage());
+                feedbackText.setText("❌ Failed to clear detection: " + e.getMessage());
             });
     }
 
