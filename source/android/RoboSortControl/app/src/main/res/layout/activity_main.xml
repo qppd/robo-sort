@@ -126,7 +126,39 @@
                     android:textSize="12sp"
                     app:cornerRadius="6dp"
                     android:minHeight="36dp"
-                    android:padding="4dp" />
+                    android:padding="4dp"
+                    android:layout_marginBottom="3dp" />
+
+                <!-- Single Motor Turn Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTurnLeft"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="↺ L"
+                        android:textSize="11sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginEnd="2dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTurnRight"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="R ↻"
+                        android:textSize="11sp"
+                        app:cornerRadius="6dp"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Lifter Control Column -->
@@ -207,17 +239,38 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnBinHome"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🏠 HOME"
-                    android:textSize="10sp"
-                    app:cornerRadius="6dp"
-                    android:backgroundTint="@android:color/holo_orange_dark"
-                    android:minHeight="36dp"
-                    android:padding="4dp"
-                    android:layout_marginBottom="3dp" />
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBinHome"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🏠 HOME"
+                        android:textSize="10sp"
+                        app:cornerRadius="6dp"
+                        android:backgroundTint="@android:color/holo_orange_dark"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginEnd="2dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBinClear"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🧹 CLR"
+                        android:textSize="10sp"
+                        app:cornerRadius="6dp"
+                        android:backgroundTint="@android:color/holo_red_light"
+                        android:minHeight="36dp"
+                        android:padding="4dp"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -15,6 +15,13 @@ import time
 from typing import Optional
 
 try:
+    import RPi.GPIO as GPIO
+    GPIO_AVAILABLE = True
+except ImportError:
+    GPIO_AVAILABLE = False
+    print("⚠ RPi.GPIO not available - GPIO button functionality disabled")
+
+try:
     # Optional: only needed when camera streaming is enabled
     from flask import Flask, Response
 except Exception:
@@ -67,11 +74,17 @@ class RoboSortRemoteControl:
         self.servo_angles = {"servo1": 180, "servo2": 110, "servo3": 90, "servo4": 180, "servo5": 180}
         self.motor_state = "STOP"
         self.detected_object = "None"  # Store detected object for display
+        
+        # GPIO button configuration
+        self.GPIO_BUTTON_PIN = 17
+        self.button_last_press_time = 0
+        self.button_debounce_delay = 0.3  # 300ms debounce
 
         # Initialize connections
         self.init_arduino()
         self.init_camera()
         self.init_firebase()
+        self.init_gpio_button()
 
         if self.stream_enabled:
             self.init_camera_stream_server()
@@ -216,6 +229,51 @@ class RoboSortRemoteControl:
         except Exception as e:
             print(f"✗ Firebase connection failed: {e}")
             raise
+
+    def init_gpio_button(self):
+        """Initialize GPIO button on pin 17 for alert beep"""
+        if not GPIO_AVAILABLE:
+            print("⚠ GPIO initialization skipped - RPi.GPIO not available")
+            return
+        
+        try:
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(self.GPIO_BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            
+            # Add event detection with callback
+            GPIO.add_event_detect(
+                self.GPIO_BUTTON_PIN,
+                GPIO.FALLING,
+                callback=self.on_button_press,
+                bouncetime=300
+            )
+            
+            print(f"✓ GPIO button initialized on pin {self.GPIO_BUTTON_PIN}")
+        except Exception as e:
+            print(f"✗ GPIO initialization failed: {e}")
+
+    def on_button_press(self, channel):
+        """Callback when GPIO17 button is pressed - sends beep command to Android"""
+        current_time = time.time()
+        
+        # Software debounce
+        if current_time - self.button_last_press_time < self.button_debounce_delay:
+            return
+        
+        self.button_last_press_time = current_time
+        
+        print("🔘 GPIO17 button pressed - sending beep alert to Android")
+        
+        # Send beep command to Firebase for Android to play sound
+        try:
+            self.db.child("robosortv2").child("commands").child("alert").set({
+                "type": "beep",
+                "timestamp": int(current_time * 1000),
+                "message": "Control machine alert"
+            })
+            print("✓ Beep alert sent to Android")
+        except Exception as e:
+            print(f"✗ Failed to send beep alert: {e}")
 
     def on_command_change(self, message):
         """
@@ -724,6 +782,14 @@ class RoboSortRemoteControl:
             self.arduino.close()
         if self.camera:
             self.camera.release()
+        
+        # Cleanup GPIO
+        if GPIO_AVAILABLE:
+            try:
+                GPIO.cleanup()
+                print("✓ GPIO cleaned up")
+            except:
+                pass
 
         cv2.destroyAllWindows()
         print("✓ Shutdown complete")

@@ -1,6 +1,8 @@
 package com.qppd.robosortcontrol;
 
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference commandsRef;
     private DatabaseReference feedbackRef;
+    private DatabaseReference alertRef;
     
     // UI Elements
     private TextView statusText;
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     // State
     private boolean isConnected = false;
     private Handler handler;
+    private ToneGenerator toneGenerator;
     
     // Servo positions
     // Match Arduino SERVO_CONFIG defaults (channels 1-5) + lifter buttons
@@ -81,6 +85,13 @@ public class MainActivity extends AppCompatActivity {
         
         handler = new Handler(Looper.getMainLooper());
         
+        // Initialize ToneGenerator for beep alerts
+        try {
+            toneGenerator = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+        } catch (Exception e) {
+            Log.e("RoboSort", "Failed to initialize ToneGenerator: " + e.getMessage());
+        }
+        
         // Initialize Firebase
         initializeFirebase();
         
@@ -95,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         setupPlaceControl();
 
         setupFeedbackListener();
+        setupAlertListener();
     }
     
     private void initializeFirebase() {
@@ -105,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             commandsRef = database.getReference("robosortv2/commands");
             // RPi publishes live state under robosortv2/status
             feedbackRef = database.getReference("robosortv2/status");
+            alertRef = database.getReference("robosortv2/commands/alert");
             
             // Test connection with detailed logging
             commandsRef.child("timestamp").setValue(System.currentTimeMillis())
@@ -607,6 +620,82 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setupAlertListener() {
+        if (alertRef == null) return;
+
+        alertRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    return;
+                }
+
+                Object raw = snapshot.getValue();
+                if (!(raw instanceof Map)) {
+                    return;
+                }
+
+                try {
+                    //noinspection unchecked
+                    Map<String, Object> alertData = (Map<String, Object>) raw;
+                    String type = (String) alertData.get("type");
+                    
+                    if ("beep".equals(type)) {
+                        // Play beep sound
+                        playBeepAlert();
+                        
+                        // Log the alert
+                        String message = (String) alertData.get("message");
+                        Log.i("RoboSort", "Alert received: " + (message != null ? message : "Control machine alert"));
+                        
+                        // Reset the alert in Firebase to stop continuous beeping
+                        resetAlert();
+                    }
+                } catch (Exception e) {
+                    Log.e("RoboSort", "Failed to parse alert: " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("RoboSort", "Alert listener cancelled: " + error.getMessage());
+            }
+        });
+    }
+
+    private void playBeepAlert() {
+        runOnUiThread(() -> {
+            try {
+                if (toneGenerator != null) {
+                    // Play a beep tone (frequency ~2000Hz, duration 500ms)
+                    toneGenerator.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 500);
+                    
+                    // Show toast notification
+                    android.widget.Toast.makeText(
+                        MainActivity.this,
+                        "🔔 Control Machine Alert!",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show();
+                    
+                    Log.i("RoboSort", "Beep alert played");
+                } else {
+                    Log.w("RoboSort", "ToneGenerator not available");
+                }
+            } catch (Exception e) {
+                Log.e("RoboSort", "Failed to play beep: " + e.getMessage());
+            }
+        });
+    }
+
+    private void resetAlert() {
+        // Reset the alert in Firebase to prevent continuous beeping
+        if (alertRef != null) {
+            alertRef.removeValue()
+                .addOnSuccessListener(aVoid -> Log.i("RoboSort", "Alert reset successfully"))
+                .addOnFailureListener(e -> Log.e("RoboSort", "Failed to reset alert: " + e.getMessage()));
+        }
+    }
     
     private void displayFeedback(Map<String, Object> feedback) {
         StringBuilder sb = new StringBuilder();
@@ -731,6 +820,11 @@ public class MainActivity extends AppCompatActivity {
         if (isConnected) {
             sendMotorCommand("STOP", 0);
         }
-
+        
+        // Release ToneGenerator
+        if (toneGenerator != null) {
+            toneGenerator.release();
+            toneGenerator = null;
+        }
     }
 }
