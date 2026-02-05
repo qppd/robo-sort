@@ -668,8 +668,17 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             try {
                 if (toneGenerator != null) {
-                    // Play a beep tone (frequency ~2000Hz, duration 500ms)
-                    toneGenerator.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 500);
+                    // Play 3 beep tones with delays
+                    new Thread(() -> {
+                        try {
+                            for (int i = 0; i < 3; i++) {
+                                toneGenerator.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+                                Thread.sleep(400); // Wait for tone to finish + gap
+                            }
+                        } catch (InterruptedException e) {
+                            Log.e("RoboSort", "Beep sequence interrupted: " + e.getMessage());
+                        }
+                    }).start();
                     
                     // Show toast notification
                     android.widget.Toast.makeText(
@@ -678,7 +687,7 @@ public class MainActivity extends AppCompatActivity {
                         android.widget.Toast.LENGTH_SHORT
                     ).show();
                     
-                    Log.i("RoboSort", "Beep alert played");
+                    Log.i("RoboSort", "3x Beep alert started");
                 } else {
                     Log.w("RoboSort", "ToneGenerator not available");
                 }

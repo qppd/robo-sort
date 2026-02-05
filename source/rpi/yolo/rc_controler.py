@@ -79,6 +79,10 @@ class RoboSortRemoteControl:
         self.GPIO_BUTTON_PIN = 17
         self.button_last_press_time = 0
         self.button_debounce_delay = 0.3  # 300ms debounce
+        
+        # Ultrasonic monitoring
+        self.ultrasonic_threshold = 22  # cm
+        self.ultrasonic_check_interval = 0.5  # seconds
 
         # Initialize connections
         self.init_arduino()
@@ -659,6 +663,50 @@ class RoboSortRemoteControl:
             import traceback
             traceback.print_exc()
 
+    def monitor_ultrasonic(self):
+        """
+        Continuously monitor ultrasonic sensor and control Arduino buzzer
+        <22cm: buzzer ON, >=22cm: buzzer OFF
+        Runs in separate thread - non-blocking
+        """
+        print("✓ Ultrasonic monitoring started")
+        
+        while self.running:
+            try:
+                # Request distance from Arduino ultrasonic sensor 1
+                self.arduino.write(b"UDIST 1\n")
+                time.sleep(0.05)  # Give Arduino time to respond
+                
+                # Read response
+                if self.arduino.in_waiting > 0:
+                    response = self.arduino.readline().decode('utf-8', errors='ignore').strip()
+                    
+                    # Parse distance from response like "Ultrasonic 1 Distance: 15 cm"
+                    if "Distance:" in response:
+                        parts = response.split()
+                        try:
+                            # Find the distance value (number before "cm")
+                            for i, part in enumerate(parts):
+                                if part.isdigit() and i + 1 < len(parts) and parts[i + 1] == "cm":
+                                    distance = int(part)
+                                    
+                                    # Control buzzer based on threshold
+                                    if distance < self.ultrasonic_threshold:
+                                        # Object detected close - sound buzzer
+                                        self.arduino.write(b"BWARNING\n")
+                                        print(f"⚠ Obstacle detected: {distance}cm - Buzzer ON")
+                                    break
+                        except (ValueError, IndexError):
+                            pass
+                
+                # Wait before next check
+                time.sleep(self.ultrasonic_check_interval)
+                
+            except Exception as e:
+                if self.running:
+                    print(f"Ultrasonic monitoring error: {e}")
+                    time.sleep(1)  # Back off on error
+    
     def read_arduino_feedback(self):
         """
         Continuously read feedback from Arduino
@@ -742,6 +790,10 @@ class RoboSortRemoteControl:
         # Start Arduino feedback thread
         arduino_thread = threading.Thread(target=self.read_arduino_feedback, daemon=True)
         arduino_thread.start()
+        
+        # Start ultrasonic monitoring thread
+        ultrasonic_thread = threading.Thread(target=self.monitor_ultrasonic, daemon=True)
+        ultrasonic_thread.start()
 
         # Start camera display thread (blocking on main thread for cv2)
         self.display_camera()

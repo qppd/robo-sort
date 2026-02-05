@@ -31,6 +31,12 @@ bool autonomousMode = false;
 unsigned long lastAutonomousHeartbeat = 0;
 const unsigned long AUTONOMOUS_TIMEOUT = 5000; // 5 seconds timeout for autonomous mode
 
+// Ultrasonic buzzer control
+const int ULTRASONIC_THRESHOLD = 22; // cm
+unsigned long lastUltrasonicCheck = 0;
+const unsigned long ULTRASONIC_CHECK_INTERVAL = 500; // ms
+bool buzzerActive = false;
+
 void setup() {
   Serial.begin(9600);
   
@@ -81,6 +87,26 @@ void loop() {
   ultrasonicConfig.update();
   buzzerConfig.update();
   dcConfig.update();  // Software PWM for motor speed control
+  
+  // Ultrasonic buzzer control - check every 500ms
+  unsigned long currentMillis = millis();
+  if (currentMillis - lastUltrasonicCheck >= ULTRASONIC_CHECK_INTERVAL) {
+    lastUltrasonicCheck = currentMillis;
+    
+    // Get distance from sensor 1
+    long distance = ultrasonicConfig.getDistance(0);  // Sensor 1 (0-indexed)
+    
+    if (distance > 0 && distance < ULTRASONIC_THRESHOLD) {
+      // Object detected within threshold - activate buzzer
+      if (!buzzerActive) {
+        buzzerConfig.warningBeep();
+        buzzerActive = true;
+      }
+    } else {
+      // No object or out of range - silence buzzer
+      buzzerActive = false;
+    }
+  }
   
   // Check autonomous mode timeout
   if (autonomousMode) {
