@@ -223,6 +223,7 @@ class RoboSortRemoteControl:
                 "servo3": self.servo_angles["servo3"],
                 "servo4": self.servo_angles["servo4"],
                 "servo5": self.servo_angles["servo5"],
+                "detected_object": self.detected_object,
             })
 
             # Start listening to commands
