@@ -226,6 +226,9 @@ class RoboSortRemoteControl:
                 "detected_object": self.detected_object,
             })
 
+            # Clear any pending commands to prevent processing old BIN commands on startup
+            self.db.child("robosortv2").child("commands").set({})
+
             # Start listening to commands
             print("Starting Firebase stream listener...")
             self.stream = self.db.child("robosortv2").child("commands").stream(self.on_command_change)
