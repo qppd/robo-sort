@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton btnLifterUp, btnLifterDown, btnLifterStop;
     private MaterialButton btnBinHome, btnBinClear, btnBin1, btnBin2, btnBin3, btnBin4;
     private MaterialButton btnPlace;
+    
+    // Detection buttons
+    private MaterialButton btnDetectBottle, btnDetectWrapper, btnDetectPaper, btnDetectOther;
 
     // Servo buttons (replace sliders)
     private MaterialButton btnArmRotateFront, btnArmRotateBack;
@@ -102,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         setupMotorControls();
         setupLifterControls();
         setupBinControls();
+        setupDetectionControls();
         setupServoControls();
         setupPlaceControl();
 
@@ -114,10 +118,10 @@ public class MainActivity extends AppCompatActivity {
             database = FirebaseDatabase.getInstance();
             // REMOVED: database.useEmulator("10.0.2.2", 9000); // For production use
             
-            commandsRef = database.getReference("robosortv2/commands");
-            // RPi publishes live state under robosortv2/status
-            feedbackRef = database.getReference("robosortv2/status");
-            alertRef = database.getReference("robosortv2/commands/alert");
+            commandsRef = database.getReference("robosort/commands");
+            // RPi publishes live state under robosort/status
+            feedbackRef = database.getReference("robosort/status");
+            alertRef = database.getReference("robosort/commands/alert");
             
             // Test connection with detailed logging
             commandsRef.child("timestamp").setValue(System.currentTimeMillis())
@@ -132,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                     feedbackText.setText("Firebase connection failed: " + e.getMessage());
                     e.printStackTrace();
                 });
-                
         } catch (Exception e) {
             e.printStackTrace();
             updateConnectionStatus(false);
@@ -164,6 +167,12 @@ public class MainActivity extends AppCompatActivity {
         btnBin4 = findViewById(R.id.btnBin4);
         
         btnPlace = findViewById(R.id.btnPlace);
+        
+        // Detection buttons
+        btnDetectBottle = findViewById(R.id.btnDetectBottle);
+        btnDetectWrapper = findViewById(R.id.btnDetectWrapper);
+        btnDetectPaper = findViewById(R.id.btnDetectPaper);
+        btnDetectOther = findViewById(R.id.btnDetectOther);
         
         servo1Label = findViewById(R.id.servo1Label);
         servo2Label = findViewById(R.id.servo2Label);
@@ -309,6 +318,13 @@ public class MainActivity extends AppCompatActivity {
         btnBin4.setOnClickListener(v -> sendBinCommand("BIN_4"));
     }
     
+    private void setupDetectionControls() {
+        btnDetectBottle.setOnClickListener(v -> sendDetectionCommand("plastic_bottle"));
+        btnDetectWrapper.setOnClickListener(v -> sendDetectionCommand("plastic_wrapper"));
+        btnDetectPaper.setOnClickListener(v -> sendDetectionCommand("paper"));
+        btnDetectOther.setOnClickListener(v -> sendDetectionCommand("other"));
+    }
+    
     private void setupPlaceControl() {
         btnPlace.setOnClickListener(v -> {
             Map<String, Object> placeCommand = new HashMap<>();
@@ -395,19 +411,19 @@ public class MainActivity extends AppCompatActivity {
         // ARM-EXTEND: +/-
         btnArmExtendMinus.setOnClickListener(v -> {
             servo4Pos -= STEP_ARM_EXTEND;
-            servo4Pos = Math.max(90, Math.min(180, servo4Pos));
+            servo4Pos = Math.max(0, Math.min(180, servo4Pos));
             servo4Label.setText(String.format(Locale.US, "ARM-EXTEND (S4): %d°", servo4Pos));
             sendServoCommand(4, servo4Pos);
         });
 
         btnArmExtendPlus.setOnClickListener(v -> {
             servo4Pos += STEP_ARM_EXTEND;
-            servo4Pos = Math.max(90, Math.min(180, servo4Pos));
+            servo4Pos = Math.max(0, Math.min(180, servo4Pos));
             servo4Label.setText(String.format(Locale.US, "ARM-EXTEND (S4): %d°", servo4Pos));
             sendServoCommand(4, servo4Pos);
         });
         
-        // ARM-EXTEND Presets: 180°, 110°, 90°
+        // ARM-EXTEND presets
         btnArmExtend180.setOnClickListener(v -> {
             servo4Pos = 180;
             servo4Label.setText(String.format(Locale.US, "ARM-EXTEND (S4): %d°", servo4Pos));
@@ -505,6 +521,30 @@ public class MainActivity extends AppCompatActivity {
                 feedbackText.setText("❌ Failed to clear detection: " + e.getMessage());
             });
     }
+    
+    private void sendDetectionCommand(String objectType) {
+        if (!isConnected) {
+            feedbackText.setText("Cannot send detection: Not connected to Firebase");
+            return;
+        }
+
+        Map<String, Object> command = new HashMap<>();
+        command.put("type", "detected");
+        command.put("object", objectType);
+        command.put("timestamp", System.currentTimeMillis());
+
+        feedbackText.setText("📦 Setting detected: " + objectType);
+
+        commandsRef.child("detected").setValue(command)
+            .addOnSuccessListener(aVoid -> {
+                Log.d("RoboSort", "Detection command sent successfully: " + objectType);
+                feedbackText.setText("📦 Detected: " + objectType);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("RoboSort", "Failed to send detection: " + e.getMessage());
+                feedbackText.setText("❌ Failed to send detection: " + e.getMessage());
+            });
+    }
 
     private void sendLifterCommand(String action) {
         if (!isConnected) {
@@ -512,21 +552,18 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        String normalized = action == null ? "" : action.trim().toUpperCase(Locale.US);
-        if (!normalized.equals("UP") && !normalized.equals("DOWN") && !normalized.equals("STOP")) {
-            feedbackText.setText("Invalid LIFTER command: " + action);
-            return;
-        }
-
         Map<String, Object> command = new HashMap<>();
         command.put("type", "lifter");
-        command.put("action", normalized);
+        command.put("action", action);
         command.put("timestamp", System.currentTimeMillis());
 
-        feedbackText.setText("Sending LIFTER: " + normalized);
+        feedbackText.setText("Sending LIFTER command: " + action);
 
         commandsRef.child("lifter").setValue(command)
-            .addOnSuccessListener(aVoid -> Log.d("RoboSort", "LIFTER command sent: " + normalized))
+            .addOnSuccessListener(aVoid -> {
+                Log.d("RoboSort", "LIFTER command sent successfully: " + action);
+                feedbackText.setText("LIFTER " + action);
+            })
             .addOnFailureListener(e -> {
                 Log.e("RoboSort", "Failed to send LIFTER command: " + e.getMessage());
                 feedbackText.setText("Failed to send LIFTER command: " + e.getMessage());
@@ -535,61 +572,51 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendMotorCommand(String direction, int speed) {
         if (!isConnected) {
-            feedbackText.setText("Cannot send motor command: Not connected to Firebase");
             return;
         }
 
-        String normalized = direction == null ? "STOP" : direction.trim().toUpperCase(Locale.US);
-        int clampedSpeed = Math.max(0, Math.min(255, speed));
-
         Map<String, Object> command = new HashMap<>();
-        // RPi listener accepts a motor payload with {direction, speed}
-        command.put("direction", normalized);
-        command.put("speed", clampedSpeed);
+        command.put("direction", direction);
+        command.put("speed", speed);
         command.put("timestamp", System.currentTimeMillis());
 
-        feedbackText.setText("Motor: " + normalized + " (" + clampedSpeed + ")");
-
-        commandsRef.child("motor").setValue(command)
-            .addOnSuccessListener(aVoid -> Log.d("RoboSort", "Motor command sent: " + normalized))
-            .addOnFailureListener(e -> {
-                Log.e("RoboSort", "Failed to send motor command: " + e.getMessage());
-                feedbackText.setText("Failed to send motor command: " + e.getMessage());
-            });
+        commandsRef.child("motor").setValue(command);
     }
 
     private void sendServoCommand(int servoNumber, int angle) {
         if (!isConnected) {
-            feedbackText.setText("Cannot send servo command: Not connected to Firebase");
             return;
         }
 
-        int clampedAngle;
-        if (servoNumber == 4) {
-            // ARM-EXTEND range: 0-180 degrees
-            clampedAngle = clamp(angle, 0, 180);
-        } else if (servoNumber == 2) {
-            // GRIP defaults in this project generally use 110-180
-            clampedAngle = clamp(angle, 110, 180);
-        } else {
-            clampedAngle = clamp(angle, 0, 180);
+        // Map servo numbers to named commands
+        String cmdName;
+        switch (servoNumber) {
+            case 1:
+                cmdName = "ARM-ROTATE";
+                break;
+            case 2:
+                cmdName = "GRIP";
+                break;
+            case 3:
+                cmdName = "GRIP-ROTATE";
+                break;
+            case 4:
+                cmdName = "ARM-EXTEND";
+                break;
+            case 5:
+                cmdName = "LOOK";
+                break;
+            default:
+                return;
         }
 
         Map<String, Object> command = new HashMap<>();
-        // Legacy schema supported by RPi: {type:'servo', servo:n, angle:x}
         command.put("type", "servo");
-        command.put("servo", servoNumber);
-        command.put("angle", clampedAngle);
+        command.put("cmd", cmdName);
+        command.put("angle", angle);
         command.put("timestamp", System.currentTimeMillis());
 
-        feedbackText.setText("Servo " + servoNumber + " -> " + clampedAngle + "°");
-
-        commandsRef.child("servo" + servoNumber).setValue(command)
-            .addOnSuccessListener(aVoid -> Log.d("RoboSort", "Servo command sent: servo" + servoNumber + "=" + clampedAngle))
-            .addOnFailureListener(e -> {
-                Log.e("RoboSort", "Failed to send servo command: " + e.getMessage());
-                feedbackText.setText("Failed to send servo command: " + e.getMessage());
-            });
+        commandsRef.child("servo" + servoNumber).setValue(command);
     }
 
     private void setupFeedbackListener() {

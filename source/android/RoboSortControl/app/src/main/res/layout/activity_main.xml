@@ -708,6 +708,92 @@
                 android:layout_marginStart="2dp" />
         </LinearLayout>
 
+        <!-- Detection Buttons -->
+        <TextView
+            android:id="@+id/detectionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Detected Object"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/lookControls"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:id="@+id/detectionButtonsRow1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/detectionLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDetectBottle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🍾 Bottle"
+                android:textSize="11sp"
+                app:cornerRadius="6dp"
+                android:backgroundTint="#2196F3"
+                android:minHeight="40dp"
+                android:padding="4dp"
+                android:layout_marginEnd="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDetectWrapper"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="📦 Wrapper"
+                android:textSize="11sp"
+                app:cornerRadius="6dp"
+                android:backgroundTint="#FF9800"
+                android:minHeight="40dp"
+                android:padding="4dp"
+                android:layout_marginStart="2dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/detectionButtonsRow2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/detectionButtonsRow1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDetectPaper"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="📄 Paper"
+                android:textSize="11sp"
+                app:cornerRadius="6dp"
+                android:backgroundTint="#8BC34A"
+                android:minHeight="40dp"
+                android:padding="4dp"
+                android:layout_marginEnd="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDetectOther"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🎯 Other"
+                android:textSize="11sp"
+                app:cornerRadius="6dp"
+                android:backgroundTint="#9E9E9E"
+                android:minHeight="40dp"
+                android:padding="4dp"
+                android:layout_marginStart="2dp" />
+        </LinearLayout>
+
         <!-- PLACE Object Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPlace"
@@ -719,7 +805,7 @@
             app:cornerRadius="8dp"
             android:backgroundTint="#4CAF50"
             android:textColor="#FFFFFF"
-            app:layout_constraintTop_toBottomOf="@id/lookControls"
+            app:layout_constraintTop_toBottomOf="@id/detectionButtonsRow2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp"
