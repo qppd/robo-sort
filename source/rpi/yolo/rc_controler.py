@@ -74,6 +74,7 @@ class RoboSortRemoteControl:
         self.servo_angles = {"servo1": 180, "servo2": 110, "servo3": 90, "servo4": 180, "servo5": 180}
         self.motor_state = "STOP"
         self.detected_object = "None"  # Store detected object for display
+        self.first_stream_event = True  # Flag to skip auto-detect on first stream event
         
         # GPIO button configuration
         self.GPIO_BUTTON_PIN = 17
@@ -226,9 +227,6 @@ class RoboSortRemoteControl:
                 "detected_object": self.detected_object,
             })
 
-            # Clear any pending commands to prevent processing old BIN commands on startup
-            self.db.child("robosortv2").child("commands").set({})
-
             # Start listening to commands
             print("Starting Firebase stream listener...")
             self.stream = self.db.child("robosortv2").child("commands").stream(self.on_command_change)
@@ -292,6 +290,9 @@ class RoboSortRemoteControl:
         print(f"Stream path: {message.get('path', '')}")
         print(f"Stream data: {message.get('data', 'No data')}")
         
+        is_first_event = self.first_stream_event
+        self.first_stream_event = False
+        
         if message["event"] == "put":
             data = message["data"]
             path = str(message.get("path", ""))
@@ -320,18 +321,19 @@ class RoboSortRemoteControl:
                     print(f"✓ Sent BIN command: {bin_cmd}")
                     
                     # Automatically set detected object based on BIN position
-                    bin_to_object = {
-                        "BIN_1": "plastic_bottle",
-                        "BIN_2": "plastic_wrapper",
-                        "BIN_3": "paper",
-                        "BIN_4": "other"
-                    }
-                    if bin_cmd in bin_to_object:
-                        self.detected_object = bin_to_object[bin_cmd]
-                        print(f"📦 Auto-detected object for {bin_cmd}: {self.detected_object}")
-                    elif bin_cmd == "BIN_HOME":
-                        self.detected_object = "None"
-                        print(f"🏠 BIN_HOME - Reset detected object to None")
+                    if not is_first_event:
+                        bin_to_object = {
+                            "BIN_1": "plastic_bottle",
+                            "BIN_2": "plastic_wrapper",
+                            "BIN_3": "paper",
+                            "BIN_4": "other"
+                        }
+                        if bin_cmd in bin_to_object:
+                            self.detected_object = bin_to_object[bin_cmd]
+                            print(f"📦 Auto-detected object for {bin_cmd}: {self.detected_object}")
+                        elif bin_cmd == "BIN_HOME":
+                            self.detected_object = "None"
+                            print(f"🏠 BIN_HOME - Reset detected object to None")
                     
                     return
                 print(f"Unknown BIN command payload: {data}")
@@ -350,18 +352,19 @@ class RoboSortRemoteControl:
                     print(f"✓ Sent BIN command: {bin_cmd}")
                     
                     # Automatically set detected object based on BIN position
-                    bin_to_object = {
-                        "BIN_1": "plastic_bottle",
-                        "BIN_2": "plastic_wrapper",
-                        "BIN_3": "paper",
-                        "BIN_4": "other"
-                    }
-                    if bin_cmd in bin_to_object:
-                        self.detected_object = bin_to_object[bin_cmd]
-                        print(f"📦 Auto-detected object for {bin_cmd}: {self.detected_object}")
-                    elif bin_cmd == "BIN_HOME":
-                        self.detected_object = "None"
-                        print(f"🏠 BIN_HOME - Reset detected object to None")
+                    if not is_first_event:
+                        bin_to_object = {
+                            "BIN_1": "plastic_bottle",
+                            "BIN_2": "plastic_wrapper",
+                            "BIN_3": "paper",
+                            "BIN_4": "other"
+                        }
+                        if bin_cmd in bin_to_object:
+                            self.detected_object = bin_to_object[bin_cmd]
+                            print(f"📦 Auto-detected object for {bin_cmd}: {self.detected_object}")
+                        elif bin_cmd == "BIN_HOME":
+                            self.detected_object = "None"
+                            print(f"🏠 BIN_HOME - Reset detected object to None")
                     
                     return
 
