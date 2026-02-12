@@ -799,8 +799,8 @@ class RoboSortRemoteControl:
         arduino_thread.start()
         
         # Start ultrasonic monitoring thread
-        ultrasonic_thread = threading.Thread(target=self.monitor_ultrasonic, daemon=True)
-        ultrasonic_thread.start()
+        # ultrasonic_thread = threading.Thread(target=self.monitor_ultrasonic, daemon=True)
+        # ultrasonic_thread.start()
 
         # Start camera display thread (blocking on main thread for cv2)
         self.display_camera()
