@@ -781,7 +781,7 @@ class RoboSortRemoteControl:
 
                 # Display detected object
                 cv2.putText(frame, f"Detected: {self.detected_object}", (10, 120),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
 
                 cv2.imshow("RoboSort RC View", frame)
 
