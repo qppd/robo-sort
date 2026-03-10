@@ -118,10 +118,10 @@ public class MainActivity extends AppCompatActivity {
             database = FirebaseDatabase.getInstance();
             // REMOVED: database.useEmulator("10.0.2.2", 9000); // For production use
             
-            commandsRef = database.getReference("robosort/commands");
-            // RPi publishes live state under robosort/status
-            feedbackRef = database.getReference("robosort/status");
-            alertRef = database.getReference("robosort/commands/alert");
+            commandsRef = database.getReference("robosortv2/commands");
+            // RPi publishes live state under robosortv2/status
+            feedbackRef = database.getReference("robosortv2/status");
+            alertRef = database.getReference("robosortv2/commands/alert");
             
             // Test connection with detailed logging
             commandsRef.child("timestamp").setValue(System.currentTimeMillis())

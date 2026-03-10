@@ -37,6 +37,32 @@ unsigned long lastUltrasonicCheck = 0;
 const unsigned long ULTRASONIC_CHECK_INTERVAL = 500; // ms
 bool buzzerActive = false;
 
+// --- Front obstacle avoidance ---
+void autonomousObstacleCheck() {
+  const uint8_t AUTO_SPEED = 150;
+  long distLeft  = ultrasonicConfig.readFrontLeftDistance();
+  long distRight = ultrasonicConfig.readFrontRightDistance();
+
+  bool leftBlocked  = (distLeft  > 0 && distLeft  <= OBSTACLE_DISTANCE);
+  bool rightBlocked = (distRight > 0 && distRight <= OBSTACLE_DISTANCE);
+
+  if (leftBlocked && rightBlocked) {
+    dcConfig.stopAll();
+    delay(50);
+    dcConfig.moveBackward(AUTO_SPEED);
+    delay(300);
+    dcConfig.rotateRight(AUTO_SPEED);
+    delay(400);
+    dcConfig.stopAll();
+  } else if (leftBlocked) {
+    dcConfig.rotateRight(AUTO_SPEED);
+  } else if (rightBlocked) {
+    dcConfig.rotateLeft(AUTO_SPEED);
+  } else {
+    dcConfig.moveForward(AUTO_SPEED);
+  }
+}
+
 void setup() {
   Serial.begin(9600);
   
@@ -119,7 +145,12 @@ void loop() {
       buzzerConfig.errorBeep();
     }
   }
-  
+
+  // Run front obstacle avoidance when autonomous mode is active
+  if (autonomousMode) {
+    autonomousObstacleCheck();
+  }
+
   // Handle continuous limit switch testing
   if (limitTestingActive) {
     bool armState = digitalRead(ARM_LIMIT_PIN);
@@ -698,6 +729,16 @@ void loop() {
       } else {
         Serial.println("ERROR: Autonomous mode not active");
       }
+    } else if (input.equalsIgnoreCase("AUTO_ON")) {
+      autonomousMode = true;
+      lastAutonomousHeartbeat = millis();
+      Serial.println("AUTONOMOUS MODE ENABLED");
+      buzzerConfig.successBeep();
+    } else if (input.equalsIgnoreCase("AUTO_OFF")) {
+      autonomousMode = false;
+      dcConfig.stopAll();
+      Serial.println("AUTONOMOUS MODE DISABLED");
+      buzzerConfig.warningBeep();
     }
     else {
       buzzerConfig.errorBeep();

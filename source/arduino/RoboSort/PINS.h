@@ -47,4 +47,10 @@
 #define ARM_LIMIT_PIN 42     // Arm limit switch connected to pin 42
 #define BIN_LIMIT_PIN 43     // Bin limit switch connected to pin 43
 
+// ===== FRONT ULTRASONIC SENSORS (Obstacle Avoidance) =====
+#define FRONT_LEFT_TRIG  46  // Trigger pin for front-left obstacle sensor
+#define FRONT_LEFT_ECHO  47  // Echo pin for front-left obstacle sensor
+#define FRONT_RIGHT_TRIG 48  // Trigger pin for front-right obstacle sensor
+#define FRONT_RIGHT_ECHO 49  // Echo pin for front-right obstacle sensor
+
 #endif // PINS_H

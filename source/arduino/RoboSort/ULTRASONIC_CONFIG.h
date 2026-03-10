@@ -8,8 +8,9 @@
 #define NUM_ULTRASONIC 4
 
 // Measurement constants
-#define MAX_DISTANCE 400  // Maximum distance in cm (HC-SR04 limit)
-#define TIMEOUT 30000     // Timeout in microseconds
+#define MAX_DISTANCE 400      // Maximum distance in cm (HC-SR04 limit)
+#define TIMEOUT 30000         // Timeout in microseconds
+#define OBSTACLE_DISTANCE 25  // Front obstacle detection threshold in cm
 
 class UltrasonicConfig {
 public:
@@ -23,8 +24,12 @@ public:
     void startContinuousMonitor(uint8_t sensor);
     void stopContinuousMonitor(uint8_t sensor);
     void update();
+    // Front obstacle avoidance sensors
+    long readFrontLeftDistance();
+    long readFrontRightDistance();
 private:
     long measureDistance(uint8_t sensor);
+    long measureDistanceOnPins(uint8_t trigPin, uint8_t echoPin);
     uint8_t _trigPins[NUM_ULTRASONIC];
     uint8_t _echoPins[NUM_ULTRASONIC];
     bool _continuousMonitor[NUM_ULTRASONIC];

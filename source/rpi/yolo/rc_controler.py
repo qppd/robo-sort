@@ -85,6 +85,10 @@ class RoboSortRemoteControl:
         self.ultrasonic_threshold = 22  # cm
         self.ultrasonic_check_interval = 0.5  # seconds
 
+        # Autonomous obstacle avoidance mode
+        self.autonomous_mode = False
+        self._autonomous_stream = None
+
         # Initialize connections
         self.init_arduino()
         self.init_camera()
@@ -232,9 +236,42 @@ class RoboSortRemoteControl:
             self.stream = self.db.child("robosortv2").child("commands").stream(self.on_command_change)
             print("✓ Firebase stream listener started")
 
+            # Start listening to autonomous mode flag
+            self.init_autonomous_listener()
+
         except Exception as e:
             print(f"✗ Firebase connection failed: {e}")
             raise
+
+    def init_autonomous_listener(self):
+        """Listen for autonomous mode flag at robot/autonomous_mode in Firebase."""
+        try:
+            self._autonomous_stream = self.db.child("robot").child("autonomous_mode").stream(
+                self.on_autonomous_mode_change
+            )
+            print("✓ Autonomous mode listener started (robot/autonomous_mode)")
+        except Exception as e:
+            print(f"✗ Autonomous mode listener failed: {e}")
+
+    def on_autonomous_mode_change(self, message):
+        """Handle changes to robot/autonomous_mode Firebase flag (0=manual, 1=autonomous)."""
+        if message["event"] != "put":
+            return
+        data = message.get("data")
+        if data is None:
+            return
+        try:
+            value = int(data)
+        except (TypeError, ValueError):
+            return
+        if value == 1 and not self.autonomous_mode:
+            self.autonomous_mode = True
+            self.send_text_command("AUTO_ON")
+            print("✓ Autonomous mode ON - sent AUTO_ON to Arduino")
+        elif value == 0 and self.autonomous_mode:
+            self.autonomous_mode = False
+            self.send_text_command("AUTO_OFF")
+            print("✓ Autonomous mode OFF - sent AUTO_OFF to Arduino")
 
     def init_gpio_button(self):
         """Initialize GPIO button on pin 17 for alert beep"""

@@ -26,6 +26,13 @@ void UltrasonicConfig::begin() {
         pinMode(_echoPins[i], INPUT);
         digitalWrite(_trigPins[i], LOW);
     }
+    // Front obstacle avoidance sensors
+    pinMode(FRONT_LEFT_TRIG,  OUTPUT);
+    pinMode(FRONT_LEFT_ECHO,  INPUT);
+    pinMode(FRONT_RIGHT_TRIG, OUTPUT);
+    pinMode(FRONT_RIGHT_ECHO, INPUT);
+    digitalWrite(FRONT_LEFT_TRIG,  LOW);
+    digitalWrite(FRONT_RIGHT_TRIG, LOW);
     delayMicroseconds(2);
 }
 
@@ -176,4 +183,30 @@ void UltrasonicConfig::update() {
             }
         }
     }
+}
+
+// --- Front obstacle avoidance sensor helpers ---
+
+long UltrasonicConfig::measureDistanceOnPins(uint8_t trigPin, uint8_t echoPin) {
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    long duration = pulseIn(echoPin, HIGH, TIMEOUT);
+    long distance = duration / 58.2;
+
+    if (distance == 0 || distance > MAX_DISTANCE) {
+        return 0;
+    }
+    return distance;
+}
+
+long UltrasonicConfig::readFrontLeftDistance() {
+    return measureDistanceOnPins(FRONT_LEFT_TRIG, FRONT_LEFT_ECHO);
+}
+
+long UltrasonicConfig::readFrontRightDistance() {
+    return measureDistanceOnPins(FRONT_RIGHT_TRIG, FRONT_RIGHT_ECHO);
 }
