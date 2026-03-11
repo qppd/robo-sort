@@ -6,6 +6,9 @@
 #include "TB6600.h"
 #include "BUZZER_CONFIG.h"
 
+// Include .cpp files to ensure implementations are compiled
+#include "ULTRASONIC_CONFIG.cpp"
+
 ServoConfig servoConfig;
 DCConfig dcConfig;
 UltrasonicConfig ultrasonicConfig;
