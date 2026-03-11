@@ -129,15 +129,15 @@ void DCConfig::moveBackward(uint8_t speed) {
 void DCConfig::rotateRight(uint8_t speed) {
     // Rotate right: both motors same direction for rotation
     // INVERTED: Robot was physically flipped
-    moveMotor(MOTOR_A, BACKWARD, speed);
-    moveMotor(MOTOR_B, BACKWARD, speed);
+    moveMotor(MOTOR_A, FORWARD, speed);
+    moveMotor(MOTOR_B, FORWARD, speed);
 }
 
 void DCConfig::rotateLeft(uint8_t speed) {
     // Rotate left: both motors same direction for rotation
     // INVERTED: Robot was physically flipped
-    moveMotor(MOTOR_A, FORWARD, speed);
-    moveMotor(MOTOR_B, FORWARD, speed);
+    moveMotor(MOTOR_A, BACKWARD, speed);
+    moveMotor(MOTOR_B, BACKWARD, speed);
 }
 
 void DCConfig::stopAll() {
@@ -148,19 +148,19 @@ void DCConfig::stopAll() {
 void DCConfig::turnLeft(uint8_t speed) {
     // Stop both motors first to prevent one motor staying active
     stopAll();
-    // Turn left: only left wheel forward (right wheel stopped)
+    // Turn left: only right wheel moves (left wheel stopped)
     // INVERTED: Robot was physically flipped
-    moveMotor(MOTOR_A, BACKWARD, speed);  // Left wheel forward (inverted)
-    // Right wheel (MOTOR_B) remains stopped
+    moveMotor(MOTOR_B, BACKWARD, speed);  // Right wheel rotates for left turn
+    // Left wheel (MOTOR_A) remains stopped
 }
 
 void DCConfig::turnRight(uint8_t speed) {
     // Stop both motors first to prevent one motor staying active
     stopAll();
-    // Turn right: only right wheel forward (left wheel stopped)
+    // Turn right: only left wheel moves (right wheel stopped)
     // INVERTED: Robot was physically flipped
-    moveMotor(MOTOR_B, BACKWARD, speed);  // Right wheel forward (inverted)
-    // Left wheel (MOTOR_A) remains stopped
+    moveMotor(MOTOR_A, BACKWARD, speed);  // Left wheel rotates for right turn
+    // Right wheel (MOTOR_B) remains stopped
 }
 
 void DCConfig::turnAbout(uint8_t direction, uint8_t speed) {
@@ -169,14 +169,14 @@ void DCConfig::turnAbout(uint8_t direction, uint8_t speed) {
     // Spot turn: one wheel forward, one wheel backward (opposite directions)
     // INVERTED: Robot was physically flipped
     if (direction == 0) {
-        // Turn left: left wheel backward, right wheel forward
-        moveMotor(MOTOR_A, BACKWARD, speed);
-        moveMotor(MOTOR_B, BACKWARD, speed);
- 
-    } else {
-        // Turn right: left wheel forward, right wheel backward
+        // Turn left: rotate counterclockwise
         moveMotor(MOTOR_A, FORWARD, speed);
         moveMotor(MOTOR_B, FORWARD, speed);
+ 
+    } else {
+        // Turn right: rotate clockwise
+        moveMotor(MOTOR_A, BACKWARD, speed);
+        moveMotor(MOTOR_B, BACKWARD, speed);
        
     }
 }
