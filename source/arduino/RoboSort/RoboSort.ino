@@ -31,35 +31,111 @@ bool autonomousMode = false;
 unsigned long lastAutonomousHeartbeat = 0;
 const unsigned long AUTONOMOUS_TIMEOUT = 5000; // 5 seconds timeout for autonomous mode
 
+// Autonomous navigation state machine
+enum AutoNavState {
+  AUTO_STATE_FORWARD = 0,
+  AUTO_STATE_REVERSING,
+  AUTO_STATE_SCAN,
+  AUTO_STATE_TURNING_SOFT,
+  AUTO_STATE_TURNABOUT
+};
+
+AutoNavState autoNavState        = AUTO_STATE_FORWARD;
+unsigned long autoStateEntryTime = 0;
+uint8_t autoTurnDirection        = 1;  // 0=left, 1=right
+
+const uint8_t  AUTO_SPEED              = 150;
+const unsigned long AUTO_REVERSE_MS    = 300;  // reverse duration before scan
+const unsigned long AUTO_SOFT_TURN_MS  = 500;  // soft-turn duration before resuming
+
 // Ultrasonic buzzer control
 const int ULTRASONIC_THRESHOLD = 22; // cm
 unsigned long lastUltrasonicCheck = 0;
 const unsigned long ULTRASONIC_CHECK_INTERVAL = 500; // ms
 bool buzzerActive = false;
 
-// --- Front obstacle avoidance ---
+// --- Front obstacle avoidance (non-blocking state machine) ---
 void autonomousObstacleCheck() {
-  const uint8_t AUTO_SPEED = 150;
-  long distLeft  = ultrasonicConfig.readFrontLeftDistance();
-  long distRight = ultrasonicConfig.readFrontRightDistance();
+  unsigned long now = millis();
 
-  bool leftBlocked  = (distLeft  > 0 && distLeft  <= OBSTACLE_DISTANCE);
-  bool rightBlocked = (distRight > 0 && distRight <= OBSTACLE_DISTANCE);
+  switch (autoNavState) {
 
-  if (leftBlocked && rightBlocked) {
-    dcConfig.stopAll();
-    delay(50);
-    dcConfig.moveBackward(AUTO_SPEED);
-    delay(300);
-    dcConfig.rotateRight(AUTO_SPEED);
-    delay(400);
-    dcConfig.stopAll();
-  } else if (leftBlocked) {
-    dcConfig.rotateRight(AUTO_SPEED);
-  } else if (rightBlocked) {
-    dcConfig.rotateLeft(AUTO_SPEED);
-  } else {
-    dcConfig.moveForward(AUTO_SPEED);
+    case AUTO_STATE_FORWARD: {
+      long distLeft  = ultrasonicConfig.getAvgFrontLeftDistance();
+      long distRight = ultrasonicConfig.getAvgFrontRightDistance();
+      bool leftBlocked  = (distLeft  > 0 && distLeft  <= OBSTACLE_DISTANCE);
+      bool rightBlocked = (distRight > 0 && distRight <= OBSTACLE_DISTANCE);
+
+      if (leftBlocked || rightBlocked) {
+        dcConfig.stopAll();
+        autoStateEntryTime = now;
+        autoNavState = AUTO_STATE_REVERSING;
+      } else {
+        dcConfig.moveForward(AUTO_SPEED);
+      }
+      break;
+    }
+
+    case AUTO_STATE_REVERSING:
+      dcConfig.moveBackward(AUTO_SPEED);
+      if (now - autoStateEntryTime >= AUTO_REVERSE_MS) {
+        dcConfig.stopAll();
+        autoNavState = AUTO_STATE_SCAN;
+      }
+      break;
+
+    case AUTO_STATE_SCAN: {
+      long distLeft  = ultrasonicConfig.getAvgFrontLeftDistance();
+      long distRight = ultrasonicConfig.getAvgFrontRightDistance();
+      bool leftBlocked  = (distLeft  > 0 && distLeft  <= OBSTACLE_DISTANCE);
+      bool rightBlocked = (distRight > 0 && distRight <= OBSTACLE_DISTANCE);
+
+      autoStateEntryTime = now;
+
+      if (!leftBlocked && !rightBlocked) {
+        // Path is clear — resume forward immediately
+        autoNavState = AUTO_STATE_FORWARD;
+      } else if (!rightBlocked) {
+        // Left blocked, right open → soft-turn right
+        autoTurnDirection = 1;
+        autoNavState = AUTO_STATE_TURNING_SOFT;
+      } else if (!leftBlocked) {
+        // Right blocked, left open → soft-turn left
+        autoTurnDirection = 0;
+        autoNavState = AUTO_STATE_TURNING_SOFT;
+      } else {
+        // Both sides blocked → rotate in place to find a clear path
+        autoTurnDirection = 1;
+        autoNavState = AUTO_STATE_TURNABOUT;
+      }
+      break;
+    }
+
+    case AUTO_STATE_TURNING_SOFT:
+      if (autoTurnDirection == 0) {
+        dcConfig.turnLeft(AUTO_SPEED);
+      } else {
+        dcConfig.turnRight(AUTO_SPEED);
+      }
+      if (now - autoStateEntryTime >= AUTO_SOFT_TURN_MS) {
+        autoNavState = AUTO_STATE_FORWARD;
+      }
+      break;
+
+    case AUTO_STATE_TURNABOUT: {
+      long distLeft  = ultrasonicConfig.getAvgFrontLeftDistance();
+      long distRight = ultrasonicConfig.getAvgFrontRightDistance();
+      bool leftBlocked  = (distLeft  > 0 && distLeft  <= OBSTACLE_DISTANCE);
+      bool rightBlocked = (distRight > 0 && distRight <= OBSTACLE_DISTANCE);
+
+      if (!leftBlocked && !rightBlocked) {
+        dcConfig.stopAll();
+        autoNavState = AUTO_STATE_FORWARD;
+      } else {
+        dcConfig.turnAbout(autoTurnDirection, AUTO_SPEED);
+      }
+      break;
+    }
   }
 }
 
@@ -145,6 +221,7 @@ void loop() {
       // Timeout - stop motors for safety
       dcConfig.stopAll();
       autonomousMode = false;
+      autoNavState = AUTO_STATE_FORWARD;
       Serial.println("AUTONOMOUS MODE TIMEOUT - SAFETY STOP!");
       buzzerConfig.errorBeep();
     }
@@ -713,12 +790,13 @@ void loop() {
     // Autonomous navigation commands
     else if (input.equalsIgnoreCase("AUTO_START")) {
       autonomousMode = true;
-      lastAutonomousHeartbeat = millis();
-      Serial.println("AUTONOMOUS MODE ENABLED");
+      lastAutonomousHeartbeat = millis();      autoNavState = AUTO_STATE_FORWARD;
+      autoStateEntryTime = millis();      Serial.println("AUTONOMOUS MODE ENABLED");
       Serial.println("Send AUTO_HEARTBEAT commands regularly to maintain control");
       buzzerConfig.successBeep();
     } else if (input.equalsIgnoreCase("AUTO_STOP")) {
       autonomousMode = false;
+      autoNavState = AUTO_STATE_FORWARD;
       dcConfig.stopAll();
       Serial.println("AUTONOMOUS MODE DISABLED");
       Serial.println("Motors stopped.");
@@ -748,10 +826,13 @@ void loop() {
     } else if (input.equalsIgnoreCase("AUTO_ON")) {
       autonomousMode = true;
       lastAutonomousHeartbeat = millis();
+      autoNavState = AUTO_STATE_FORWARD;
+      autoStateEntryTime = millis();
       Serial.println("AUTONOMOUS MODE ENABLED");
       buzzerConfig.successBeep();
     } else if (input.equalsIgnoreCase("AUTO_OFF")) {
       autonomousMode = false;
+      autoNavState = AUTO_STATE_FORWARD;
       dcConfig.stopAll();
       Serial.println("AUTONOMOUS MODE DISABLED");
       buzzerConfig.warningBeep();

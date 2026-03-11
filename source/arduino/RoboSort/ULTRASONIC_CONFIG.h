@@ -12,6 +12,10 @@
 #define TIMEOUT 30000         // Timeout in microseconds
 #define OBSTACLE_DISTANCE 25  // Front obstacle detection threshold in cm
 
+// Front sensor mean-averaging
+#define FRONT_AVG_SAMPLES 5         // Rolling window size for mean filter
+#define FRONT_SENSOR_INTERVAL 100   // ms between each individual front sensor update
+
 class UltrasonicConfig {
 public:
     UltrasonicConfig();
@@ -27,6 +31,9 @@ public:
     // Front obstacle avoidance sensors
     long readFrontLeftDistance();
     long readFrontRightDistance();
+    // Mean-averaged front sensor readings (updated non-blocking in update())
+    long getAvgFrontLeftDistance();
+    long getAvgFrontRightDistance();
 private:
     long measureDistance(uint8_t sensor);
     long measureDistanceOnPins(uint8_t trigPin, uint8_t echoPin);
@@ -35,6 +42,15 @@ private:
     bool _continuousMonitor[NUM_ULTRASONIC];
     unsigned long _monitorStartTime[NUM_ULTRASONIC];
     unsigned long _lastReadTime[NUM_ULTRASONIC];
+    // Front sensor mean-averaging ring buffers
+    long _frontLeftBuf[FRONT_AVG_SAMPLES];
+    long _frontRightBuf[FRONT_AVG_SAMPLES];
+    uint8_t _frontLeftIdx;
+    uint8_t _frontRightIdx;
+    uint8_t _frontLeftCount;
+    uint8_t _frontRightCount;
+    uint8_t _frontSensorTurn;   // 0=left next, 1=right next (alternates each update)
+    unsigned long _lastFrontUpdate;
 };
 
 #endif // ULTRASONIC_CONFIG_H

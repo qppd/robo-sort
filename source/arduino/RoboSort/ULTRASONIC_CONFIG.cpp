@@ -11,6 +11,18 @@ UltrasonicConfig::UltrasonicConfig() {
         _monitorStartTime[i] = 0;
         _lastReadTime[i] = 0;
     }
+
+    // Initialize front sensor mean-averaging buffers
+    for (uint8_t i = 0; i < FRONT_AVG_SAMPLES; i++) {
+        _frontLeftBuf[i]  = 0;
+        _frontRightBuf[i] = 0;
+    }
+    _frontLeftIdx    = 0;
+    _frontRightIdx   = 0;
+    _frontLeftCount  = 0;
+    _frontRightCount = 0;
+    _frontSensorTurn = 0;
+    _lastFrontUpdate = 0;
 }
 
 void UltrasonicConfig::begin() {
@@ -176,6 +188,23 @@ void UltrasonicConfig::update() {
             }
         }
     }
+
+    // Non-blocking front sensor mean-averaging: alternate one sensor per interval
+    if (now - _lastFrontUpdate >= FRONT_SENSOR_INTERVAL) {
+        if (_frontSensorTurn == 0) {
+            long d = measureDistanceOnPins(FRONT_LEFT_TRIG, FRONT_LEFT_ECHO);
+            _frontLeftBuf[_frontLeftIdx] = d;
+            _frontLeftIdx = (_frontLeftIdx + 1) % FRONT_AVG_SAMPLES;
+            if (_frontLeftCount < FRONT_AVG_SAMPLES) _frontLeftCount++;
+        } else {
+            long d = measureDistanceOnPins(FRONT_RIGHT_TRIG, FRONT_RIGHT_ECHO);
+            _frontRightBuf[_frontRightIdx] = d;
+            _frontRightIdx = (_frontRightIdx + 1) % FRONT_AVG_SAMPLES;
+            if (_frontRightCount < FRONT_AVG_SAMPLES) _frontRightCount++;
+        }
+        _frontSensorTurn = 1 - _frontSensorTurn;
+        _lastFrontUpdate = now;
+    }
 }
 
 // --- Front obstacle avoidance sensor helpers ---
@@ -202,4 +231,34 @@ long UltrasonicConfig::readFrontLeftDistance() {
 
 long UltrasonicConfig::readFrontRightDistance() {
     return measureDistanceOnPins(FRONT_RIGHT_TRIG, FRONT_RIGHT_ECHO);
+}
+
+// Mean of the last FRONT_AVG_SAMPLES front-left readings (ignores 0/out-of-range)
+long UltrasonicConfig::getAvgFrontLeftDistance() {
+    if (_frontLeftCount == 0) return 0;
+    long sum = 0;
+    uint8_t validCount = 0;
+    for (uint8_t i = 0; i < _frontLeftCount; i++) {
+        if (_frontLeftBuf[i] > 0) {
+            sum += _frontLeftBuf[i];
+            validCount++;
+        }
+    }
+    if (validCount == 0) return 0;
+    return sum / validCount;
+}
+
+// Mean of the last FRONT_AVG_SAMPLES front-right readings (ignores 0/out-of-range)
+long UltrasonicConfig::getAvgFrontRightDistance() {
+    if (_frontRightCount == 0) return 0;
+    long sum = 0;
+    uint8_t validCount = 0;
+    for (uint8_t i = 0; i < _frontRightCount; i++) {
+        if (_frontRightBuf[i] > 0) {
+            sum += _frontRightBuf[i];
+            validCount++;
+        }
+    }
+    if (validCount == 0) return 0;
+    return sum / validCount;
 }
