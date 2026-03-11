@@ -5,7 +5,7 @@
 #include "PINS.h"
 
 // Number of ultrasonic sensors
-#define NUM_ULTRASONIC 4
+#define NUM_ULTRASONIC 1
 
 // Measurement constants
 #define MAX_DISTANCE 400      // Maximum distance in cm (HC-SR04 limit)

@@ -97,7 +97,7 @@ class RoboSortRemoteControl:
     def init_arduino(self):
         """Initialize serial connection to Arduino"""
         try:
-            # IMPORTANT: Arduino sketch in this repo uses Serial.begin(9600)
+           
             # Using the wrong baud rate will make Arduino receive garbage.
             self.arduino = serial.Serial(
                 self.arduino_port,

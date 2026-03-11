@@ -23,18 +23,6 @@
 #define ULTRASONIC1_TRIG_PIN 9   // Trigger pin for ultrasonic sensor 1
 #define ULTRASONIC1_ECHO_PIN 6   // Echo pin for ultrasonic sensor 1
 
-// Ultrasonic Sensor 2
-#define ULTRASONIC2_TRIG_PIN 29  // Trigger pin for ultrasonic sensor 2
-#define ULTRASONIC2_ECHO_PIN 27  // Echo pin for ultrasonic sensor 2
-
-// Ultrasonic Sensor 3
-#define ULTRASONIC3_TRIG_PIN 33  // Trigger pin for ultrasonic sensor 3
-#define ULTRASONIC3_ECHO_PIN 31  // Echo pin for ultrasonic sensor 3
-
-// Ultrasonic Sensor 4
-#define ULTRASONIC4_TRIG_PIN 37  // Trigger pin for ultrasonic sensor 4
-#define ULTRASONIC4_ECHO_PIN 35  // Echo pin for ultrasonic sensor 4
-
 // ===== STEPPER MOTOR DRIVER (TB6600) PINS =====
 #define STEPPER_STEP_PIN 3  // PUL+ connected to pin 3
 #define STEPPER_DIR_PIN 4   // DIR+ connected to pin 4
@@ -48,9 +36,8 @@
 #define BIN_LIMIT_PIN 43     // Bin limit switch connected to pin 43
 
 // ===== FRONT ULTRASONIC SENSORS (Obstacle Avoidance) =====
-#define FRONT_LEFT_TRIG  46  // Trigger pin for front-left obstacle sensor
-#define FRONT_LEFT_ECHO  47  // Echo pin for front-left obstacle sensor
-#define FRONT_RIGHT_TRIG 48  // Trigger pin for front-right obstacle sensor
-#define FRONT_RIGHT_ECHO 49  // Echo pin for front-right obstacle sensor
-
+#define FRONT_LEFT_TRIG  52  // Trigger pin for front-left obstacle sensor
+#define FRONT_LEFT_ECHO  53  // Echo pin for front-left obstacle sensor
+#define FRONT_RIGHT_TRIG 50  // Trigger pin for front-right obstacle sensor
+#define FRONT_RIGHT_ECHO 51  // Echo pin for front-right obstacle sensor
 #endif // PINS_H
