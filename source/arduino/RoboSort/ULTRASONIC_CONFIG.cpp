@@ -3,7 +3,6 @@
 UltrasonicConfig::UltrasonicConfig() {
     // Initialize pin arrays
     _trigPins[0] = ULTRASONIC1_TRIG_PIN;
-    
     _echoPins[0] = ULTRASONIC1_ECHO_PIN;
     
     // Initialize monitoring arrays
