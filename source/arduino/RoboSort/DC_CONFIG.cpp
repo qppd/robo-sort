@@ -150,7 +150,7 @@ void DCConfig::turnLeft(uint8_t speed) {
     stopAll();
     // Turn left: only right wheel moves (left wheel stopped)
     // INVERTED: Robot was physically flipped
-    moveMotor(MOTOR_B, BACKWARD, speed);  // Right wheel rotates for left turn
+    moveMotor(MOTOR_B, FORWARD, speed);   // Right wheel rotates for left turn
     // Left wheel (MOTOR_A) remains stopped
 }
 
