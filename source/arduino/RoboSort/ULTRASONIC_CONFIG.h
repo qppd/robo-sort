@@ -32,26 +32,8 @@ public:
     long readFrontLeftDistance();
     long readFrontRightDistance();
     // Mean-averaged front sensor readings (updated non-blocking in update())
-    inline long getAvgFrontLeftDistance() {
-        if (_frontLeftCount == 0) return 0;
-        long sum = 0;
-        uint8_t validCount = 0;
-        for (uint8_t i = 0; i < _frontLeftCount; i++) {
-            if (_frontLeftBuf[i] > 0) { sum += _frontLeftBuf[i]; validCount++; }
-        }
-        if (validCount == 0) return 0;
-        return sum / validCount;
-    }
-    inline long getAvgFrontRightDistance() {
-        if (_frontRightCount == 0) return 0;
-        long sum = 0;
-        uint8_t validCount = 0;
-        for (uint8_t i = 0; i < _frontRightCount; i++) {
-            if (_frontRightBuf[i] > 0) { sum += _frontRightBuf[i]; validCount++; }
-        }
-        if (validCount == 0) return 0;
-        return sum / validCount;
-    }
+    long getAvgFrontLeftDistance();
+    long getAvgFrontRightDistance();
 private:
     long measureDistance(uint8_t sensor);
     long measureDistanceOnPins(uint8_t trigPin, uint8_t echoPin);

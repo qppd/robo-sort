@@ -233,5 +233,32 @@ long UltrasonicConfig::readFrontRightDistance() {
     return measureDistanceOnPins(FRONT_RIGHT_TRIG, FRONT_RIGHT_ECHO);
 }
 
-// getAvgFrontLeftDistance() and getAvgFrontRightDistance() are defined
-// inline in ULTRASONIC_CONFIG.h to guarantee visibility at link time.
+// Mean of the last FRONT_AVG_SAMPLES front-left readings (ignores 0/out-of-range)
+long UltrasonicConfig::getAvgFrontLeftDistance() {
+    if (_frontLeftCount == 0) return 0;
+    long sum = 0;
+    uint8_t validCount = 0;
+    for (uint8_t i = 0; i < _frontLeftCount; i++) {
+        if (_frontLeftBuf[i] > 0) {
+            sum += _frontLeftBuf[i];
+            validCount++;
+        }
+    }
+    if (validCount == 0) return 0;
+    return sum / validCount;
+}
+
+// Mean of the last FRONT_AVG_SAMPLES front-right readings (ignores 0/out-of-range)
+long UltrasonicConfig::getAvgFrontRightDistance() {
+    if (_frontRightCount == 0) return 0;
+    long sum = 0;
+    uint8_t validCount = 0;
+    for (uint8_t i = 0; i < _frontRightCount; i++) {
+        if (_frontRightBuf[i] > 0) {
+            sum += _frontRightBuf[i];
+            validCount++;
+        }
+    }
+    if (validCount == 0) return 0;
+    return sum / validCount;
+}
