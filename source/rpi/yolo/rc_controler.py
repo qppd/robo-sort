@@ -85,6 +85,12 @@ class RoboSortRemoteControl:
         self._heartbeat_thread = None
         self._heartbeat_interval = 2.0  # seconds between AUTO_HEARTBEAT commands (< 5s Arduino timeout)
 
+        # Live sensor readings (updated by read_arduino_feedback)
+        self.front_left_dist: Optional[int] = None   # cm, None = no reading yet
+        self.front_right_dist: Optional[int] = None  # cm, None = no reading yet
+        self.rear_dist: Optional[int] = None         # sensor 1 (rear/top), cm
+        self.avoid_action = ""                       # last AVOID: log line from Arduino
+
         # Initialize connections
         self.init_arduino()
         self.init_camera()
@@ -770,78 +776,202 @@ class RoboSortRemoteControl:
     
     def read_arduino_feedback(self):
         """
-        Continuously read feedback from Arduino
-        Runs in separate thread - non-blocking
+        Continuously read feedback from Arduino.
+        Also parses AVOID: log lines and distance reports to keep
+        self.front_left_dist / front_right_dist / rear_dist up to date.
+        Runs in separate thread - non-blocking.
         """
+        import re
         while self.running:
             try:
                 if self.arduino.in_waiting > 0:
-                    line = self.arduino.readline().decode('utf-8').strip()
+                    line = self.arduino.readline().decode('utf-8', errors='ignore').strip()
 
                     if line:
-                        print(f"← Arduino response: '{line}'")
-                        
-                        # Parse feedback: format "S:1:90" or "M:FORWARD"
-                        parts = line.split(':')
+                        print(f"\u2190 Arduino response: '{line}'")
 
+                        # --- Structured feedback: "S:1:90" or "M:FORWARD" ---
+                        parts = line.split(':')
                         if parts[0] == 'S' and len(parts) == 3:
-                            # Servo feedback
                             servo_id = parts[1]
                             angle = parts[2]
                             self.update_status_async(f"servo{servo_id}", int(angle))
-
                         elif parts[0] == 'M' and len(parts) == 2:
-                            # Motor feedback
-                            state = parts[1]
-                            self.update_status_async("motor_state", state)
+                            self.update_status_async("motor_state", parts[1])
+
+                        # --- AVOID state-machine log lines ---
+                        # e.g. "AVOID: collision L=18 R=25 -> BACKWARD:255"
+                        if line.startswith("AVOID:"):
+                            self.avoid_action = line[6:].strip()
+                            # extract L= and R= values if present
+                            m = re.search(r'L=(\d+)', line)
+                            if m:
+                                self.front_left_dist = int(m.group(1))
+                            m = re.search(r'R=(\d+)', line)
+                            if m:
+                                self.front_right_dist = int(m.group(1))
+
+                        # --- Front distance queries: "FL_DIST"/"FR_DIST" replies ---
+                        # "Distance from Front Left Sensor: 32 cm"
+                        if 'Front Left' in line or 'front left' in line:
+                            m = re.search(r'(\d+)\s*cm', line)
+                            if m:
+                                self.front_left_dist = int(m.group(1))
+                        if 'Front Right' in line or 'front right' in line:
+                            m = re.search(r'(\d+)\s*cm', line)
+                            if m:
+                                self.front_right_dist = int(m.group(1))
+
+                        # --- Generic ultrasonic report: "Ultrasonic 1 Distance: 45 cm" ---
+                        if 'Ultrasonic 1' in line and 'Distance:' in line:
+                            m = re.search(r'(\d+)\s*cm', line)
+                            if m:
+                                self.rear_dist = int(m.group(1))
 
             except Exception as e:
                 if self.running:
                     print(f"Arduino read error: {e}")
 
+    # ------------------------------------------------------------------
+    # Camera display helpers
+    # ------------------------------------------------------------------
+    _MOVEMENT_LABEL = {
+        "FORWARD":    ("\u2191 FORWARD",    (0, 220, 0)),
+        "BACKWARD":   ("\u2193 BACKWARD",   (0, 100, 255)),
+        "LEFT":       ("\u21b0 ARC LEFT",   (0, 220, 220)),
+        "RIGHT":      ("\u21b1 ARC RIGHT",  (0, 180, 255)),
+        "TURN_LEFT":  ("\u21ba TURN LEFT",  (255, 180, 0)),
+        "TURN_RIGHT": ("\u21bb TURN RIGHT", (255, 100, 0)),
+        "STOP":       ("\u25a0 STOP",        (0, 0, 220)),
+    }
+
+    @staticmethod
+    def _dist_color(dist, warn_cm=35, crit_cm=20):
+        """Return BGR colour for a sensor distance reading."""
+        if dist is None:
+            return (160, 160, 160)   # grey  - no data
+        if dist <= crit_cm:
+            return (0, 0, 255)       # red   - collision zone
+        if dist <= warn_cm:
+            return (0, 165, 255)     # orange - warning zone
+        return (0, 220, 0)           # green - clear
+
     def display_camera(self):
         """
-        Display camera feed locally on Raspberry Pi
-        Runs in separate thread - non-blocking
+        Display camera feed locally on Raspberry Pi.
+        Overlay: movement arrow, front ultrasonic bars, rear distance,
+                 autonomous mode indicator, servo positions, detected object.
         """
         if not self.camera:
             return
 
+        font       = cv2.FONT_HERSHEY_SIMPLEX
+        font_sm    = 0.55
+        font_md    = 0.70
+        thick_sm   = 1
+        thick_md   = 2
+
         while self.running:
             ret, frame = self.camera.read()
+            if not ret:
+                continue
 
-            if ret:
-                # Define crosshair position (center of frame)
-                crosshair_x = frame.shape[1] // 2
-                crosshair_y = (frame.shape[0] // 2) + 100  # Move crosshair down by 50 pixels
+            h, w = frame.shape[:2]
 
-                # Draw crosshair
-                cv2.line(frame, (crosshair_x - 20, crosshair_y), (crosshair_x + 20, crosshair_y), (0, 255, 0), 2)
-                cv2.line(frame, (crosshair_x, crosshair_y - 20), (crosshair_x, crosshair_y + 20), (0, 255, 0), 2)
+            # ── Crosshair ──────────────────────────────────────────────
+            cx, cy = w // 2, h // 2 + 100
+            cv2.line(frame, (cx - 20, cy), (cx + 20, cy), (0, 255, 0), 2)
+            cv2.line(frame, (cx, cy - 20), (cx, cy + 20), (0, 255, 0), 2)
 
-                # Share latest frame to stream (after crosshair so stream matches what you see)
-                with self._frame_lock:
-                    self._latest_frame = frame
+            # Share frame with MJPEG stream before text overlays
+            # (stream gets clean crosshair frame; text overlays on local copy)
+            with self._frame_lock:
+                self._latest_frame = frame.copy()
 
-                # Add status overlay
-                cv2.putText(frame, f"Motor: {self.motor_state}", (10, 30),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+            # ── Semi-transparent dark sidebar (left) ───────────────────
+            overlay = frame.copy()
+            cv2.rectangle(overlay, (0, 0), (260, h), (20, 20, 20), -1)
+            cv2.addWeighted(overlay, 0.45, frame, 0.55, 0, frame)
 
-                cv2.putText(frame, f"S1:{self.servo_angles['servo1']} S2:{self.servo_angles['servo2']}",
-                           (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+            # ── Movement label ─────────────────────────────────────────
+            mv   = self.motor_state.upper() if self.motor_state else "STOP"
+            lbl, lbl_color = self._MOVEMENT_LABEL.get(mv, (mv, (200, 200, 200)))
+            cv2.putText(frame, lbl, (8, 30), font, font_md, lbl_color, thick_md)
 
-                cv2.putText(frame, f"S3:{self.servo_angles['servo3']} S4:{self.servo_angles['servo4']}",
-                           (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+            # ── Autonomous mode badge ──────────────────────────────────
+            if self.autonomous_mode:
+                cv2.putText(frame, "AUTO", (8, 56), font, font_md, (0, 255, 180), thick_md)
+            else:
+                cv2.putText(frame, "MANUAL", (8, 56), font, font_sm, (160, 160, 160), thick_sm)
 
-                # Display detected object
-                cv2.putText(frame, f"Detected: {self.detected_object}", (10, 120),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
+            # ── Front ultrasonic bars ──────────────────────────────────
+            bar_y    = 75
+            bar_max  = 80     # pixel width for 100 cm
+            max_cm   = 100.0
 
-                cv2.imshow("RoboSort RC View", frame)
+            # Left sensor
+            dL  = self.front_left_dist
+            cL  = self._dist_color(dL)
+            lL  = f"FL: {'---' if dL is None else f'{dL:3d} cm'}"
+            bwL = 0 if dL is None else int(min(dL, max_cm) / max_cm * bar_max)
+            cv2.rectangle(frame, (8, bar_y + 4), (8 + bar_max, bar_y + 16), (60, 60, 60), -1)
+            if bwL > 0:
+                cv2.rectangle(frame, (8, bar_y + 4), (8 + bwL, bar_y + 16), cL, -1)
+            cv2.putText(frame, lL, (8, bar_y), font, font_sm, cL, thick_sm)
 
-                # Non-blocking key check
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    self.running = False
+            # Right sensor
+            bar_y2 = bar_y + 30
+            dR  = self.front_right_dist
+            cR  = self._dist_color(dR)
+            lR  = f"FR: {'---' if dR is None else f'{dR:3d} cm'}"
+            bwR = 0 if dR is None else int(min(dR, max_cm) / max_cm * bar_max)
+            cv2.rectangle(frame, (8, bar_y2 + 4), (8 + bar_max, bar_y2 + 16), (60, 60, 60), -1)
+            if bwR > 0:
+                cv2.rectangle(frame, (8, bar_y2 + 4), (8 + bwR, bar_y2 + 16), cR, -1)
+            cv2.putText(frame, lR, (8, bar_y2), font, font_sm, cR, thick_sm)
+
+            # Rear / top sensor
+            bar_y3 = bar_y2 + 30
+            dS  = self.rear_dist
+            cS  = self._dist_color(dS, warn_cm=22, crit_cm=10)
+            lS  = f"S1: {'---' if dS is None else f'{dS:3d} cm'}"
+            cv2.putText(frame, lS, (8, bar_y3), font, font_sm, cS, thick_sm)
+
+            # Obstacle status summary
+            bar_y4 = bar_y3 + 22
+            if dL is not None and dR is not None:
+                if dL <= 20 or dR <= 20:
+                    obs_txt, obs_col = "!! COLLISION !!", (0, 0, 255)
+                elif dL <= 35 or dR <= 35:
+                    obs_txt, obs_col = "WARN: close",   (0, 165, 255)
+                else:
+                    obs_txt, obs_col = "PATH CLEAR",    (0, 220, 0)
+            else:
+                obs_txt, obs_col = "sensors init...", (160, 160, 160)
+            cv2.putText(frame, obs_txt, (8, bar_y4), font, font_sm, obs_col, thick_sm)
+
+            # Avoid action (last line from Arduino AVOID: log)
+            if self.autonomous_mode and self.avoid_action:
+                short = self.avoid_action[:30]
+                cv2.putText(frame, short, (8, bar_y4 + 20), font, 0.42, (200, 200, 100), 1)
+
+            # ── Servos & detected object ───────────────────────────────
+            sv_y = bar_y4 + 50
+            cv2.putText(frame,
+                f"S1:{self.servo_angles['servo1']} S2:{self.servo_angles['servo2']}",
+                (8, sv_y), font, font_sm, (180, 220, 180), thick_sm)
+            cv2.putText(frame,
+                f"S3:{self.servo_angles['servo3']} S4:{self.servo_angles['servo4']}",
+                (8, sv_y + 20), font, font_sm, (180, 220, 180), thick_sm)
+            cv2.putText(frame,
+                f"Obj: {self.detected_object}",
+                (8, sv_y + 40), font, font_sm, (220, 220, 100), thick_sm)
+
+            cv2.imshow("RoboSort RC View", frame)
+
+            # Non-blocking key check
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                self.running = False
 
     def run(self):
         """Start all threads and run the control system"""
