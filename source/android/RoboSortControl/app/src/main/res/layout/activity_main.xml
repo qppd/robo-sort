@@ -212,13 +212,71 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Autonomous Mode Control -->
+        <LinearLayout
+            android:id="@+id/autonomousRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/motorLifterRow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Autonomous:"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="6dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAutoOn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="AUTO ON"
+                android:textSize="12sp"
+                app:cornerRadius="6dp"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:minHeight="40dp"
+                android:padding="4dp"
+                android:layout_marginEnd="4dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAutoOff"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="AUTO OFF"
+                android:textSize="12sp"
+                app:cornerRadius="6dp"
+                android:backgroundTint="@android:color/holo_orange_dark"
+                android:minHeight="40dp"
+                android:padding="4dp"
+                android:layout_marginStart="4dp" />
+
+            <TextView
+                android:id="@+id/autoStatusLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="●"
+                android:textSize="22sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
         <!-- BIN and Servo Controls (Side by Side) -->
         <LinearLayout
             android:id="@+id/binServoRow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/motorLifterRow"
+            app:layout_constraintTop_toBottomOf="@id/autonomousRow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="8dp">

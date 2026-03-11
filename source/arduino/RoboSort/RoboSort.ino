@@ -32,21 +32,21 @@ unsigned long lastAutonomousHeartbeat = 0;
 const unsigned long AUTONOMOUS_TIMEOUT = 5000; // 5 seconds timeout for autonomous mode
 
 // Autonomous navigation state machine
-enum AutoNavState {
-  AUTO_STATE_FORWARD = 0,
-  AUTO_STATE_REVERSING,
-  AUTO_STATE_SCAN,
-  AUTO_STATE_TURNING_SOFT,
-  AUTO_STATE_TURNABOUT
+// Distance limits are configured in ULTRASONIC_CONFIG.h:
+//   FRONT_LEFT/RIGHT_WARN_CM      – gentle arc correction while moving forward
+//   FRONT_LEFT/RIGHT_COLLISION_CM – hard stop, reverse, then spot-turn
+enum AutoAvoidState {
+  AVOID_FORWARD = 0,  // Moving forward; sensors monitored every cycle
+  AVOID_BACKWARD,     // Reversing briefly to clear space before deciding turn
+  AVOID_TURNING       // Executing corrective turn; sensors still monitored
 };
 
-AutoNavState autoNavState        = AUTO_STATE_FORWARD;
-unsigned long autoStateEntryTime = 0;
-uint8_t autoTurnDirection        = 1;  // 0=left, 1=right
+AutoAvoidState avoidState    = AVOID_FORWARD;
+unsigned long  avoidStateTime = 0;
 
-const uint8_t  AUTO_SPEED              = 150;
-const unsigned long AUTO_REVERSE_MS    = 300;  // reverse duration before scan
-const unsigned long AUTO_SOFT_TURN_MS  = 500;  // soft-turn duration before resuming
+const uint8_t       AUTO_FULL_SPEED  = 255; // Speed used for all autonomous moves
+const unsigned long AUTO_BACKWARD_MS = 400; // How long to reverse before deciding (ms)
+const unsigned long AUTO_TURN_MS     = 700; // How long to execute corrective turn (ms)
 
 // Ultrasonic buzzer control
 const int ULTRASONIC_THRESHOLD = 22; // cm
@@ -55,84 +55,130 @@ const unsigned long ULTRASONIC_CHECK_INTERVAL = 500; // ms
 bool buzzerActive = false;
 
 // --- Front obstacle avoidance (non-blocking state machine) ---
+// Reads both front ultrasonic sensors every cycle — including during turns —
+// so a side collision while turning is caught immediately.
+//
+// AVOID_FORWARD:
+//   Both sensors clear           → FORWARD:255
+//   One side in warning zone     → gentle arc away (LEFT:255 or RIGHT:255)
+//   Either sensor in collision   → stop → BACKWARD:255 → AVOID_BACKWARD
+//
+// AVOID_BACKWARD:
+//   After AUTO_BACKWARD_MS ms, re-read sensors and decide:
+//     Both clear                 → FORWARD:255 (continue normally)
+//     Left blocked only          → TURN_RIGHT:255
+//     Right blocked only         → TURN_LEFT:255
+//     Both blocked               → TURN toward side with more space
+//
+// AVOID_TURNING:
+//   Execute chosen spot-turn; keep checking sensors.
+//   New collision mid-turn      → immediately → AVOID_BACKWARD
+//   After AUTO_TURN_MS ms        → AVOID_FORWARD
 void autonomousObstacleCheck() {
   unsigned long now = millis();
 
-  switch (autoNavState) {
+  switch (avoidState) {
 
-    case AUTO_STATE_FORWARD: {
-      long distLeft  = ultrasonicConfig.getAvgFrontLeftDistance();
-      long distRight = ultrasonicConfig.getAvgFrontRightDistance();
-      bool leftBlocked  = (distLeft  > 0 && distLeft  <= OBSTACLE_DISTANCE);
-      bool rightBlocked = (distRight > 0 && distRight <= OBSTACLE_DISTANCE);
+    // ── FORWARD ───────────────────────────────────────────────────────────
+    case AVOID_FORWARD: {
+      long dL = ultrasonicConfig.getAvgFrontLeftDistance();
+      long dR = ultrasonicConfig.getAvgFrontRightDistance();
+      bool lCollide = (dL > 0 && dL <= FRONT_LEFT_COLLISION_CM);
+      bool rCollide = (dR > 0 && dR <= FRONT_RIGHT_COLLISION_CM);
+      bool lWarn    = (dL > 0 && dL <= FRONT_LEFT_WARN_CM);
+      bool rWarn    = (dR > 0 && dR <= FRONT_RIGHT_WARN_CM);
 
-      if (leftBlocked || rightBlocked) {
+      if (lCollide || rCollide) {
+        // Hard collision zone — stop and reverse to create maneuvering space
         dcConfig.stopAll();
-        autoStateEntryTime = now;
-        autoNavState = AUTO_STATE_REVERSING;
+        avoidState    = AVOID_BACKWARD;
+        avoidStateTime = now;
+        dcConfig.moveBackward(AUTO_FULL_SPEED);
+        Serial.print("AVOID: collision L="); Serial.print(dL);
+        Serial.print(" R="); Serial.print(dR); Serial.println(" -> BACKWARD:255");
+      } else if (lWarn && !rWarn) {
+        // Left approaching — gentle arc right (single-motor, robot keeps moving)
+        dcConfig.turnRight(AUTO_FULL_SPEED);
+      } else if (rWarn && !lWarn) {
+        // Right approaching — gentle arc left
+        dcConfig.turnLeft(AUTO_FULL_SPEED);
+      } else if (lWarn && rWarn) {
+        // Both sides in warning zone — arc toward the side with more space
+        if (dL <= dR) {
+          dcConfig.turnRight(AUTO_FULL_SPEED); // left closer -> arc right
+        } else {
+          dcConfig.turnLeft(AUTO_FULL_SPEED);  // right closer -> arc left
+        }
       } else {
-        dcConfig.moveForward(AUTO_SPEED);
+        dcConfig.moveForward(AUTO_FULL_SPEED);
       }
       break;
     }
 
-    case AUTO_STATE_REVERSING:
-      dcConfig.moveBackward(AUTO_SPEED);
-      if (now - autoStateEntryTime >= AUTO_REVERSE_MS) {
+    // ── BACKWARD ──────────────────────────────────────────────────────────
+    case AVOID_BACKWARD: {
+      if (now - avoidStateTime >= AUTO_BACKWARD_MS) {
         dcConfig.stopAll();
-        autoNavState = AUTO_STATE_SCAN;
-      }
-      break;
+        // Re-read sensors after reversing to choose optimal turn direction
+        long dL = ultrasonicConfig.getAvgFrontLeftDistance();
+        long dR = ultrasonicConfig.getAvgFrontRightDistance();
+        bool lBlocked = (dL > 0 && dL <= FRONT_LEFT_COLLISION_CM);
+        bool rBlocked = (dR > 0 && dR <= FRONT_RIGHT_COLLISION_CM);
 
-    case AUTO_STATE_SCAN: {
-      long distLeft  = ultrasonicConfig.getAvgFrontLeftDistance();
-      long distRight = ultrasonicConfig.getAvgFrontRightDistance();
-      bool leftBlocked  = (distLeft  > 0 && distLeft  <= OBSTACLE_DISTANCE);
-      bool rightBlocked = (distRight > 0 && distRight <= OBSTACLE_DISTANCE);
-
-      autoStateEntryTime = now;
-
-      if (!leftBlocked && !rightBlocked) {
-        // Path is clear — resume forward immediately
-        autoNavState = AUTO_STATE_FORWARD;
-      } else if (!rightBlocked) {
-        // Left blocked, right open → soft-turn right
-        autoTurnDirection = 1;
-        autoNavState = AUTO_STATE_TURNING_SOFT;
-      } else if (!leftBlocked) {
-        // Right blocked, left open → soft-turn left
-        autoTurnDirection = 0;
-        autoNavState = AUTO_STATE_TURNING_SOFT;
-      } else {
-        // Both sides blocked → rotate in place to find a clear path
-        autoTurnDirection = 1;
-        autoNavState = AUTO_STATE_TURNABOUT;
+        if (!lBlocked && !rBlocked) {
+          avoidState = AVOID_FORWARD;
+          Serial.println("AVOID: path clear -> FORWARD:255");
+        } else if (lBlocked && !rBlocked) {
+          dcConfig.turnAbout(1, AUTO_FULL_SPEED); // TURN_RIGHT:255
+          avoidState    = AVOID_TURNING;
+          avoidStateTime = now;
+          Serial.println("AVOID: left blocked -> TURN_RIGHT:255");
+        } else if (!lBlocked && rBlocked) {
+          dcConfig.turnAbout(0, AUTO_FULL_SPEED); // TURN_LEFT:255
+          avoidState    = AVOID_TURNING;
+          avoidStateTime = now;
+          Serial.println("AVOID: right blocked -> TURN_LEFT:255");
+        } else {
+          // Both blocked — turn toward the side with more space
+          // (when both dL and dR > 0 here; larger value = more space)
+          if (dL >= dR) {
+            dcConfig.turnAbout(0, AUTO_FULL_SPEED); // TURN_LEFT:255
+            Serial.print("AVOID: both blocked (L="); Serial.print(dL);
+            Serial.print(" R="); Serial.print(dR); Serial.println(") -> TURN_LEFT:255");
+          } else {
+            dcConfig.turnAbout(1, AUTO_FULL_SPEED); // TURN_RIGHT:255
+            Serial.print("AVOID: both blocked (L="); Serial.print(dL);
+            Serial.print(" R="); Serial.print(dR); Serial.println(") -> TURN_RIGHT:255");
+          }
+          avoidState    = AVOID_TURNING;
+          avoidStateTime = now;
+        }
       }
       break;
     }
 
-    case AUTO_STATE_TURNING_SOFT:
-      if (autoTurnDirection == 0) {
-        dcConfig.turnLeft(AUTO_SPEED);
-      } else {
-        dcConfig.turnRight(AUTO_SPEED);
-      }
-      if (now - autoStateEntryTime >= AUTO_SOFT_TURN_MS) {
-        autoNavState = AUTO_STATE_FORWARD;
-      }
-      break;
+    // ── TURNING ───────────────────────────────────────────────────────────
+    case AVOID_TURNING: {
+      // Monitor sensors during every turn — a new obstacle could appear
+      long dL = ultrasonicConfig.getAvgFrontLeftDistance();
+      long dR = ultrasonicConfig.getAvgFrontRightDistance();
+      bool lCollide = (dL > 0 && dL <= FRONT_LEFT_COLLISION_CM);
+      bool rCollide = (dR > 0 && dR <= FRONT_RIGHT_COLLISION_CM);
 
-    case AUTO_STATE_TURNABOUT: {
-      long distLeft  = ultrasonicConfig.getAvgFrontLeftDistance();
-      long distRight = ultrasonicConfig.getAvgFrontRightDistance();
-      bool leftBlocked  = (distLeft  > 0 && distLeft  <= OBSTACLE_DISTANCE);
-      bool rightBlocked = (distRight > 0 && distRight <= OBSTACLE_DISTANCE);
-
-      if (!leftBlocked && !rightBlocked) {
+      if (lCollide || rCollide) {
+        // New obstacle detected mid-turn — reverse again
         dcConfig.stopAll();
-        autoNavState = AUTO_STATE_FORWARD;
-      } else {
-        dcConfig.turnAbout(autoTurnDirection, AUTO_SPEED);
+        avoidState    = AVOID_BACKWARD;
+        avoidStateTime = now;
+        dcConfig.moveBackward(AUTO_FULL_SPEED);
+        Serial.println("AVOID: obstacle mid-turn -> BACKWARD:255");
+        break;
+      }
+
+      if (now - avoidStateTime >= AUTO_TURN_MS) {
+        dcConfig.stopAll();
+        avoidState = AVOID_FORWARD;
+        Serial.println("AVOID: turn done -> FORWARD:255");
       }
       break;
     }
@@ -221,7 +267,7 @@ void loop() {
       // Timeout - stop motors for safety
       dcConfig.stopAll();
       autonomousMode = false;
-      autoNavState = AUTO_STATE_FORWARD;
+      avoidState = AVOID_FORWARD;
       Serial.println("AUTONOMOUS MODE TIMEOUT - SAFETY STOP!");
       buzzerConfig.errorBeep();
     }
@@ -790,13 +836,15 @@ void loop() {
     // Autonomous navigation commands
     else if (input.equalsIgnoreCase("AUTO_START")) {
       autonomousMode = true;
-      lastAutonomousHeartbeat = millis();      autoNavState = AUTO_STATE_FORWARD;
-      autoStateEntryTime = millis();      Serial.println("AUTONOMOUS MODE ENABLED");
+      lastAutonomousHeartbeat = millis();
+      avoidState    = AVOID_FORWARD;
+      avoidStateTime = millis();
+      Serial.println("AUTONOMOUS MODE ENABLED");
       Serial.println("Send AUTO_HEARTBEAT commands regularly to maintain control");
       buzzerConfig.successBeep();
     } else if (input.equalsIgnoreCase("AUTO_STOP")) {
       autonomousMode = false;
-      autoNavState = AUTO_STATE_FORWARD;
+      avoidState = AVOID_FORWARD;
       dcConfig.stopAll();
       Serial.println("AUTONOMOUS MODE DISABLED");
       Serial.println("Motors stopped.");
@@ -826,13 +874,13 @@ void loop() {
     } else if (input.equalsIgnoreCase("AUTO_ON")) {
       autonomousMode = true;
       lastAutonomousHeartbeat = millis();
-      autoNavState = AUTO_STATE_FORWARD;
-      autoStateEntryTime = millis();
+      avoidState    = AVOID_FORWARD;
+      avoidStateTime = millis();
       Serial.println("AUTONOMOUS MODE ENABLED");
       buzzerConfig.successBeep();
     } else if (input.equalsIgnoreCase("AUTO_OFF")) {
       autonomousMode = false;
-      autoNavState = AUTO_STATE_FORWARD;
+      avoidState = AVOID_FORWARD;
       dcConfig.stopAll();
       Serial.println("AUTONOMOUS MODE DISABLED");
       buzzerConfig.warningBeep();

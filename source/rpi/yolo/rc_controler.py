@@ -1,9 +1,4 @@
 ﻿#!/usr/bin/env python3
-"""
-Real-Time Remote Control System for RoboSort
-Controls DC motors and servo motors via Firebase Realtime Database
-No artificial delays - pure event-driven architecture
-"""
 
 import cv2
 import serial
@@ -69,8 +64,7 @@ class RoboSortRemoteControl:
 
         # Current state
         self.current_command = "STOP"
-        # Match Arduino SERVO_CONFIG defaults (channels 1-5):
-        # 1: ARM-ROTATE=180, 2: GRIP=110, 3: GRIP-ROTATE=90, 4: ARM-EXTEND=180, 5: LOOK=180
+        
         self.servo_angles = {"servo1": 180, "servo2": 110, "servo3": 90, "servo4": 180, "servo5": 180}
         self.motor_state = "STOP"
         self.detected_object = "None"  # Store detected object for display
@@ -88,6 +82,8 @@ class RoboSortRemoteControl:
         # Autonomous obstacle avoidance mode
         self.autonomous_mode = False
         self._autonomous_stream = None
+        self._heartbeat_thread = None
+        self._heartbeat_interval = 2.0  # seconds between AUTO_HEARTBEAT commands (< 5s Arduino timeout)
 
         # Initialize connections
         self.init_arduino()
@@ -268,10 +264,31 @@ class RoboSortRemoteControl:
             self.autonomous_mode = True
             self.send_text_command("AUTO_ON")
             print("✓ Autonomous mode ON - sent AUTO_ON to Arduino")
+            self._start_heartbeat()
         elif value == 0 and self.autonomous_mode:
             self.autonomous_mode = False
             self.send_text_command("AUTO_OFF")
             print("✓ Autonomous mode OFF - sent AUTO_OFF to Arduino")
+            # heartbeat thread checks self.autonomous_mode and will stop itself
+
+    def _start_heartbeat(self):
+        """Start a background thread that keeps sending AUTO_HEARTBEAT to Arduino
+        every _heartbeat_interval seconds while autonomous_mode is True."""
+        if self._heartbeat_thread and self._heartbeat_thread.is_alive():
+            return  # already running
+
+        def _heartbeat_loop():
+            print(f"✓ Heartbeat thread started (interval: {self._heartbeat_interval}s)")
+            while self.running and self.autonomous_mode:
+                try:
+                    self.send_text_command("AUTO_HEARTBEAT")
+                except Exception as e:
+                    print(f"✗ Heartbeat send error: {e}")
+                time.sleep(self._heartbeat_interval)
+            print("✓ Heartbeat thread stopped")
+
+        self._heartbeat_thread = threading.Thread(target=_heartbeat_loop, daemon=True)
+        self._heartbeat_thread.start()
 
     def init_gpio_button(self):
         """Initialize GPIO button on pin 17 for alert beep"""

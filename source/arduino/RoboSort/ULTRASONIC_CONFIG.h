@@ -10,7 +10,13 @@
 // Measurement constants
 #define MAX_DISTANCE 400      // Maximum distance in cm (HC-SR04 limit)
 #define TIMEOUT 30000         // Timeout in microseconds
-#define OBSTACLE_DISTANCE 25  // Front obstacle detection threshold in cm
+#define OBSTACLE_DISTANCE 25  // Legacy front obstacle threshold (kept for compatibility)
+
+// --- Per-sensor front collision distance limits (easy to tune) ---
+#define FRONT_LEFT_WARN_CM       35   // Left sensor: start gentle arc correction (cm)
+#define FRONT_LEFT_COLLISION_CM  20   // Left sensor: hard stop + reverse + spot-turn (cm)
+#define FRONT_RIGHT_WARN_CM      35   // Right sensor: start gentle arc correction (cm)
+#define FRONT_RIGHT_COLLISION_CM 20   // Right sensor: hard stop + reverse + spot-turn (cm)
 
 // Front sensor mean-averaging
 #define FRONT_AVG_SAMPLES 5         // Rolling window size for mean filter

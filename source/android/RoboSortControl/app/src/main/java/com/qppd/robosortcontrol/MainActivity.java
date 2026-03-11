@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference commandsRef;
     private DatabaseReference feedbackRef;
     private DatabaseReference alertRef;
+    private DatabaseReference autonomousModeRef;
     
     // UI Elements
     private TextView statusText;
@@ -49,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton btnLifterUp, btnLifterDown, btnLifterStop;
     private MaterialButton btnBinHome, btnBinClear, btnBin1, btnBin2, btnBin3, btnBin4;
     private MaterialButton btnPlace;
+    
+    // Autonomous mode
+    private MaterialButton btnAutoOn, btnAutoOff;
+    private TextView autoStatusLabel;
+    private boolean isAutonomousMode = false;
     
     // Detection buttons
     private MaterialButton btnDetectBottle, btnDetectWrapper, btnDetectPaper, btnDetectOther;
@@ -108,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         setupDetectionControls();
         setupServoControls();
         setupPlaceControl();
+        setupAutonomousControls();
 
         setupFeedbackListener();
         setupAlertListener();
@@ -122,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
             // RPi publishes live state under robosortv2/status
             feedbackRef = database.getReference("robosortv2/status");
             alertRef = database.getReference("robosortv2/commands/alert");
+            // Autonomous mode flag — RPi listens here and forwards to Arduino
+            autonomousModeRef = database.getReference("robot/autonomous_mode");
             
             // Test connection with detailed logging
             commandsRef.child("timestamp").setValue(System.currentTimeMillis())
@@ -167,6 +176,11 @@ public class MainActivity extends AppCompatActivity {
         btnBin4 = findViewById(R.id.btnBin4);
         
         btnPlace = findViewById(R.id.btnPlace);
+
+        // Autonomous mode
+        btnAutoOn = findViewById(R.id.btnAutoOn);
+        btnAutoOff = findViewById(R.id.btnAutoOff);
+        autoStatusLabel = findViewById(R.id.autoStatusLabel);
         
         // Detection buttons
         btnDetectBottle = findViewById(R.id.btnDetectBottle);
@@ -340,7 +354,50 @@ public class MainActivity extends AppCompatActivity {
                 });
         });
     }
-    
+    private void setupAutonomousControls() {
+        btnAutoOn.setOnClickListener(v -> setAutonomousMode(true));
+        btnAutoOff.setOnClickListener(v -> setAutonomousMode(false));
+
+        // Sync UI when the flag changes (e.g. another device or RPi resets it)
+        if (autonomousModeRef != null) {
+            autonomousModeRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Object val = snapshot.getValue();
+                    boolean on = (val instanceof Long   && (Long)    val == 1L)
+                              || (val instanceof Boolean && (Boolean) val);
+                    updateAutonomousUI(on);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("RoboSort", "Autonomous mode listener cancelled: " + error.getMessage());
+                }
+            });
+        }
+    }
+
+    private void setAutonomousMode(boolean on) {
+        if (!isConnected || autonomousModeRef == null) return;
+        autonomousModeRef.setValue(on ? 1 : 0)
+            .addOnSuccessListener(aVoid ->
+                Log.d("RoboSort", "Autonomous mode set to " + (on ? "ON" : "OFF")))
+            .addOnFailureListener(e ->
+                feedbackText.setText("Failed to set autonomous mode: " + e.getMessage()));
+    }
+
+    private void updateAutonomousUI(boolean on) {
+        isAutonomousMode = on;
+        runOnUiThread(() -> {
+            if (on) {
+                autoStatusLabel.setTextColor(
+                    getResources().getColor(android.R.color.holo_green_dark));
+                feedbackText.setText("\uD83E\uDD16 Autonomous mode ON");
+            } else {
+                autoStatusLabel.setTextColor(
+                    getResources().getColor(android.R.color.darker_gray));
+            }
+        });
+    }    
     private void setupServoControls() {
         // ARM-ROTATE: FRONT/BACK
         btnArmRotateFront.setOnClickListener(v -> {
