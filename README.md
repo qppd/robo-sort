@@ -536,7 +536,7 @@ The wiring diagram shows the complete electrical connections for the RoboSort sy
 - **OE** → Arduino Pin 2 (Output Enable, active low)
 - **V+** → External 5V Power Supply (for servos)
 - **GND** → Common Ground with external power
-- **Servo Outputs** → 5 Servos connected to channels 0-4
+- **Servo Outputs** → 6 Servos connected to channels 0-5 (ch0: arm-rotate, ch1: extend, ch2: look, ch3: grip-rotator, ch4: gripper, ch5: lifter)
 
 **2. TB6600 Stepper Motor Driver**
 - **Control Pins:**

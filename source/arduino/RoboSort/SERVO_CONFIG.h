@@ -5,7 +5,7 @@
 #include "PINS.h"
 
 #define NUM_SERVOS 6
-#define LIFTER_SERVO_CHANNEL 0  // 360° continuous servo on channel 0
+#define LIFTER_SERVO_CHANNEL 5  // 360° continuous servo on channel 5
 
 // Continuous servo control values for PCA9685 (pulse length: 0-4096)
 #define LIFTER_STOP 310        // Neutral position (stopped)
@@ -29,19 +29,19 @@ private:
   bool homingPhase;               // true = UP phase, false = DOWN phase
   
   // Arm servo position tracking
-  int currentArmAngle;  // Track current position of channel 1 arm servo
+  int currentArmAngle;  // Track current position of channel 0 arm servo
   
   // Gripper servo position tracking
-  int currentGripperAngle;  // Track current position of channel 2 gripper servo
+  int currentGripperAngle;  // Track current position of channel 4 gripper servo
   
   // Gripper rotation servo position tracking
-  int currentGripperRotationAngle;  // Track current position of channel 3 gripper rotation servo
+  int currentGripperRotationAngle;  // Track current position of channel 3 gripper rotation servo (grip-rotator)
   
   // Arm extension servo position tracking
-  int currentArmExtensionAngle;  // Track current position of channel 4 arm extension servo
+  int currentArmExtensionAngle;  // Track current position of channel 1 arm extension servo
   
   // Look servo position tracking
-  int currentLookAngle;  // Track current position of channel 5 look servo
+  int currentLookAngle;  // Track current position of channel 2 look servo
   
   // Mutual exclusion flags for smooth operation
   bool armExtendOperating;  // Flag to track if ARM-EXTEND servo is operating
@@ -61,11 +61,11 @@ public:
   // Servo control functions
   void testServos();
   void setServoAngle(int servoNum, int angle);
-  void armRotate(int angle);  // Control MG996R on channel 1
-  void gripperRotate(int angle);  // Control gripper servo on channel 2
-  void gripperRotationRotate(int angle);  // Control gripper rotation servo on channel 3
-  void armExtend(int angle);  // Control arm extension servo on channel 4
-  void lookRotate(int angle);  // Control look servo on channel 5
+  void armRotate(int angle);  // Control MG996R on channel 0
+  void gripperRotate(int angle);  // Control gripper servo on channel 4
+  void gripperRotationRotate(int angle);  // Control grip-rotator servo on channel 3
+  void armExtend(int angle);  // Control arm extension servo on channel 1
+  void lookRotate(int angle);  // Control look servo on channel 2
   
   // Mutual exclusion status functions
   bool isArmExtendOperating() { return armExtendOperating; }

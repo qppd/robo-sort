@@ -49,19 +49,19 @@ void ServoConfig::begin() {
   lifterStop();
   
   // Set arm servo to default position (180 degrees)
-  setServoAngle(1, 180);
+  setServoAngle(0, 180);
   
   // Set gripper servo to default position (105 degrees)
-  setServoAngle(2, 110);
+  setServoAngle(4, 110);
   
   // Set gripper rotation servo to default position (90 degrees)
   setServoAngle(3, 90);
   
   // Set arm extension servo to HOME position (180 degrees)
-  setServoAngle(4, 180);
+  setServoAngle(1, 180);
   
   // Set look servo to HOME position (180 degrees)
-  setServoAngle(5, 180);
+  setServoAngle(2, 180);
   currentLookAngle = 180;
   
   // Enable servos by default
@@ -257,7 +257,7 @@ void ServoConfig::setServoAngle(int servoNum, int angle) {
 }
 
 void ServoConfig::armRotate(int angle) {
-  // Control MG996R servo on channel 1 (0-180 degrees)
+  // Control MG996R servo on channel 0 (0-180 degrees)
   if (angle < 0 || angle > 180) {
     Serial.println("Invalid angle. Range: 0-180");
     return;
@@ -274,7 +274,7 @@ void ServoConfig::armRotate(int angle) {
   
   while (currentArmAngle != angle) {
     currentArmAngle += step;
-    setServoAngle(1, currentArmAngle);
+    setServoAngle(0, currentArmAngle);
     delay(15);  // 15ms per degree for smooth motion
   }
   
@@ -284,7 +284,7 @@ void ServoConfig::armRotate(int angle) {
 }
 
 void ServoConfig::gripperRotate(int angle) {
-  // Control gripper servo on channel 2 (0-180 degrees)
+  // Control gripper servo on channel 4 (0-180 degrees)
   if (angle < 0 || angle > 180) {
     Serial.println("Invalid angle. Range: 0-180");
     return;
@@ -301,7 +301,7 @@ void ServoConfig::gripperRotate(int angle) {
   
   while (currentGripperAngle != angle) {
     currentGripperAngle += step;
-    setServoAngle(2, currentGripperAngle);
+    setServoAngle(4, currentGripperAngle);
     delay(15);  // 15ms per degree for smooth motion
   }
   
@@ -311,7 +311,7 @@ void ServoConfig::gripperRotate(int angle) {
 }
 
 void ServoConfig::gripperRotationRotate(int angle) {
-  // Control gripper rotation servo on channel 3 (0-180 degrees)
+  // Control gripper rotation servo on channel 3 (grip-rotator, 0-180 degrees)
   if (angle < 0 || angle > 180) {
     Serial.println("Invalid angle. Range: 0-180");
     return;
@@ -338,7 +338,7 @@ void ServoConfig::gripperRotationRotate(int angle) {
 }
 
 void ServoConfig::armExtend(int angle) {
-  // Control arm extension servo on channel 4 (0-180 degrees)
+  // Control arm extension servo on channel 1 (0-180 degrees)
   if (angle < 0 || angle > 180) {
     Serial.println("Invalid angle. Range: 0-180");
     return;
@@ -347,8 +347,8 @@ void ServoConfig::armExtend(int angle) {
   // Mutual exclusion: Loosen LOOK servo when ARM-EXTEND is operating
   if (lookOperating) {
     Serial.println("Loosening LOOK servo for smooth ARM-EXTEND operation");
-    // LOOK servo is on channel 5, loosen it by turning off PWM
-    pwm.setPWM(5, 0, 0);
+    // LOOK servo is on channel 2, loosen it by turning off PWM
+    pwm.setPWM(2, 0, 0);
     lookOperating = false;
   }
   
@@ -366,7 +366,7 @@ void ServoConfig::armExtend(int angle) {
   
   while (currentArmExtensionAngle != angle) {
     currentArmExtensionAngle += step;
-    setServoAngle(4, currentArmExtensionAngle);
+    setServoAngle(1, currentArmExtensionAngle);
     delay(15);  // 15ms per degree for smooth motion
   }
   
@@ -379,7 +379,7 @@ void ServoConfig::armExtend(int angle) {
 }
 
 void ServoConfig::lookRotate(int angle) {
-  // Control look servo on channel 5 (0-180 degrees)
+  // Control look servo on channel 2 (0-180 degrees)
   if (angle < 0 || angle > 180) {
     Serial.println("Invalid angle. Range: 0-180");
     return;
@@ -388,8 +388,8 @@ void ServoConfig::lookRotate(int angle) {
   // Mutual exclusion: Loosen ARM-EXTEND servo when LOOK is operating
   if (armExtendOperating) {
     Serial.println("Loosening ARM-EXTEND servo for smooth LOOK operation");
-    // ARM-EXTEND servo is on channel 4, loosen it by turning off PWM
-    pwm.setPWM(4, 0, 0);
+    // ARM-EXTEND servo is on channel 1, loosen it by turning off PWM
+    pwm.setPWM(1, 0, 0);
     armExtendOperating = false;
   }
   
@@ -407,7 +407,7 @@ void ServoConfig::lookRotate(int angle) {
   
   while (currentLookAngle != angle) {
     currentLookAngle += step;
-    setServoAngle(5, currentLookAngle);
+    setServoAngle(2, currentLookAngle);
     delay(15);  // 15ms per degree for smooth motion
   }
   

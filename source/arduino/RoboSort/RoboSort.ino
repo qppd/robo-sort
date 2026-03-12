@@ -209,11 +209,11 @@ void setup() {
   buzzerConfig.startupBeep();
   Serial.println("Servo Commands: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
   Serial.println("  Lifter Commands: LIFTER UP, LIFTER DOWN, LIFTER STOP");
-  Serial.println("  Arm Commands: ARM-ROTATE:<angle> (0-180 degrees, channel 1 MG996R)");
-  Serial.println("  Gripper Commands: GRIP:<angle> (0-180 degrees, channel 2, default 105 degrees)");
+  Serial.println("  Arm Commands: ARM-ROTATE:<angle> (0-180 degrees, channel 0 MG996R)");
+  Serial.println("  Gripper Commands: GRIP:<angle> (0-180 degrees, channel 4, default 105 degrees)");
   Serial.println("  Gripper Rotation Commands: GRIP-ROTATE:<angle> (0-180 degrees, channel 3, default 90 degrees)");
-  Serial.println("  Arm Extension Commands: ARM-EXTEND:<angle> (90-180 degrees, channel 4, default 110 degrees)");
-  Serial.println("  Look Commands: LOOK:<angle> (0-180 degrees, channel 5, default 90 degrees)");
+  Serial.println("  Arm Extension Commands: ARM-EXTEND:<angle> (90-180 degrees, channel 1, default 110 degrees)");
+  Serial.println("  Look Commands: LOOK:<angle> (0-180 degrees, channel 2, default 90 degrees)");
   Serial.println("Motor Commands: FORWARD:<speed>, BACKWARD:<speed>, MSTOP");
   Serial.println("  Turning: LEFT:<speed>, RIGHT:<speed> (single motor turn)");
   Serial.println("  Spot Turn: TURN_LEFT:<speed>, TURN_RIGHT:<speed> (rotate in place)");
