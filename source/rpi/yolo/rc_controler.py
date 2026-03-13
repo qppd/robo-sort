@@ -222,7 +222,7 @@ class RoboSortRemoteControl:
             print("✓ Firebase connected")
 
             # Set initial state
-            self.db.child("robosortv2").child("status").update({
+            self.db.child("robosort").child("status").update({
                 "motor_state": "STOP",
                 "connected": True,
                 "servo1": self.servo_angles["servo1"],
@@ -235,7 +235,7 @@ class RoboSortRemoteControl:
 
             # Start listening to commands
             print("Starting Firebase stream listener...")
-            self.stream = self.db.child("robosortv2").child("commands").stream(self.on_command_change)
+            self.stream = self.db.child("robosort").child("commands").stream(self.on_command_change)
             print("✓ Firebase stream listener started")
 
             # Start listening to autonomous mode flag
@@ -332,7 +332,7 @@ class RoboSortRemoteControl:
         
         # Send beep command to Firebase for Android to play sound
         try:
-            self.db.child("robosortv2").child("commands").child("alert").set({
+            self.db.child("robosort").child("commands").child("alert").set({
                 "type": "beep",
                 "timestamp": int(current_time * 1000),
                 "message": "Control machine alert"
@@ -673,7 +673,7 @@ class RoboSortRemoteControl:
         """Update Firebase status in background thread (non-blocking)"""
         def update():
             try:
-                self.db.child("robosortv2").child("status").update({key: value})
+                self.db.child("robosort").child("status").update({key: value})
             except:
                 pass
 
@@ -1017,7 +1017,7 @@ class RoboSortRemoteControl:
 
         # Update Firebase
         try:
-            self.db.child("robosortv2").child("status").update({
+            self.db.child("robosort").child("status").update({
                 "motor_state": "STOP",
                 "connected": False
             })
