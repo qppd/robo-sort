@@ -362,6 +362,10 @@ class RoboSortRemoteControl:
                 print("Data is None, skipping")
                 return
 
+            # Re-arm heartbeat on every real command while autonomous mode is active
+            if self.autonomous_mode:
+                self._start_heartbeat()
+
             # Some stream events deliver nested snapshots, e.g. {"bin": {...}}
             # when listening at /robosort/commands and only one child changed.
             if isinstance(data, dict) and "bin" in data and isinstance(data.get("bin"), dict):
