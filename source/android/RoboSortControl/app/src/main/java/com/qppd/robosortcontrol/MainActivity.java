@@ -125,10 +125,10 @@ public class MainActivity extends AppCompatActivity {
             database = FirebaseDatabase.getInstance();
             // REMOVED: database.useEmulator("10.0.2.2", 9000); // For production use
             
-            commandsRef = database.getReference("robosortv2/commands");
-            // RPi publishes live state under robosortv2/status
-            feedbackRef = database.getReference("robosortv2/status");
-            alertRef = database.getReference("robosortv2/commands/alert");
+            commandsRef = database.getReference("robosort/commands");
+            // RPi publishes live state under robosort/status
+            feedbackRef = database.getReference("robosort/status");
+            alertRef = database.getReference("robosort/commands/alert");
             // Autonomous mode flag — RPi listens here and forwards to Arduino
             autonomousModeRef = database.getReference("robot/autonomous_mode");
             
