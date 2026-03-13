@@ -12,6 +12,9 @@
 #define LIFTER_UP_SPEED   530   // +220
 #define LIFTER_DOWN_SPEED  90
 
+// Configurable lifter max rotations
+#define DEFAULT_LIFTER_MAX_ROTATIONS 40
+
 class ServoConfig {
 private:
   Adafruit_PWMServoDriver pwm;

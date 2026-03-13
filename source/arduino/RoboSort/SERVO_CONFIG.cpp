@@ -88,7 +88,7 @@ void ServoConfig::update() {
         
         // Switch to DOWN phase
         homingPhase = false;
-        lifterMaxRotations = 40;
+        lifterMaxRotations = DEFAULT_LIFTER_MAX_ROTATIONS;
         lifterTimeout = 1000000;  // Large timeout
         lifterRotationCount = 0;
         
@@ -160,7 +160,7 @@ void ServoConfig::lifterDown() {
   
   // Set timeout and max rotations based on ARM switch state
   if (armSwitchPressed) {
-    lifterMaxRotations = 40;  // 40 rotations when ARM switch is pressed
+    lifterMaxRotations = DEFAULT_LIFTER_MAX_ROTATIONS;  // Configurable rotations when ARM switch is pressed
     lifterTimeout = 1000000;  // Large timeout, stop on rotations
     Serial.println("LIFTER DOWN - ON (ARM switch pressed, " + String(lifterMaxRotations) + " rotations)");
   } else {
