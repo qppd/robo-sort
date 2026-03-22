@@ -13,7 +13,7 @@
 #define LIFTER_DOWN_SPEED  90
 
 // Configurable lifter max rotations
-#define DEFAULT_LIFTER_MAX_ROTATIONS 40
+#define DEFAULT_LIFTER_MAX_ROTATIONS 30
 
 class ServoConfig {
 private:

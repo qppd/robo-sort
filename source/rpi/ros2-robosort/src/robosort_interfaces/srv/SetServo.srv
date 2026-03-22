@@ -1,6 +1,0 @@
-# Service to set individual servo angle
-int32 servo_num   # Servo number (0-5): 0-4 for arm, 5 for lifter
-int32 angle       # Angle in degrees (0-180)
----
-bool success
-string message
