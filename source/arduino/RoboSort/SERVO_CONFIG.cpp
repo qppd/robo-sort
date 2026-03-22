@@ -80,8 +80,14 @@ void ServoConfig::update() {
   // Handle homing sequence
   if (lifterHoming) {
     if (homingPhase) {
-      // UP phase - wait for limit switch
-      if (digitalRead(ARM_LIMIT_PIN) == LOW) {
+      // UP phase - count rotations (no limit switch)
+      unsigned long elapsed = millis() - lifterStartTime;
+      int rotations = elapsed / ROTATION_TIME_MS;
+      if (rotations > lifterRotationCount) {
+        lifterRotationCount = rotations;
+        Serial.println("HOMING: UP rotation count: " + String(lifterRotationCount));
+      }
+      if (lifterRotationCount >= lifterMaxRotations) {
         lifterStop();
         Serial.println("HOMING: Limit switch triggered, starting DOWN phase");
         delay(500);  // Brief pause between phases
@@ -97,7 +103,7 @@ void ServoConfig::update() {
         lifterRunning = true;
         lifterDirection = false;  // DOWN
         lifterStartTime = millis();
-        Serial.println("HOMING: Moving down 40 rotations");
+        Serial.println("HOMING: Moving down " + String(DEFAULT_LIFTER_MAX_ROTATIONS) + " rotations");
       }
     } else {
       // DOWN phase - count rotations
@@ -137,39 +143,38 @@ void ServoConfig::update() {
     }
   }
   
-  // LIFTER UP: Auto-stop when ARM limit switch pressed
+  // LIFTER UP: Auto-stop after lifterMaxRotations rotations
   else {
-    if (digitalRead(ARM_LIMIT_PIN) == LOW) {
+    unsigned long elapsed = millis() - lifterStartTime;
+    int rotations = elapsed / ROTATION_TIME_MS;
+    if (rotations > lifterRotationCount) {
+      lifterRotationCount = rotations;
+      Serial.println("LIFTER UP rotation count: " + String(lifterRotationCount));
+    }
+    if (lifterRotationCount >= lifterMaxRotations) {
       lifterStop();
-      Serial.println("LIFTER UP stopped by ARM limit switch");
+      Serial.println("LIFTER UP complete (" + String(lifterMaxRotations) + " rotations)");
     }
   }
 }
 
 void ServoConfig::lifterUp() {
-  // Turn ON - rotate UP until arm limit switch pressed
+  // Turn ON - rotate UP for exactly DEFAULT_LIFTER_MAX_ROTATIONS rotations
+  lifterMaxRotations = DEFAULT_LIFTER_MAX_ROTATIONS;
+  lifterTimeout = 1000000;  // Large timeout, rely on rotation count
+  lifterRotationCount = 0;
+  lifterStartTime = millis();
+  
   pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_UP_SPEED);
   lifterRunning = true;
   lifterDirection = true;  // UP
-  Serial.println("LIFTER UP - ON (auto-stop on ARM switch)");
+  Serial.println("LIFTER UP - ON (" + String(lifterMaxRotations) + " rotations)");
 }
 
 void ServoConfig::lifterDown() {
-  // Check if ARM limit switch is currently pressed
-  bool armSwitchPressed = (digitalRead(ARM_LIMIT_PIN) == LOW);
-  
-  // Set timeout and max rotations based on ARM switch state
-  if (armSwitchPressed) {
-    lifterMaxRotations = DEFAULT_LIFTER_MAX_ROTATIONS;  // Configurable rotations when ARM switch is pressed
-    lifterTimeout = 1000000;  // Large timeout, stop on rotations
-    Serial.println("LIFTER DOWN - ON (ARM switch pressed, " + String(lifterMaxRotations) + " rotations)");
-  } else {
-    lifterMaxRotations = 0;   // Use time-based for normal
-    lifterTimeout = 3000;     // 3 seconds normal timeout
-    Serial.println("LIFTER DOWN - ON (auto-stop after 3s)");
-  }
-  
-  // Reset rotation count
+  // Always rotate DOWN exactly DEFAULT_LIFTER_MAX_ROTATIONS rotations
+  lifterMaxRotations = DEFAULT_LIFTER_MAX_ROTATIONS;
+  lifterTimeout = 1000000;  // Large timeout, rely on rotation count
   lifterRotationCount = 0;
   
   // Turn ON - rotate DOWN
@@ -177,6 +182,7 @@ void ServoConfig::lifterDown() {
   lifterRunning = true;
   lifterDirection = false;  // DOWN
   lifterStartTime = millis();
+  Serial.println("LIFTER DOWN - ON (" + String(lifterMaxRotations) + " rotations)");
 }
 
 void ServoConfig::lifterStop() {
@@ -192,12 +198,16 @@ void ServoConfig::lifterStop() {
 }
 
 void ServoConfig::lifterHome() {
-  // Start homing sequence: UP until limit switch, then DOWN 40 rotations
+  // Start homing sequence: UP 8 rotations, then DOWN 8 rotations
   Serial.println("LIFTER HOME: Starting homing sequence");
-  Serial.println("LIFTER HOME: Phase 1 - Moving UP to limit switch");
+  Serial.println("LIFTER HOME: Phase 1 - Moving UP " + String(DEFAULT_LIFTER_MAX_ROTATIONS) + " rotations");
   
   lifterHoming = true;
   homingPhase = true;  // Start with UP phase
+  lifterMaxRotations = DEFAULT_LIFTER_MAX_ROTATIONS;
+  lifterTimeout = 1000000;  // Large timeout, rely on rotation count
+  lifterRotationCount = 0;
+  lifterStartTime = millis();
   
   // Start UP movement
   pwm.setPWM(LIFTER_SERVO_CHANNEL, 0, LIFTER_UP_SPEED);

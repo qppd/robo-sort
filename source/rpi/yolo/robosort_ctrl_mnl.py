@@ -692,12 +692,11 @@ class RoboSortRemoteControl:
         8. LIFTER DOWN (40 rotations)
         """
         try:
-            print("🤖 PLACE Step 1: LIFTER UP (waiting for limit switch)")
+            print("🤖 PLACE Step 1: LIFTER UP (8 rotations)")
             self.send_text_command("LIFTER UP")
             
-            # Wait for ARM limit switch to trigger (monitor Arduino feedback)
-            # For now, use a timeout approach (adjust timing as needed)
-            time.sleep(3.0)  # Wait for lifter to reach top
+            # Wait for lifter to complete 8 rotations (8 * 1.5s + safety margin)
+            time.sleep(14.0)  # Wait for lifter to complete 8 rotations
             
             print("🤖 PLACE Step 2: ARM-EXTEND:90")
             self.send_named_servo_command("ARM-EXTEND", 90)
@@ -723,9 +722,9 @@ class RoboSortRemoteControl:
             self.send_named_servo_command("LOOK", 180)
             time.sleep(1.0)
             
-            print("🤖 PLACE Step 8: LIFTER DOWN (40 rotations)")
+            print("🤖 PLACE Step 8: LIFTER DOWN (8 rotations)")
             self.send_text_command("LIFTER DOWN")
-            time.sleep(60.0)  # 40 rotations @ ~1.5s per rotation = ~60 seconds
+            time.sleep(14.0)  # 8 rotations @ ~1.5s per rotation = ~12s + safety margin
             
             print("✅ PLACE sequence complete!")
             

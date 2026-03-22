@@ -375,12 +375,7 @@ void loop() {
     } else if (input.startsWith("ARM-ROTATE:")) {
       int angle = input.substring(11).toInt();  // Extract angle after "ARM-ROTATE:"
 
-      // Safety: only allow angles < 180 when arm is lifted up and ARM limit switch is pressed.
-      // If switch not pressed, force angle to 180 to avoid damaging the arm.
-      if (digitalRead(ARM_LIMIT_PIN) != LOW && angle < 180) {
-        Serial.println("ARM-ROTATE blocked: ARM limit switch not pressed. Forcing to 180.");
-        angle = 180;
-      }
+      // Full range 0-180 allowed (no limit switch restriction)
       if (angle < 0) angle = 0;
       if (angle > 180) angle = 180;
       servoConfig.armRotate(angle);
