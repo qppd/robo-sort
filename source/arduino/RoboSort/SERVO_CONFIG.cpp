@@ -52,7 +52,7 @@ void ServoConfig::begin() {
   setServoAngle(0, 180);
   
   // Set gripper servo to default position (105 degrees)
-  setServoAngle(4, 110);
+  setServoAngle(4, 120);
   
   // Set gripper rotation servo to default position (90 degrees)
   setServoAngle(3, 0);
@@ -70,8 +70,8 @@ void ServoConfig::begin() {
   Serial.println("Servo config initialized");
   
   // Perform lifter homing sequence
-  Serial.println("Starting lifter homing sequence...");
-  lifterHome();
+  // Serial.println("Starting lifter homing sequence...");
+  // lifterHome();
 }
 
 void ServoConfig::update() {
