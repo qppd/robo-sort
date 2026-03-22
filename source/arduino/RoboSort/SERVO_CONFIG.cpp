@@ -55,14 +55,14 @@ void ServoConfig::begin() {
   setServoAngle(4, 110);
   
   // Set gripper rotation servo to default position (90 degrees)
-  setServoAngle(3, 90);
+  setServoAngle(3, 0);
   
   // Set arm extension servo to HOME position (90 degrees)
   setServoAngle(1, 90);
   
   // Set look servo to HOME position (180 degrees)
-  setServoAngle(2, 180);
-  currentLookAngle = 180;
+  setServoAngle(2, 160);
+  currentLookAngle = 160;
   
   // Enable servos by default
   enableServos();
