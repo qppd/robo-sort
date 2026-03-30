@@ -477,7 +477,6 @@ void loop() {
       dcConfig.moveForward(speed);
       Serial.print("Moving forward continuously at speed ");
       Serial.println(speed);
-      buzzerConfig.successBeep();
     } else if (input.startsWith("BACKWARD:")) {
       int speed = 150; // Default speed
       int colonIdx = input.indexOf(':');
@@ -491,7 +490,6 @@ void loop() {
       dcConfig.moveBackward(speed);
       Serial.print("Moving backward continuously at speed ");
       Serial.println(speed);
-      buzzerConfig.successBeep();
     } else if (input.startsWith("LEFT:")) {
       int speed = 150; // Default speed
       int colonIdx = input.indexOf(':');
@@ -505,7 +503,6 @@ void loop() {
       dcConfig.turnLeft(speed);
       Serial.print("Turning left (single motor) at speed ");
       Serial.println(speed);
-      buzzerConfig.successBeep();
     } else if (input.startsWith("RIGHT:")) {
       int speed = 150; // Default speed
       int colonIdx = input.indexOf(':');
@@ -519,7 +516,6 @@ void loop() {
       dcConfig.turnRight(speed);
       Serial.print("Turning right (single motor) at speed ");
       Serial.println(speed);
-      buzzerConfig.successBeep();
     } else if (input.startsWith("TURN_LEFT:")) {
       int speed = 150; // Default speed
       int colonIdx = input.indexOf(':');
@@ -533,7 +529,6 @@ void loop() {
       dcConfig.turnAbout(0, speed);
       Serial.print("Spot turning left at speed ");
       Serial.println(speed);
-      buzzerConfig.successBeep();
     } else if (input.startsWith("TURN_RIGHT:")) {
       int speed = 150; // Default speed
       int colonIdx = input.indexOf(':');
@@ -547,7 +542,6 @@ void loop() {
       dcConfig.turnAbout(1, speed);
       Serial.print("Spot turning right at speed ");
       Serial.println(speed);
-      buzzerConfig.successBeep();
     }
     // Ultrasonic commands
     else if (input.startsWith("UTEST")) {
