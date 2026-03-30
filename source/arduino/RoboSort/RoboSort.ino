@@ -209,7 +209,7 @@ void setup() {
   buzzerConfig.startupBeep();
   Serial.println("Servo Commands: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
   Serial.println("  Lifter Commands: LIFTER UP, LIFTER DOWN, LIFTER STOP");
-  Serial.println("  Arm Commands: ARM-ROTATE:<angle> (0-180 degrees, channel 0 MG996R)");
+  Serial.println("  Arm Commands: ARM-ROTATE:<angle> (30-180 degrees, channel 0 MG996R)");
   Serial.println("  Gripper Commands: GRIP:<angle> (0-180 degrees, channel 4, default 105 degrees)");
   Serial.println("  Gripper Rotation Commands: GRIP-ROTATE:<angle> (0-180 degrees, channel 3, default 90 degrees)");
   Serial.println("  Arm Extension Commands: ARM-EXTEND:<angle> (90-180 degrees, channel 1, default 110 degrees)");
@@ -375,9 +375,8 @@ void loop() {
     } else if (input.startsWith("ARM-ROTATE:")) {
       int angle = input.substring(11).toInt();  // Extract angle after "ARM-ROTATE:"
 
-      // Full range 0-180 allowed (no limit switch restriction)
-      if (angle < 0) angle = 0;
-      if (angle > 180) angle = 180;
+      // Safety clamp: minimum 30 degrees, maximum 180 degrees
+      angle = constrain(angle, 30, 180);
       servoConfig.armRotate(angle);
     } else if (input.startsWith("GRIP:")) {
       int angle = input.substring(5).toInt();  // Extract angle after "GRIP:"

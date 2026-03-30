@@ -203,6 +203,10 @@ void ServoConfig::testServos() {
 }
 
 void ServoConfig::setServoAngle(int servoNum, int angle) {
+  // ARM-ROTATE (channel 0) minimum angle safety clamp
+  if (servoNum == 0) {
+    angle = constrain(angle, 30, 180);
+  }
   // Convert angle (0-180) to pulse length (102-512 for 500-2500us)
   int pulseLength = map(angle, 0, 180, SERVO_MIN_PULSE, SERVO_MAX_PULSE);
   
@@ -218,12 +222,9 @@ void ServoConfig::setServoAngle(int servoNum, int angle) {
 }
 
 void ServoConfig::armRotate(int angle) {
-  // Control MG996R servo on channel 0 (0-180 degrees)
-  if (angle < 0 || angle > 180) {
-    Serial.println("Invalid angle. Range: 0-180");
-    return;
-  }
-  
+  // Control MG996R servo on channel 0 (30-180 degrees)
+  angle = constrain(angle, 30, 180);
+
   Serial.print("ARM rotating from ");
   Serial.print(currentArmAngle);
   Serial.print(" to ");

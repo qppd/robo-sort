@@ -407,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnArmRotateBack.setOnClickListener(v -> {
-            servo1Pos = 0;
+            servo1Pos = 30;
             servo1Label.setText(String.format(Locale.US, "ARM-ROTATE (S1): %d°", servo1Pos));
             sendServoCommand(1, servo1Pos);
         });
@@ -867,8 +867,8 @@ public class MainActivity extends AppCompatActivity {
 
         switch (servoNum) {
             case 1:
-                servo1Pos = angle;
-                servo1Label.setText(String.format(Locale.US, "ARM-ROTATE (S1): %d°", angle));
+                servo1Pos = clamp(angle, 30, 180);
+                servo1Label.setText(String.format(Locale.US, "ARM-ROTATE (S1): %d°", servo1Pos));
                 break;
             case 2:
                 servo2Pos = clamp(angle, 110, 180);
