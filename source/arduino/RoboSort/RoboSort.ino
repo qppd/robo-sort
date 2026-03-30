@@ -228,7 +228,7 @@ void setup() {
   Serial.println("  BIN_2: Move to bin 2 position (1100 steps)");
   Serial.println("  BIN_3: Move to bin 3 position (2150 steps)");
   Serial.println("  BIN_4: Move to bin 4 position (3100 steps)");
-  Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING");
+  Serial.println("Buzzer Commands: BTEST, BSUCCESS, BERROR, BWARNING, BUZZER_ON, BUZZER_OFF");
   Serial.println("Limit Switch Commands: LTEST, LREAD, LCTEST, LCSTOP");
   Serial.println("Autonomous Commands: AUTO_START, AUTO_STOP, AUTO_STATUS, AUTO_HEARTBEAT");
 }
@@ -878,6 +878,12 @@ void loop() {
       dcConfig.stopAll();
       Serial.println("AUTONOMOUS MODE DISABLED");
       buzzerConfig.warningBeep();
+    } else if (input.equalsIgnoreCase("BUZZER_ON")) {
+      tone(BUZZER_PIN, 1000);
+      Serial.println("BUZZER:ON");
+    } else if (input.equalsIgnoreCase("BUZZER_OFF")) {
+      noTone(BUZZER_PIN);
+      Serial.println("BUZZER:OFF");
     }
     else {
       buzzerConfig.errorBeep();
@@ -888,7 +894,7 @@ void loop() {
       Serial.println("  Individual: M<motor> <direction> <speed>");
       Serial.println("Ultrasonic: UTEST, UDIST, UAVG <samples>, UDETECT <threshold>, UCTEST, UCSTOP, FL_DIST, FR_DIST");
       Serial.println("Stepper: BIN_HOME, BIN_1, BIN_2, BIN_3, BIN_4");
-      Serial.println("Buzzer: BTEST, BSUCCESS, BERROR, BWARNING");
+      Serial.println("Buzzer: BTEST, BSUCCESS, BERROR, BWARNING, BUZZER_ON, BUZZER_OFF");
       Serial.println("Limit Switch: LTEST, LREAD, LCTEST, LCSTOP");
       Serial.println("Autonomous: AUTO_START, AUTO_STOP, AUTO_STATUS, AUTO_HEARTBEAT");
     }

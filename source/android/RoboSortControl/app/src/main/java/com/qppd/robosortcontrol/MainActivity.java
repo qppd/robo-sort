@@ -59,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
     // Detection buttons
     private MaterialButton btnDetectBottle, btnDetectWrapper, btnDetectPaper, btnDetectOther;
 
+    // Buzzer buttons
+    private MaterialButton btnBuzzerOn, btnBuzzerOff;
+    private TextView buzzerStatusLabel;
+
     // Servo buttons (replace sliders)
     private MaterialButton btnArmRotateFront, btnArmRotateBack;
     private MaterialButton btnGripOpen, btnGripClose;
@@ -114,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         setupDetectionControls();
         setupServoControls();
         setupPlaceControl();
+        setupBuzzerControls();
         setupAutonomousControls();
 
         setupFeedbackListener();
@@ -214,12 +219,43 @@ public class MainActivity extends AppCompatActivity {
         btnLookPlus5 = findViewById(R.id.btnLookPlus5);
         btnLookPlus10 = findViewById(R.id.btnLookPlus10);
 
+        // Buzzer buttons
+        btnBuzzerOn = findViewById(R.id.btnBuzzerOn);
+        btnBuzzerOff = findViewById(R.id.btnBuzzerOff);
+        buzzerStatusLabel = findViewById(R.id.buzzerStatusLabel);
+
         // Initialize labels to match Arduino defaults immediately
         servo1Label.setText(String.format(Locale.US, "ARM-ROTATE (S1): %d°", servo1Pos));
         servo2Label.setText(String.format(Locale.US, "GRIP (S2): %d°", servo2Pos));
         servo3Label.setText(String.format(Locale.US, "GRIP-ROTATE (S3): %d°", servo3Pos));
         servo4Label.setText(String.format(Locale.US, "ARM-EXTEND (S4): %d°", servo4Pos));
         servo5Label.setText(String.format(Locale.US, "LOOK (S5): %d°", servo5Pos));
+    }
+
+    private void setupBuzzerControls() {
+        btnBuzzerOn.setOnClickListener(v -> sendBuzzerCommand("BUZZER_ON"));
+        btnBuzzerOff.setOnClickListener(v -> sendBuzzerCommand("BUZZER_OFF"));
+    }
+
+    private void sendBuzzerCommand(String command) {
+        if (!isConnected) {
+            feedbackText.setText("Cannot send BUZZER command: Not connected to Firebase");
+            return;
+        }
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("command", command);
+        payload.put("timestamp", System.currentTimeMillis());
+
+        commandsRef.child("buzzer").setValue(payload)
+            .addOnSuccessListener(aVoid -> {
+                Log.d("RoboSort", "BUZZER command sent: " + command);
+                feedbackText.setText(command.equals("BUZZER_ON") ? "🔔 Buzzer ON" : "🔕 Buzzer OFF");
+            })
+            .addOnFailureListener(e -> {
+                Log.e("RoboSort", "Failed to send BUZZER command: " + e.getMessage());
+                feedbackText.setText("Failed to send BUZZER command: " + e.getMessage());
+            });
     }
 
     private void setupLifterControls() {
@@ -843,7 +879,23 @@ public class MainActivity extends AppCompatActivity {
         if (error != null && !error.isEmpty()) {
             sb.append("⚠ Error: ").append(error).append("\n");
         }
-        
+
+        // Buzzer state
+        Object buzzerRaw = feedback.get("buzzer_state");
+        if (buzzerRaw instanceof String) {
+            String buzzerState = (String) buzzerRaw;
+            sb.append("Buzzer: ").append(buzzerState).append("\n");
+            runOnUiThread(() -> {
+                if ("ON".equals(buzzerState)) {
+                    buzzerStatusLabel.setTextColor(
+                        getResources().getColor(android.R.color.holo_orange_dark));
+                } else {
+                    buzzerStatusLabel.setTextColor(
+                        getResources().getColor(android.R.color.darker_gray));
+                }
+            });
+        }
+
         final String feedbackStr = sb.toString();
         runOnUiThread(() -> feedbackText.setText(feedbackStr));
     }

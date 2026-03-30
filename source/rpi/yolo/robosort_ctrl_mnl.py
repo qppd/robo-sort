@@ -546,6 +546,10 @@ class RoboSortRemoteControl:
                 self.send_servo_command(4, data["servo4"])
             elif "servo5" in data:
                 self.send_servo_command(5, data["servo5"])
+            elif isinstance(data, dict) and str(data.get("command", "")).upper() in {"BUZZER_ON", "BUZZER_OFF"}:
+                buzzer_cmd = str(data.get("command", "")).upper()
+                self.send_text_command(buzzer_cmd)
+                print(f"✓ Sent BUZZER command: {buzzer_cmd}")
             else:
                 print(f"Unknown data structure: {data}")
 
@@ -832,6 +836,12 @@ class RoboSortRemoteControl:
                             m = re.search(r'(\d+)\s*cm', line)
                             if m:
                                 self.rear_dist = int(m.group(1))
+
+                        # --- Buzzer state feedback: "BUZZER:ON" or "BUZZER:OFF" ---
+                        if line in ("BUZZER:ON", "BUZZER:OFF"):
+                            buzzer_state = line.split(":")[1]  # "ON" or "OFF"
+                            self.update_status_async("buzzer_state", buzzer_state)
+                            print(f"\U0001f514 Buzzer feedback: {line}")
 
             except Exception as e:
                 if self.running:
