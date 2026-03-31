@@ -579,7 +579,7 @@ class RoboSortRemoteControl:
             if cmd == "ARM-EXTEND":
                 angle = max(90, min(180, angle))  # ARM-EXTEND range: 90-180 degrees
             elif cmd == "ARM-ROTATE":
-                angle = max(30, min(180, angle))  # ARM-ROTATE range: 30-180 degrees
+                angle = max(26, min(180, angle))  # ARM-ROTATE range: 26-180 degrees
             else:
                 angle = max(0, min(180, angle))  # Default range: 0-180 degrees
 
@@ -705,8 +705,8 @@ class RoboSortRemoteControl:
             self.send_named_servo_command("ARM-EXTEND", 90)
             time.sleep(1.0)
             
-            print("🤖 PLACE Step 3: ARM-ROTATE:30")
-            self.send_named_servo_command("ARM-ROTATE", 30)
+            print("🤖 PLACE Step 3: ARM-ROTATE:26")
+            self.send_named_servo_command("ARM-ROTATE", 26)
             time.sleep(1.5)
             
             print("🤖 PLACE Step 4: GRIP:110 (release)")
