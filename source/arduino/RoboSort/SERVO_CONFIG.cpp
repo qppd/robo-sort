@@ -51,8 +51,11 @@ void ServoConfig::begin() {
   // Set arm servo to default position (180 degrees)
   setServoAngle(0, 180);
   
-  // Set gripper servo to default position (105 degrees)
-  setServoAngle(4, 120);
+  // Set gripper servo to default position (110 degrees, closed)
+  // Must match currentGripperAngle initialised in the constructor (110)
+  // to avoid a position-tracking desync that causes a jerk on the first command.
+  setServoAngle(4, 110);
+  currentGripperAngle = 110;
   
   // Set gripper rotation servo to default position (90 degrees)
   setServoAngle(3, 0);
@@ -251,22 +254,29 @@ void ServoConfig::gripperRotate(int angle) {
     Serial.println("Invalid angle. Range: 0-180");
     return;
   }
-  
+
   Serial.print("GRIPPER rotating from ");
   Serial.print(currentGripperAngle);
   Serial.print(" to ");
   Serial.print(angle);
   Serial.println(" degrees (smooth)");
-  
-  // Smooth movement with 1-degree steps
+
+  // Smooth movement with 1-degree steps.
+  // Serial.println is intentionally kept OUT of this loop: at 9600 baud the
+  // ~28-char debug message per step overflows the 64-byte TX buffer after
+  // only a few steps, causing Serial.print to block for ~29 ms before each
+  // pwm.setPWM call.  That turns the clean 15 ms/step cadence into an
+  // irregular 15-44 ms/step, which manifests as jitter on a loaded gripper
+  // servo.  The pulse-length formula is identical to setServoAngle().
   int step = (angle > currentGripperAngle) ? 1 : -1;
-  
+
   while (currentGripperAngle != angle) {
     currentGripperAngle += step;
-    setServoAngle(4, currentGripperAngle);
-    delay(15);  // 15ms per degree for smooth motion
+    int pulseLength = map(currentGripperAngle, 0, 180, SERVO_MIN_PULSE, SERVO_MAX_PULSE);
+    pwm.setPWM(4, 0, pulseLength);
+    delay(15);  // 15 ms per degree – matches all other servo functions
   }
-  
+
   Serial.print("GRIPPER rotation complete at ");
   Serial.print(angle);
   Serial.println(" degrees");
