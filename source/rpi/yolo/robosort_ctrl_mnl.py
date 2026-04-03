@@ -65,7 +65,7 @@ class RoboSortRemoteControl:
         # Current state
         self.current_command = "STOP"
         
-        self.servo_angles = {"servo1": 180, "servo2": 110, "servo3": 90, "servo4": 180, "servo5": 180}
+        self.servo_angles = {"servo1": 180, "servo2": 120, "servo3": 90, "servo4": 180, "servo5": 180}
         self.motor_state = "STOP"
         self.detected_object = "None"  # Store detected object for display
         self.first_stream_event = True  # Flag to skip auto-detect on first stream event
@@ -584,6 +584,8 @@ class RoboSortRemoteControl:
                 angle = max(90, min(180, angle))  # ARM-EXTEND range: 90-180 degrees
             elif cmd == "ARM-ROTATE":
                 angle = max(26, min(180, angle))  # ARM-ROTATE range: 26-180 degrees
+            elif cmd == "GRIP":
+                angle = max(120, min(180, angle))  # GRIP safe range: 120-180 degrees
             else:
                 angle = max(0, min(180, angle))  # Default range: 0-180 degrees
 
@@ -691,7 +693,7 @@ class RoboSortRemoteControl:
         1. LIFTER UP (until limit switch triggers)
         2. ARM-EXTEND:90
         3. ARM-ROTATE:0
-        4. GRIP:110 (release)
+        4. GRIP:120 (release)
         5. ARM-ROTATE:180
         6. ARM-EXTEND:180
         7. LOOK:180
@@ -712,8 +714,8 @@ class RoboSortRemoteControl:
             self.send_named_servo_command("ARM-ROTATE", 26)
             time.sleep(1.5)
             
-            print("🤖 PLACE Step 4: GRIP:110 (release)")
-            self.send_named_servo_command("GRIP", 110)
+            print("🤖 PLACE Step 4: GRIP:120 (release)")
+            self.send_named_servo_command("GRIP", 120)
             time.sleep(1.0)
             
             print("🤖 PLACE Step 5: ARM-ROTATE:180")

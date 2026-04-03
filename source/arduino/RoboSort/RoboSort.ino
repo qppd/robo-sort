@@ -210,7 +210,7 @@ void setup() {
   Serial.println("Servo Commands: TEST, S<servo> <angle>, STEST, SSTOP, SENABLE, SDISABLE");
   Serial.println("  Lifter Commands: LIFTER UP, LIFTER DOWN, LIFTER STOP");
   Serial.println("  Arm Commands: ARM-ROTATE:<angle> (26-180 degrees, channel 0 MG996R)");
-  Serial.println("  Gripper Commands: GRIP:<angle> (0-180 degrees, channel 4, default 105 degrees)");
+  Serial.println("  Gripper Commands: GRIP:<angle> (120-180 degrees, channel 4, default 120 degrees)");
   Serial.println("  Gripper Rotation Commands: GRIP-ROTATE:<angle> (0-180 degrees, channel 3, default 90 degrees)");
   Serial.println("  Arm Extension Commands: ARM-EXTEND:<angle> (90-180 degrees, channel 1, default 110 degrees)");
   Serial.println("  Look Commands: LOOK:<angle> (0-180 degrees, channel 2, default 90 degrees)");
@@ -381,8 +381,8 @@ void loop() {
     } else if (input.startsWith("GRIP:")) {
       int angle = input.substring(5).toInt();  // Extract angle after "GRIP:"
 
-      // Requested range: 110 (closed) .. 180 (open)
-      if (angle < 110) angle = 110;
+      // Safe operating range: 120 (closed) .. 180 (open)
+      if (angle < 120) angle = 120;
       if (angle > 180) angle = 180;
       servoConfig.gripperRotate(angle);
     } else if (input.startsWith("GRIP-ROTATE:")) {

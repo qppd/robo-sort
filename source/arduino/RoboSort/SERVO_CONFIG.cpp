@@ -22,7 +22,7 @@ ServoConfig::ServoConfig() : pwm(Adafruit_PWMServoDriver()) {
   lifterRotationCount = 0;  // Initialize rotation count
   lifterMaxRotations = 0;   // Default to time-based
   currentArmAngle = 180;  // Initialize arm to 180 degrees
-  currentGripperAngle = 110;  // Initialize gripper to 110 degrees (default closed)
+  currentGripperAngle = 120;  // Initialize gripper to 120 degrees (safe minimum, default closed)
   currentGripperRotationAngle = 90;  // Initialize gripper rotation to 90 degrees (default position)
   currentArmExtensionAngle = 180;  // Initialize arm extension to 180 degrees (HOME position)
   currentLookAngle = 180;  // Initialize look servo to 180 degrees (HOME position)
@@ -51,11 +51,11 @@ void ServoConfig::begin() {
   // Set arm servo to default position (180 degrees)
   setServoAngle(0, 180);
   
-  // Set gripper servo to default position (110 degrees, closed)
-  // Must match currentGripperAngle initialised in the constructor (110)
+  // Set gripper servo to default position (120 degrees, safe minimum / closed)
+  // Must match currentGripperAngle initialised in the constructor (120)
   // to avoid a position-tracking desync that causes a jerk on the first command.
-  setServoAngle(4, 110);
-  currentGripperAngle = 110;
+  setServoAngle(4, 120);
+  currentGripperAngle = 120;
   
   // Set gripper rotation servo to default position (90 degrees)
   setServoAngle(3, 0);
@@ -181,6 +181,11 @@ void ServoConfig::testServos() {
       // Skip lifter servo (360° continuous) for angle testing
       continue;
     }
+    if (servoNum == 4) {
+      // Skip gripper servo — its safe range (120-180°) is incompatible with the
+      // 0/90/180 test pattern; use GRIP:<angle> to exercise it directly.
+      continue;
+    }
     
     Serial.print("Testing servo ");
     Serial.println(servoNum);
@@ -249,11 +254,11 @@ void ServoConfig::armRotate(int angle) {
 }
 
 void ServoConfig::gripperRotate(int angle) {
-  // Control gripper servo on channel 4 (0-180 degrees)
-  if (angle < 0 || angle > 180) {
-    Serial.println("Invalid angle. Range: 0-180");
-    return;
-  }
+  // Control gripper servo on channel 4 (120-180 degrees only)
+  // Hard-clamp to the safe operating range — prevents any caller (direct command,
+  // snapshot replay, or testServos) from driving the gripper below 120°.
+  if (angle < 120) angle = 120;
+  if (angle > 180) angle = 180;
 
   Serial.print("GRIPPER rotating from ");
   Serial.print(currentGripperAngle);
