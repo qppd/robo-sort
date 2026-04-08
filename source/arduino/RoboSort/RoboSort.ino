@@ -53,6 +53,7 @@ const int ULTRASONIC_THRESHOLD = 22; // cm
 unsigned long lastUltrasonicCheck = 0;
 const unsigned long ULTRASONIC_CHECK_INTERVAL = 500; // ms
 bool buzzerActive = false;
+bool manualBuzzerActive = false; // True while BUZZER_ON is in effect; suppresses auto-proximity beep
 
 // --- Front obstacle avoidance (non-blocking state machine) ---
 // Reads both front ultrasonic sensors every cycle — including during turns —
@@ -248,15 +249,18 @@ void loop() {
     // Get distance from sensor 1
     long distance = ultrasonicConfig.getDistance(0);  // Sensor 1 (0-indexed)
     
-    if (distance > 0 && distance < ULTRASONIC_THRESHOLD) {
-      // Object detected within threshold - activate buzzer
+    if (distance > 0 && distance < ULTRASONIC_THRESHOLD && !manualBuzzerActive) {
+      // Object detected within threshold - activate proximity tone (non-blocking)
       if (!buzzerActive) {
-        buzzerConfig.warningBeep();
+        tone(BUZZER_PIN, 1000);  // Non-blocking continuous tone instead of blocking warningBeep()
         buzzerActive = true;
       }
-    } else {
-      // No object or out of range - silence buzzer
-      buzzerActive = false;
+    } else if (!manualBuzzerActive) {
+      // No object, out of range, or manual mode active - silence proximity tone
+      if (buzzerActive) {
+        noTone(BUZZER_PIN);
+        buzzerActive = false;
+      }
     }
   }
   
@@ -873,9 +877,13 @@ void loop() {
       Serial.println("AUTONOMOUS MODE DISABLED");
       buzzerConfig.warningBeep();
     } else if (input.equalsIgnoreCase("BUZZER_ON")) {
+      manualBuzzerActive = true;  // Suppress auto-proximity beep while manual mode is on
+      buzzerActive = false;       // Allow state to reset cleanly
       tone(BUZZER_PIN, 1000);
       Serial.println("BUZZER:ON");
     } else if (input.equalsIgnoreCase("BUZZER_OFF")) {
+      manualBuzzerActive = false; // Re-enable auto-proximity beep
+      buzzerActive = false;
       noTone(BUZZER_PIN);
       Serial.println("BUZZER:OFF");
     }

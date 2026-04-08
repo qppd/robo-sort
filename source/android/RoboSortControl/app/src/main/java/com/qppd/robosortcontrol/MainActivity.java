@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
@@ -426,11 +427,11 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             if (on) {
                 autoStatusLabel.setTextColor(
-                    getResources().getColor(android.R.color.holo_green_dark));
+                    ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
                 feedbackText.setText("\uD83E\uDD16 Autonomous mode ON");
             } else {
                 autoStatusLabel.setTextColor(
-                    getResources().getColor(android.R.color.darker_gray));
+                    ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
             }
         });
     }    
@@ -888,10 +889,10 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 if ("ON".equals(buzzerState)) {
                     buzzerStatusLabel.setTextColor(
-                        getResources().getColor(android.R.color.holo_orange_dark));
+                        ContextCompat.getColor(MainActivity.this, android.R.color.holo_orange_dark));
                 } else {
                     buzzerStatusLabel.setTextColor(
-                        getResources().getColor(android.R.color.darker_gray));
+                        ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
                 }
             });
         }
@@ -950,10 +951,10 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             if (connected) {
                 statusText.setText("● Connected");
-                statusText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                statusText.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
             } else {
                 statusText.setText("● Disconnected");
-                statusText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                statusText.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_red_dark));
             }
         });
     }

@@ -346,13 +346,22 @@ class RoboSortRemoteControl:
         Firebase stream callback - handles incoming commands
         Event-driven, NO delays
         """
+        try:
+            self._handle_command_change(message)
+        except Exception as e:
+            print(f"✗ on_command_change unhandled error (stream kept alive): {e}")
+            import traceback
+            traceback.print_exc()
+
+    def _handle_command_change(self, message):
+        """Inner handler — exceptions bubble up to on_command_change's safety net."""
         print(f"Stream event received: {message['event']}")
         print(f"Stream path: {message.get('path', '')}")
         print(f"Stream data: {message.get('data', 'No data')}")
-        
+
         is_first_event = self.first_stream_event
         self.first_stream_event = False
-        
+
         if message["event"] == "put":
             data = message["data"]
             path = str(message.get("path", ""))
@@ -366,13 +375,26 @@ class RoboSortRemoteControl:
             if self.autonomous_mode:
                 self._start_heartbeat()
 
-            # Some stream events deliver nested snapshots, e.g. {"bin": {...}}
-            # when listening at /robosort/commands and only one child changed.
+            # Some stream events deliver nested snapshots, e.g. {"bin": {...}} or
+            # {"buzzer": {...}} when listening at /robosort/commands and only one
+            # child changed (Pyrebase reconnect / partial snapshot at path "/").
             if isinstance(data, dict) and "bin" in data and isinstance(data.get("bin"), dict):
                 # Only unwrap if it looks like a bin payload
                 inner = data.get("bin")
                 if inner.get("type") == "bin" or str(inner.get("command", "")).upper().startswith("BIN_"):
                     data = inner
+
+            # Unwrap nested buzzer snapshot {"buzzer": {"command": "BUZZER_ON", ...}}
+            # delivered at path "/" when no motor/servo keys are present.
+            if (
+                isinstance(data, dict)
+                and "buzzer" in data
+                and isinstance(data.get("buzzer"), dict)
+                and not any(k in data for k in ("motor", "servo1", "servo2", "servo3", "servo4", "servo5"))
+            ):
+                inner_bz = data.get("buzzer")
+                if str(inner_bz.get("command", "")).upper() in {"BUZZER_ON", "BUZZER_OFF"}:
+                    data = inner_bz
 
             # BIN fast-path (supports both full object writes and leaf updates)
             if (
