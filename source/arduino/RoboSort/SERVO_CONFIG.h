@@ -9,7 +9,7 @@
 
 // Continuous servo control values for PCA9685 (pulse length: 0-4096)
 #define LIFTER_STOP 310        // Neutral position (stopped)
-#define LIFTER_UP_SPEED   530   // +220
+#define LIFTER_UP_SPEED   490   // clamped to < SERVO_MAX_PULSE (512 = 2500us max); was 530 (2588us, out of range)
 #define LIFTER_DOWN_SPEED  90
 
 // Configurable lifter max rotations (8 full rotations for both UP and DOWN)
