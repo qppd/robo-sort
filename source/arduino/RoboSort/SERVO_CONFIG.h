@@ -12,8 +12,8 @@
 #define LIFTER_UP_SPEED   490   // clamped to < SERVO_MAX_PULSE (512 = 2500us max); was 530 (2588us, out of range)
 #define LIFTER_DOWN_SPEED  90
 
-// Configurable lifter max rotations (8 full rotations for both UP and DOWN)
-#define DEFAULT_LIFTER_MAX_ROTATIONS 8
+// Configurable lifter max rotations (6 full rotations for both UP and DOWN)
+#define DEFAULT_LIFTER_MAX_ROTATIONS 6
 
 class ServoConfig {
 private:

@@ -712,21 +712,21 @@ class RoboSortRemoteControl:
     def execute_place_sequence(self):
         """
         Execute the PLACE sequence:
-        1. LIFTER UP (until limit switch triggers)
+        1. LIFTER UP (6 rotations)
         2. ARM-EXTEND:90
         3. ARM-ROTATE:0
         4. GRIP:120 (release)
         5. ARM-ROTATE:180
         6. ARM-EXTEND:180
         7. LOOK:180
-        8. LIFTER DOWN (40 rotations)
+        8. LIFTER DOWN (6 rotations)
         """
         try:
-            print("🤖 PLACE Step 1: LIFTER UP (8 rotations)")
+            print("🤖 PLACE Step 1: LIFTER UP (6 rotations)")
             self.send_text_command("LIFTER UP")
             
-            # Wait for lifter to complete 8 rotations (8 * 1.5s + safety margin)
-            time.sleep(14.0)  # Wait for lifter to complete 8 rotations
+            # Wait for lifter to complete 6 rotations (6 * 1.5s + safety margin)
+            time.sleep(11.0)  # Wait for lifter to complete 6 rotations
             
             print("🤖 PLACE Step 2: ARM-EXTEND:90")
             self.send_named_servo_command("ARM-EXTEND", 90)
@@ -752,9 +752,9 @@ class RoboSortRemoteControl:
             self.send_named_servo_command("LOOK", 180)
             time.sleep(1.0)
             
-            print("🤖 PLACE Step 8: LIFTER DOWN (8 rotations)")
+            print("🤖 PLACE Step 8: LIFTER DOWN (6 rotations)")
             self.send_text_command("LIFTER DOWN")
-            time.sleep(14.0)  # 8 rotations @ ~1.5s per rotation = ~12s + safety margin
+            time.sleep(11.0)  # 6 rotations @ ~1.5s per rotation = ~9s + safety margin
             
             print("✅ PLACE sequence complete!")
             
